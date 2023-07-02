@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../../css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            max-width: 560px;
+        }
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="py-5 text-center">
+        <h2 th:text="#{page.addItem}">Tea Order</h2>
+    </div>
+
+    <hr class="my-4">
+    <form action="item.html" th:action th:object="${order}" method="post">
+    <div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th th:text="#{label.item.id}">ID</th>
+                <th th:text="#{label.item.itemName}">상품명</th>
+                <th th:text="#{label.item.price}">가격</th>
+                <th th:text="#{label.item.quantity}">재고 수량</th>
+                <th th:text="#{label.item.orderQuantity}">주문 수량</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="teaOrder : ${teaOrders}">
+                <td><a href="item.html" th:href="@{|/order/v1/teas/${teaOrder.id}|}" th:text="${teaOrder.id}">회원id</a></td>
+                <td><a href="item.html" th:href="@{|/order/v1/teas/${teaOrder.id}|}" th:text="${teaOrder.teaName}">상품명</a></td>
+                <td th:text="${teaOrder.price}">10000</td>
+                <td th:text="${teaOrder.quantity}">10</td>
+                <td type="text" th:text="${teaOrder.orderQuantity}" th:field="*{orderQuantity}" th:errorclass="field-error" class="form-control">0</td>
+                <div class="field-error" th:errors="*{orderQuantity}">
+                    상품명 오류
+                </div>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+
+
+
+        <div class="row">
+            <div class="col">
+                <button class="w-100 btn btn-primary btn-lg" type="submit" th:text="#{button.save}">상품 등록</button>
+            </div>
+            <div class="col">
+                <button class="w-100 btn btn-secondary btn-lg"
+                        onclick="location.href='items.html'"
+                        th:onclick="|location.href='@{/validation/v4/items}'|"
+                        type="button" th:text="#{button.cancel}">취소</button>
+            </div>
+        </div>
+
+    </form>
+
+</div> <!-- /container -->
+</body>
+</html>
