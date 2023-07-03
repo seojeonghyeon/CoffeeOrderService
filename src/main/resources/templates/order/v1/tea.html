@@ -1,0 +1,60 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            max-width: 560px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="py-5 text-center">
+        <h2 th:text="#{page.item}">Tea 상세</h2>
+    </div>
+
+    <div>
+        <label for="teaId" th:text="#{label.item.id}">Tea ID</label>
+        <input type="text" id="teaId" name="itemId" class="form-control" value="1" th:value="${tea.id}" readonly>
+    </div>
+    <div>
+        <label for="itemName" th:text="#{label.item.itemName}">Tea 이름</label>
+        <input type="text" id="itemName" name="itemName" class="form-control" value="TEA" th:value="${tea.teaName}" readonly>
+    </div>
+    <div>
+        <label for="price" th:text="#{label.item.price}">가격</label>
+        <input type="text" id="price" name="price" class="form-control" value="10000" th:value="${tea.price}" readonly>
+    </div>
+    <div>
+        <label for="quantity" th:text="#{label.item.quantity}">수량</label>
+        <input type="text" id="quantity" name="quantity" class="form-control" value="10" th:value="${tea.quantity}" readonly>
+    </div>
+    <div>
+        <label for="quantity" th:text="#{label.item.image}">Tea 사진</label>
+        <img th:if="${!#strings.isEmpty(tea.teaImage)}" class="img-fluid float-left rounded img-thumbnail"
+             th:src="${tea.teaImage}" width="125" height="125" readonly/>
+    </div>
+    <div>
+        <label for="quantity" th:text="#{lable.item.description}">Tea 설명</label>
+        <input type="text" id="description" name="description" class="form-control" value="10" th:value="${tea.description}" readonly>
+    </div>
+
+    <hr class="my-4">
+
+    <div class="row">
+        <div class="col">
+            <button class="w-100 btn btn-secondary btn-lg"
+                    onclick="location.href='items.html'"
+                    th:onclick="|location.href='@{/order/v1/teas}'|"
+                    type="button" th:text="#{button.previous}">이전으로</button>
+        </div>
+    </div>
+
+</div> <!-- /container -->
+</body>
+</html>
