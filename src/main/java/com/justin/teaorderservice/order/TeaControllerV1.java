@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Controller
@@ -21,7 +22,8 @@ public class TeaControllerV1 {
     @GetMapping
     public String items(Model model){
         List<Tea> teas = teaRepository.findAll();
-        List<TeaOrder> teaOrders = new ArrayList<>();
+
+        List<TeaOrder> teaOrderList = new ArrayList<>();
         for(Tea tea : teas){
             TeaOrder teaOrder = TeaOrder.builder()
                     .id(tea.getId())
@@ -30,9 +32,15 @@ public class TeaControllerV1 {
                     .quantity(tea.getQuantity())
                     .orderQuantity(Integer.valueOf(0))
                     .build();
-            teaOrders.add(teaOrder);
+            teaOrderList.add(teaOrder);
         }
-        model.addAttribute("teaOrders",teaOrders);
+
+        Order order = Order.builder()
+                .userId(UUID.randomUUID().toString())
+                .teaOrderList(teaOrderList)
+                .build();
+
+        model.addAttribute("order",order);
         return "order/v1/addItems";
     }
 
