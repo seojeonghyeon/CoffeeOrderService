@@ -12,10 +12,10 @@ public class TeaRepository {
     private static final Map<Long, Tea> store = new HashMap<>();
     private static long sequence = 0L;
 
-    public Tea save(Tea Tea) {
-        Tea.setId(++sequence);
-        store.put(Tea.getId(), Tea);
-        return Tea;
+    public Tea save(Tea tea) {
+        tea.setId(++sequence);
+        store.put(tea.getId(), tea);
+        return tea;
     }
 
     public Tea findById(Long id) {
@@ -26,8 +26,8 @@ public class TeaRepository {
         return new ArrayList<>(store.values());
     }
 
-    public void update(Long TeaId, Tea updateParam) {
-        Tea findTea = findById(TeaId);
+    public void update(Long teaId, Tea updateParam) {
+        Tea findTea = findById(teaId);
         findTea.setTeaName(updateParam.getTeaName());
         findTea.setPrice(updateParam.getPrice());
         findTea.setQuantity(updateParam.getQuantity());

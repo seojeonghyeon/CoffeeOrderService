@@ -26,10 +26,19 @@
     <hr class="my-4">
     <form action="item.html" th:action th:object="${order}" method="post">
         <div>
+            <label for="userId" th:text="#{label.order.userId}">User ID</label>
+            <input type="text" id="userId" name="userId" class="form-control" value="" th:value="${order.userId}" th:field="${order.userId}" readonly>
+        </div>
+
+        <div th:if="${#fields.hasGlobalErrors()}">
+            <p class="field-error" th:each="err : ${#fields.globalErrors()}" th:text="${err}">글로벌 오류 메시지</p>
+        </div>
+
+        <div>
             <table class="table">
                 <thead>
                 <tr>
-                    <th th:text="#{label.item.id}">ID</th>
+                    <th th:text="#{label.item.id}">Tea ID</th>
                     <th th:text="#{label.item.itemName}">상품명</th>
                     <th th:text="#{label.item.price}">가격</th>
                     <th th:text="#{label.item.quantity}">재고 수량</th>
@@ -37,13 +46,16 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="teaOrder : ${order.teaOrderList}">
+                <tr th:each="teaOrder : ${order.teaOrderList}" th:field="${order.teaOrderList}">
                     <td><a href="item.html" th:href="@{|/order/v1/teas/${teaOrder.id}|}"
-                           th:text="${teaOrder.id}">회원id</a></td>
-                    <td><a href="item.html" th:href="@{|/order/v1/teas/${teaOrder.id}|}" th:text="${teaOrder.teaName}">상품명</a>
-                    </td>
-                    <td th:text="${teaOrder.price}">10000</td>
-                    <td th:text="${teaOrder.quantity}">10</td>
+                           th:text="${teaOrder.id}"
+                           th:field="${order.teaOrderList[__${teaOrderStat.index}__].id}">Tea ID</a></td>
+                    <td><a href="item.html" th:href="@{|/order/v1/teas/${teaOrder.id}|}" th:text="${teaOrder.teaName}"
+                           th:field="${order.teaOrderList[__${teaOrderStat.index}__].teaName}">상품명</a></td>
+                    <td th:text="${teaOrder.price}"
+                        th:field="${order.teaOrderList[__${teaOrderStat.index}__].price}">10000</td>
+                    <td th:text="${teaOrder.quantity}"
+                        th:field="${order.teaOrderList[__${teaOrderStat.index}__].quantity}">10</td>
                     <td>
                         <input type="text" id="teaOrderQuantity"
                                th:field="${order.teaOrderList[__${teaOrderStat.index}__].orderQuantity}"
@@ -60,7 +72,7 @@
 
         <div class="row">
             <div class="col">
-                <button class="w-100 btn btn-primary btn-lg" type="submit" th:text="#{button.order}">주문 하기</button>
+                <button class="w-100 btn btn-primary btn-lg" type="submit" th:type="submit" th:text="#{button.order}">주문 하기</button>
             </div>
             <div class="col">
                 <button class="w-100 btn btn-secondary btn-lg"
