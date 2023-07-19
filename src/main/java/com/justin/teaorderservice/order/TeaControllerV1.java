@@ -66,10 +66,9 @@ public class TeaControllerV1 {
     @PostMapping
     public String addOrder(@Validated @ModelAttribute("itemPurchaseForm") ItemPurchaseForm itemPurchaseForm, BindingResult bindingResult,
                            RedirectAttributes redirectAttributes){
-        //User의 Point에 대한 복합 Rule 검증
-        //User가 가지고 있는 Point가 부족한지? 부족하다면 어디에 표시해서 알려줄 것인지
-        //글로벌 오류 처리에 대한 표시 부분도 addItems.html에 추가 필요
-
+        /**
+         * 오류가 존재할 경우
+         */
         if(bindingResult.hasErrors()){
             log.info("error={}",bindingResult);
             return "order/v1/addItems";
@@ -82,13 +81,41 @@ public class TeaControllerV1 {
 
         int tea_max = teas.size();
 
-        //transactional
+        /**
+         * Transactional
+         */
         for(int i = 0; i < tea_max; ++i){
             ItemOrderForm itemOrderForm = itemOrderFormList.get(i);
             boolean isNotZeroTheOrderQuantity = itemOrderForm.getOrderQuantity() != 0;
             if(isNotZeroTheOrderQuantity) {
                 Tea tea = teas.get(i);
                 Integer remaining = tea.getQuantity() - itemOrderForm.getOrderQuantity();
+                boolean isNoRemaining = remaining <= 0;
+
+                /**
+                 * 재고가 없을 경우
+                 */
+                if(isNoRemaining){
+                    bindingResult.reject("noRemaining",
+                            new Object[]{itemOrderForm.getOrderQuantity(), tea.getQuantity()}, null);
+                }
+
+                /**
+                 * 사용자의 Point가 없을 경우
+                 */
+                //추가 필요
+
+                /**
+                 * 오류가 존재할 경우
+                 */
+                if(bindingResult.hasErrors()){
+                    log.info("error={}",bindingResult);
+                    return "order/v1/addItems";
+                }
+
+                /**
+                 * 재고 감소
+                 */
                 TeaOrder teaOrder = TeaOrder.builder()
                         .id(tea.getId())
                         .teaName(tea.getTeaName())
@@ -97,19 +124,18 @@ public class TeaControllerV1 {
                         .orderQuantity(itemOrderForm.getOrderQuantity())
                         .build();
                 teaOrderList.add(teaOrder);
-
-                //재고 감소
                 tea.setQuantity(remaining);
                 teaRepository.update(tea.getId(), tea);
             }
         }
 
+        /**
+         * 주문 저장
+         */
         Order order = Order.builder()
                 .userId(itemPurchaseForm.getUserId())
                 .teaOrderList(teaOrderList)
                 .build();
-
-
         Order saveOrder = orderRepository.save(order);
         redirectAttributes.addAttribute("orderId", saveOrder.getId());
         redirectAttributes.addAttribute("status", true);

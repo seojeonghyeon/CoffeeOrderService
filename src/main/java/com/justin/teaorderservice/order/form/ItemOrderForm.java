@@ -20,9 +20,11 @@ public class ItemOrderForm {
     private String teaName;
 
     @NotNull
+    @Range(min = 0, max = 1000000)
     private Integer price;
 
     @NotNull
+    @Range(min = 0)
     private Integer quantity;
 
     @NotNull
