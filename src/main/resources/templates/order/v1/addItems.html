@@ -6,7 +6,7 @@
           href="../../css/bootstrap.min.css" rel="stylesheet">
     <style>
         .container {
-            max-width: 560px;
+            max-width: 80%;
         }
 
         .field-error {
@@ -24,10 +24,11 @@
     </div>
 
     <hr class="my-4">
-    <form action="item.html" th:action th:object="${order}" method="post">
+    <form action="item.html" th:action th:object="${itemPurchaseForm}" method="post">
         <div>
             <label for="userId" th:text="#{label.order.userId}">User ID</label>
-            <input type="text" id="userId" name="userId" class="form-control" value="" th:value="${order.userId}" th:field="${order.userId}" readonly>
+            <input type="text" id="userId" name="userId" class="form-control" value=""
+                   th:value="*{userId}" th:field="*{userId}" readonly>
         </div>
 
         <div th:if="${#fields.hasGlobalErrors()}">
@@ -35,6 +36,7 @@
         </div>
 
         <div>
+
             <table class="table">
                 <thead>
                 <tr>
@@ -43,26 +45,41 @@
                     <th th:text="#{label.item.price}">가격</th>
                     <th th:text="#{label.item.quantity}">재고 수량</th>
                     <th th:text="#{label.item.orderQuantity}">주문 수량</th>
+                    <th th:text="#{label.item.details}">Tea Detail</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="teaOrder : ${order.teaOrderList}" th:field="${order.teaOrderList}">
-                    <td><a href="item.html" th:href="@{|/order/v1/teas/${teaOrder.id}|}"
-                           th:text="${teaOrder.id}"
-                           th:field="${order.teaOrderList[__${teaOrderStat.index}__].id}">Tea ID</a></td>
-                    <td><a href="item.html" th:href="@{|/order/v1/teas/${teaOrder.id}|}" th:text="${teaOrder.teaName}"
-                           th:field="${order.teaOrderList[__${teaOrderStat.index}__].teaName}">상품명</a></td>
-                    <td th:text="${teaOrder.price}"
-                        th:field="${order.teaOrderList[__${teaOrderStat.index}__].price}">10000</td>
-                    <td th:text="${teaOrder.quantity}"
-                        th:field="${order.teaOrderList[__${teaOrderStat.index}__].quantity}">10</td>
+                <tr th:each="itemOrderForm, itemOrderFormStat : *{itemOrderFormList}">
                     <td>
-                        <input type="text" id="teaOrderQuantity"
-                               th:field="${order.teaOrderList[__${teaOrderStat.index}__].orderQuantity}"
-                               th:errorclass="field-error" class="form-control" placeholder="0" th:value="0">
-                        <div class="field-error" th:errors="${order.teaOrderList[__${teaOrderStat.index}__].orderQuantity}">
-                            수량 오류
-                        </div>
+                        <input th:field="*{itemOrderFormList[__${itemOrderFormStat.index}__].id}"
+                           class="form-control" readonly/>
+                    </td>
+                    <td>
+                        <input th:field="*{itemOrderFormList[__${itemOrderFormStat.index}__].teaName}"
+                           class="form-control" readonly/>
+                    </td>
+                    <td>
+                        <input th:field="*{itemOrderFormList[__${itemOrderFormStat.index}__].price}"
+                        class="form-control" readonly/>
+                    </td>
+                    <td>
+                        <input th:field="*{itemOrderFormList[__${itemOrderFormStat.index}__].quantity}"
+                        class="form-control" readonly/>
+                    </td>
+                    <td>
+                            <input
+                                   th:field="*{itemOrderFormList[__${itemOrderFormStat.index}__].orderQuantity}"
+                                   th:errorclass="field-error" class="form-control"/>
+                            <div class="field-error" th:errors="*{itemOrderFormList[__${itemOrderFormStat.index}__].orderQuantity}">
+                                수량 오류
+                            </div>
+                    </td>
+                    <td>
+                        <button class="w-100 btn btn-secondary btn-lg"
+                                onclick="location.href='items.html'"
+                                th:onclick="|location.href='@{|/order/v1/teas/${itemOrderForm.id}|}'|"
+                                type="button" th:text="#{label.item.detail}">Tea Detail
+                        </button>
                     </td>
                 </tr>
                 </tbody>

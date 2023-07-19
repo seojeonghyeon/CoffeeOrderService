@@ -28,24 +28,24 @@ public class TeaControllerV1 {
     public String items(Model model){
         List<Tea> teas = teaRepository.findAll();
 
-        List<TeaOrder> teaOrderList = new ArrayList<>();
+        List<ItemOrderForm> itemOrderFormList = new ArrayList<>();
         for(Tea tea : teas){
-            TeaOrder teaOrder = TeaOrder.builder()
+            ItemOrderForm itemOrderForm = ItemOrderForm.builder()
                     .id(tea.getId())
                     .teaName(tea.getTeaName())
                     .price(tea.getPrice())
                     .quantity(tea.getQuantity())
                     .orderQuantity(Integer.valueOf(0))
                     .build();
-            teaOrderList.add(teaOrder);
+            itemOrderFormList.add(itemOrderForm);
         }
 
-        Order order = Order.builder()
+        ItemPurchaseForm itemPurchaseForm = ItemPurchaseForm.builder()
                 .userId(UUID.randomUUID().toString())
-                .teaOrderList(teaOrderList)
+                .itemOrderFormList(itemOrderFormList)
                 .build();
 
-        model.addAttribute("order",order);
+        model.addAttribute("itemPurchaseForm",itemPurchaseForm);
         return "order/v1/addItems";
     }
 
@@ -64,9 +64,8 @@ public class TeaControllerV1 {
     }
 
     @PostMapping
-    public String addOrder(@Validated @ModelAttribute("order") ItemPurchaseForm form, BindingResult bindingResult,
+    public String addOrder(@Validated @ModelAttribute("itemPurchaseForm") ItemPurchaseForm itemPurchaseForm, BindingResult bindingResult,
                            RedirectAttributes redirectAttributes){
-
         //User의 Point에 대한 복합 Rule 검증
         //User가 가지고 있는 Point가 부족한지? 부족하다면 어디에 표시해서 알려줄 것인지
         //글로벌 오류 처리에 대한 표시 부분도 addItems.html에 추가 필요
@@ -76,32 +75,40 @@ public class TeaControllerV1 {
             return "order/v1/addItems";
         }
 
-        int tea_index = 0;
-        List<TeaOrder> teaOrderList = new ArrayList<>();
         List<Tea> teas = teaRepository.findAll();
+        List<TeaOrder> teaOrderList = new ArrayList<>();
+        List<ItemOrderForm> itemOrderFormList = itemPurchaseForm.getItemOrderFormList();
 
-        for(ItemOrderForm itemOrderForm : form.getTeaOrderList()){
-            boolean isNotZeroTheOrderQuantity = itemOrderForm.getOrderQuantity() != 0 ? true : false;
+
+        int tea_max = teas.size();
+
+        //transactional
+        for(int i = 0; i < tea_max; ++i){
+            ItemOrderForm itemOrderForm = itemOrderFormList.get(i);
+            boolean isNotZeroTheOrderQuantity = itemOrderForm.getOrderQuantity() != 0;
             if(isNotZeroTheOrderQuantity) {
-                Tea tea = teas.get(tea_index);
+                Tea tea = teas.get(i);
+                Integer remaining = tea.getQuantity() - itemOrderForm.getOrderQuantity();
                 TeaOrder teaOrder = TeaOrder.builder()
                         .id(tea.getId())
                         .teaName(tea.getTeaName())
                         .price(tea.getPrice())
-                        .quantity(tea.getQuantity())
+                        .quantity(remaining)
                         .orderQuantity(itemOrderForm.getOrderQuantity())
                         .build();
                 teaOrderList.add(teaOrder);
+
+                //재고 감소
+                tea.setQuantity(remaining);
+                teaRepository.update(tea.getId(), tea);
             }
-            tea_index++;
         }
 
         Order order = Order.builder()
-                .userId(form.getUserId())
+                .userId(itemPurchaseForm.getUserId())
                 .teaOrderList(teaOrderList)
                 .build();
 
-        //재고수량 감소 -> 안되면 실패 처리 transaction 처리 필요
 
         Order saveOrder = orderRepository.save(order);
         redirectAttributes.addAttribute("orderId", saveOrder.getId());
