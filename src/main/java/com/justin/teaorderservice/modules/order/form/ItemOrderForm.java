@@ -1,4 +1,4 @@
-package com.justin.teaorderservice.order.form;
+package com.justin.teaorderservice.modules.order.form;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;

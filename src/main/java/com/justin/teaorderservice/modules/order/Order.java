@@ -1,4 +1,4 @@
-package com.justin.teaorderservice.order;
+package com.justin.teaorderservice.modules.order;
 
 
 import lombok.Builder;

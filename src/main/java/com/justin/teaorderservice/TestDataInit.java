@@ -1,7 +1,7 @@
 package com.justin.teaorderservice;
 
-import com.justin.teaorderservice.order.Tea;
-import com.justin.teaorderservice.order.TeaRepository;
+import com.justin.teaorderservice.modules.order.Tea;
+import com.justin.teaorderservice.modules.order.TeaRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

@@ -1,7 +1,7 @@
-package com.justin.teaorderservice.order;
+package com.justin.teaorderservice.modules.order;
 
-import com.justin.teaorderservice.order.form.ItemOrderForm;
-import com.justin.teaorderservice.order.form.ItemPurchaseForm;
+import com.justin.teaorderservice.modules.order.form.ItemOrderForm;
+import com.justin.teaorderservice.modules.order.form.ItemPurchaseForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
