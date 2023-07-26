@@ -18,8 +18,8 @@ public class ItemPurchaseForm {
     @NotBlank
     private String userId;
 
-    @Valid
     @NotNull
+    @Valid
     private List<ItemOrderForm> itemOrderFormList;
 
 }

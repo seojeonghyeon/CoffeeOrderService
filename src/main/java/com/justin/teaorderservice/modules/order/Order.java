@@ -1,6 +1,7 @@
 package com.justin.teaorderservice.modules.order;
 
 
+import com.justin.teaorderservice.modules.tea.TeaOrder;
 import lombok.Builder;
 import lombok.Data;
 import java.util.List;

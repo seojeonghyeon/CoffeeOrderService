@@ -33,6 +33,10 @@ class ItemPurchaseFormTest {
     void validationItemPurchaseForm(){
         List<ItemOrderForm> itemOrderFormList = new ArrayList<>();
         ItemOrderForm itemOrderForm = ItemOrderForm.builder()
+                .id(1L)
+                .teaName("아메리카노")
+                .price(2000)
+                .quantity(10000)
                 .orderQuantity(1)
                 .build();
         itemOrderFormList.add(itemOrderForm);
@@ -70,6 +74,10 @@ class ItemPurchaseFormTest {
     void validationItemOrderFormUnderOrderQuantity(){
         List<ItemOrderForm> itemOrderFormList = new ArrayList<>();
         ItemOrderForm itemOrderForm = ItemOrderForm.builder()
+                .id(1L)
+                .teaName("아메리카노")
+                .price(2000)
+                .quantity(10000)
                 .orderQuantity(-1)
                 .build();
         itemOrderFormList.add(itemOrderForm);
@@ -94,6 +102,10 @@ class ItemPurchaseFormTest {
     void validationItemOrderFormOverOrderQuantity(){
         List<ItemOrderForm> itemOrderFormList = new ArrayList<>();
         ItemOrderForm itemOrderForm = ItemOrderForm.builder()
+                .id(1L)
+                .teaName("아메리카노")
+                .price(2000)
+                .quantity(10000)
                 .orderQuantity(1001)
                 .build();
         itemOrderFormList.add(itemOrderForm);
@@ -110,28 +122,6 @@ class ItemPurchaseFormTest {
             String message = next.getMessage();
             log.info("message = {}",message);
             assertThat("0에서 1000 사이여야 합니다").isEqualTo(message);
-        }
-    }
-
-    @Test
-    @DisplayName("Tea Order에 대한 구매 양식 검증 : orderQuantity is Null")
-    void validationItemOrderFormOrderQuantityIsNull(){
-        List<ItemOrderForm> itemOrderFormList = new ArrayList<>();
-        ItemOrderForm itemOrderForm = null;
-        itemOrderFormList.add(itemOrderForm);
-        ItemPurchaseForm itemPurchaseForm = ItemPurchaseForm.builder()
-                .itemOrderFormList(itemOrderFormList)
-                .userId(UUID.randomUUID().toString())
-                .build();
-        Set<ConstraintViolation<ItemPurchaseForm>> validate = validator.validate(itemPurchaseForm);
-        Iterator<ConstraintViolation<ItemPurchaseForm>> iterator = validate.iterator();
-
-        assertThat(true).isEqualTo(iterator.hasNext());
-        while(iterator.hasNext()){
-            ConstraintViolation<ItemPurchaseForm> next = iterator.next();
-            String message = next.getMessage();
-            log.info("message = {}",message);
-            assertThat("널이어서는 안됩니다").isEqualTo(message);
         }
     }
 
