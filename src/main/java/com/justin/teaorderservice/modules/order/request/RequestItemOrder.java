@@ -1,7 +1,6 @@
-package com.justin.teaorderservice.modules.order.form;
+package com.justin.teaorderservice.modules.order.request;
 
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,8 +11,7 @@ import org.hibernate.validator.constraints.Range;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ItemOrderForm {
-
+public class RequestItemOrder {
     @NotNull
     private Long id;
 
@@ -21,18 +19,14 @@ public class ItemOrderForm {
     private String teaName;
 
     @NotNull
-    @PositiveOrZero
     @Range(min = 0, max = 1000000)
     private Integer price;
 
     @NotNull
-    @PositiveOrZero
     @Range(min = 0)
     private Integer quantity;
 
     @NotNull
-    @PositiveOrZero
     @Range(min = 0, max = 1000)
     private Integer orderQuantity;
-
 }
