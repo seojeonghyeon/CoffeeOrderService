@@ -1,13 +1,11 @@
 package com.justin.teaorderservice.modules.order;
 
-import com.justin.teaorderservice.modules.exception.ComplexException;
-import com.justin.teaorderservice.modules.order.form.ItemPurchaseForm;
-import com.justin.teaorderservice.modules.order.request.RequestItemPurchase;
-import org.springframework.validation.BindingResult;
+
+import com.justin.teaorderservice.modules.tea.TeaOrder;
+import java.util.List;
 
 public interface OrderService {
     Order findById(Long orderId);
     Order save(Order order);
-    Long addViewOrder(BindingResult bindingResult, ItemPurchaseForm itemPurchaseForm);
-    Long addApiOrder(RequestItemPurchase requestItemPurchase) throws ComplexException;
+    Order saveOrder(String userId, List<TeaOrder> teaOrderList, int tea_max);
 }

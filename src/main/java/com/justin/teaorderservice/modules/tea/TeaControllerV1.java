@@ -75,7 +75,44 @@ public class TeaControllerV1 {
             log.info("error={}",bindingResult);
             return "order/v1/addItems";
         }
-        Long orderId = orderService.addViewOrder(bindingResult, itemPurchaseForm);
+
+        List<Tea> teas = teaService.findAll();
+        List<TeaOrder> teaOrderList = new ArrayList<>();
+        List<ItemOrderForm> itemOrderFormList = itemPurchaseForm.getItemOrderFormList();
+
+        int tea_max = teas.size();
+
+        for(int i = 0; i < tea_max; ++i){
+            ItemOrderForm itemOrderForm = itemOrderFormList.get(i);
+            boolean isNotZeroTheOrderQuantity = itemOrderForm.getOrderQuantity() != 0;
+            if(isNotZeroTheOrderQuantity) {
+                Tea tea = teas.get(i);
+                Integer remaining = tea.getQuantity() - itemOrderForm.getOrderQuantity();
+                boolean isNoRemaining = remaining < 0;
+
+                /**
+                 * 재고가 없을 경우
+                 */
+                if(isNoRemaining){
+                    bindingResult.reject("noRemaining",
+                            new Object[]{itemOrderForm.getOrderQuantity(), tea.getQuantity()}, null);
+                }
+
+                /**
+                 * 사용자의 Point가 없을 경우
+                 */
+                //추가 필요
+
+                TeaOrder teaOrder = TeaOrder.builder()
+                        .id(tea.getId())
+                        .teaName(tea.getTeaName())
+                        .quantity(tea.getQuantity())
+                        .orderQuantity(itemOrderForm.getOrderQuantity())
+                        .price(tea.getPrice())
+                        .build();
+                teaOrderList.add(teaOrder);
+            }
+        }
 
         /**
          * Process 처리 상의 오류가 존재할 경우
@@ -85,7 +122,9 @@ public class TeaControllerV1 {
             return "order/v1/addItems";
         }
 
-        redirectAttributes.addAttribute("orderId", orderId);
+        Order saveOrder = orderService.saveOrder(itemPurchaseForm.getUserId(), teaOrderList, tea_max);
+
+        redirectAttributes.addAttribute("orderId", saveOrder.getId());
         redirectAttributes.addAttribute("status", true);
         return "redirect:/order/v1/teas/{orderId}/detail";
     }
