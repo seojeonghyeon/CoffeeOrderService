@@ -1,4 +1,4 @@
-package com.justin.teaorderservice.modules;
+package com.justin.teaorderservice.modules.exception;
 
 
 import com.justin.teaorderservice.modules.exception.ComplexException;
