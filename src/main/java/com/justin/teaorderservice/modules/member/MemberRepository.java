@@ -28,6 +28,12 @@ public class MemberRepository {
                 .findFirst();
     }
 
+    public Optional<Member> findByPhoneNumber(String phoneNumber){
+        return findAll().stream()
+                .filter(m -> m.getPhoneNumber().equals(phoneNumber))
+                .findFirst();
+    }
+
     public List<Member> findAll() {
         return new ArrayList<>(store.values());
     }

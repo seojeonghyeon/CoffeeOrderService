@@ -15,4 +15,15 @@ public class MemberServiceImpl implements  MemberService{
     public Member save(Member member) {
         return memberRepository.save(member);
     }
+
+    @Override
+    public Member findByPhoneNumber(String phoneNumber) {
+        return memberRepository.findByPhoneNumber(phoneNumber).orElse(null);
+    }
+
+    @Override
+    public boolean hasPhoneNumber(String phoneNumber) {
+        return findByPhoneNumber(phoneNumber) != null;
+    }
+
 }

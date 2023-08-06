@@ -43,10 +43,10 @@
             <div class="field-error" th:errors="*{password}" />
         </div>
         <div>
-            <label for="email" th:text="#{label.members.email}">E-mail</label>
-            <input type="text" id="email" th:field="*{email}" class="form-control"
+            <label for="simplePassword" th:text="#{label.members.simplePassword}">간편 비밀번호</label>
+            <input type="password" id="simplePassword" th:field="*{simplePassword}" class="form-control"
                    th:errorclass="field-error">
-            <div class="field-error" th:errors="*{email}" />
+            <div class="field-error" th:errors="*{simplePassword}" />
         </div>
 
 
