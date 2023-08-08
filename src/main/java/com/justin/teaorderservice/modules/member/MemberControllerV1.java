@@ -48,8 +48,6 @@ public class MemberControllerV1 {
                 .grade(Grade.User)
                 .build();
 
-        //핸드폰 중복 검증
-        //중복 시, 오류 표시
         if(memberService.hasPhoneNumber(member.getPhoneNumber())){
             bindingResult.reject("hasPhoneNumber",
                     new Object[]{member.getPhoneNumber()}, null);

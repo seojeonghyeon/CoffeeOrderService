@@ -26,7 +26,10 @@ public class WebSecurityConfig {
                                 "/error",
                                 "/login",
                                 "/logout",
-                                "/index.html"
+                                "/index.html",
+                                "/login.html",
+                                "/templates/css/**",
+                                "/static/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
