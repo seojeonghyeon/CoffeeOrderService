@@ -3,6 +3,6 @@ package com.justin.teaorderservice.modules.login;
 import com.justin.teaorderservice.modules.member.Member;
 
 public interface LoginService {
-    Member simpleLogin(String phoneNumber, String simpleEncryptedPwd);
+    Member simpleLogin(String phoneNumber, String simplePassword);
     Member login(String phoneNumber, String encryptedPwd);
 }

@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -15,37 +14,49 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @Controller
-@RequiredArgsConstructor
 @RequestMapping("/order/v1/login")
+@RequiredArgsConstructor
 public class OrderLoginControllerV1 {
 
     private final LoginService loginService;
-    private final BCryptPasswordEncoder passwordEncoder;
 
     @GetMapping
     public String loginForm(@ModelAttribute("simpleLoginForm") SimpleLoginForm simpleLoginForm) {
-        return "login/simpleLoginForm";
+        return "login/v1/simpleLoginForm";
     }
 
     @PostMapping
-    public String simpleLoginV1(@Validated @ModelAttribute SimpleLoginForm simpleLoginForm, BindingResult bindingResult, @RequestParam(defaultValue = "/order/v1/login")String redirectURL, HttpServletRequest request){
+    public String simpleLoginV1(@Validated @ModelAttribute("simpleLoginForm") SimpleLoginForm simpleLoginForm, BindingResult bindingResult,
+                                HttpServletRequest request, @RequestParam(defaultValue = "/order/v1/teas") String redirectURL){
         if(bindingResult.hasErrors()){
-            return "/order/v1/login";
+            return "login/v1/simpleLoginForm";
         }
 
-        Member member = loginService.simpleLogin(simpleLoginForm.getPhoneNumber(), passwordEncoder.encode(simpleLoginForm.getSimplePassword()));
+        Member member = loginService.simpleLogin(
+                simpleLoginForm.getPhoneNumber(),
+                simpleLoginForm.getSimplePassword()
+        );
 
         if(member == null){
             bindingResult.reject("loginFail", new Object[]{}, null);
-            return "/order/v1/login";
+            return "login/v1/simpleLoginForm";
         }else if(member.isDisabled()){
             bindingResult.reject("isDisabled", new Object[]{}, null);
-            return "/order/v1/login";
+            return "login/v1/simpleLoginForm";
         }
 
         HttpSession session = request.getSession();
         session.setAttribute(SessionConst.LOGIN_MEMBER, member);
-        return "redirect:" + redirectURL;
+        return "redirect:"+redirectURL;
+    }
+
+    @PostMapping("/logout")
+    public String logoutV1(HttpServletRequest request){
+        HttpSession session = request.getSession(false);
+        if(session != null){
+            session.invalidate();
+        }
+        return "redirect:";
     }
 
 }

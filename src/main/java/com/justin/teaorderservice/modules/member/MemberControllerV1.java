@@ -7,12 +7,11 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -32,7 +31,8 @@ public class MemberControllerV1 {
     }
 
     @PostMapping("/add")
-    public String saveMember(@ModelAttribute @Validated MemberSaveForm memberSaveForm, BindingResult bindingResult){
+    public String saveMember(@ModelAttribute @Validated MemberSaveForm memberSaveForm, BindingResult bindingResult,
+                             RedirectAttributes redirectAttributes){
         if(bindingResult.hasErrors()){
             return "members/v1/addMember";
         }
@@ -55,8 +55,21 @@ public class MemberControllerV1 {
             return "members/v1/addMember";
         }
 
-        memberService.save(member);
-        return "redirect:/order/v1/login";
+        Member saveMember = memberService.save(member);
+        redirectAttributes.addAttribute("userId", saveMember.getUserId());
+        return "redirect:/order/v1/members/{userId}/detail";
+    }
+
+    @GetMapping("/{userId}/detail")
+    public String memberDetail(@PathVariable String userId, Model model){
+        Member member = memberService.findByUserId(userId);
+        log.info("get: member={}", member);
+        String phoneNumber;
+        if(member == null) phoneNumber = "가입 정보가 존재하지 않습니다";
+        else phoneNumber = member.getPhoneNumber();
+
+        model.addAttribute("phoneNumber", phoneNumber);
+        return "members/v1/addResult";
     }
 
 }

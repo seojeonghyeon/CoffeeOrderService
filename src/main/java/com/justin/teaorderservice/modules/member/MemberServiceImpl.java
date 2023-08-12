@@ -12,13 +12,18 @@ public class MemberServiceImpl implements  MemberService{
     private final MemberRepository memberRepository;
 
     @Override
+    public Member findByUserId(String userId) {
+        return memberRepository.findByUserId(userId).filter(member -> member.isDisabled() == false).orElse(null);
+    }
+
+    @Override
     public Member save(Member member) {
         return memberRepository.save(member);
     }
 
     @Override
     public Member findByPhoneNumber(String phoneNumber) {
-        return memberRepository.findByPhoneNumber(phoneNumber).orElse(null);
+        return memberRepository.findByPhoneNumber(phoneNumber).filter(member -> member.isDisabled() == false).orElse(null);
     }
 
     @Override

@@ -8,7 +8,7 @@ import java.util.*;
 @Slf4j
 @Repository
 public class MemberRepository {
-    private static Map<Long, Member> store = new HashMap<>();
+    private static final Map<Long, Member> store = new HashMap<>();
     private static long sequence = 0L;
 
     public Member save(Member member) {
@@ -22,7 +22,7 @@ public class MemberRepository {
         return store.get(id);
     }
 
-    public Optional<Member> findByLoginId(String userId) {
+    public Optional<Member> findByUserId(String userId) {
         return findAll().stream()
                 .filter(m -> m.getUserId().equals(userId))
                 .findFirst();

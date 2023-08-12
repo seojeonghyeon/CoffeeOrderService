@@ -14,7 +14,7 @@ public class LoginController {
 
     @GetMapping("/login")
     public String loginForm(@ModelAttribute("simpleLoginForm") SimpleLoginForm simpleLoginForm) {
-        return "login/simpleLoginForm";
+        return "login/v1/simpleLoginForm";
     }
 
 }

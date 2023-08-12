@@ -18,18 +18,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests((requests)
                         -> requests
                         .requestMatchers(
-                                "/",
-                                "/home",
-                                "/order/v1/members/add",
-                                "/css/**",
-                                "/*.ico",
-                                "/error",
-                                "/login",
-                                "/logout",
-                                "/index.html",
-                                "/login.html",
-                                "/templates/css/**",
-                                "/static/**"
+                                "/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )

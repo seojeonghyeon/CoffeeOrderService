@@ -1,5 +1,7 @@
 package com.justin.teaorderservice.modules.tea;
 
+import com.justin.teaorderservice.modules.argumentresolver.Login;
+import com.justin.teaorderservice.modules.member.Member;
 import com.justin.teaorderservice.modules.order.Order;
 import com.justin.teaorderservice.modules.order.OrderService;
 import com.justin.teaorderservice.modules.order.form.ItemOrderForm;
@@ -27,7 +29,12 @@ public class TeaControllerV1 {
     private final OrderService orderService;
 
     @GetMapping
-    public String items(Model model){
+    public String items(@Login Member loginMember, Model model){
+
+        if(loginMember == null){
+            return "redirect:/order/v1/login";
+        }
+
         List<Tea> teas = teaService.findAll();
 
         List<ItemOrderForm> itemOrderFormList = new ArrayList<>();
@@ -43,10 +50,11 @@ public class TeaControllerV1 {
         }
 
         ItemPurchaseForm itemPurchaseForm = ItemPurchaseForm.builder()
-                .userId(UUID.randomUUID().toString())
+                .userId(loginMember.getUserId())
                 .itemOrderFormList(itemOrderFormList)
                 .build();
 
+        model.addAttribute("member", loginMember);
         model.addAttribute("itemPurchaseForm",itemPurchaseForm);
         return "order/v1/addItems";
     }
