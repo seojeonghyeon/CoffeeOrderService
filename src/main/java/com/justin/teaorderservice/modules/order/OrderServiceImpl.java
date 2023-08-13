@@ -29,11 +29,12 @@ public class OrderServiceImpl implements OrderService{
 
     @Transactional
     @Override
-    public Order saveOrder(String userId, List<TeaOrder> teaOrderList, int tea_max) {
+    public Order saveOrder(String userId, List<TeaOrder> teaOrderList) {
+        int orderSize = teaOrderList.size();
         /**
          * 재고 감소
          */
-        for(int i = 0; i < tea_max; ++i){
+        for(int i = 0; i < orderSize; ++i){
             TeaOrder teaOrder = teaOrderList.get(i);
             boolean isNotZeroTheOrderQuantity = teaOrder.getOrderQuantity() != 0;
             if(isNotZeroTheOrderQuantity) {

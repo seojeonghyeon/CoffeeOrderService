@@ -38,7 +38,8 @@ public class WebConfig implements WebMvcConfigurer {
                         "/order/v1/login",
                         "/order/v1/login/logout",
                         "/order/v1/members/add",
-                        "/order/v1/members/{userId}/detail"
+                        "/order/v1/members/{userId}/detail",
+                        "/order/v1/home"
                 );
     }
 }

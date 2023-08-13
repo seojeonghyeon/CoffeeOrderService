@@ -130,7 +130,7 @@ public class TeaControllerV1 {
             return "order/v1/addItems";
         }
 
-        Order saveOrder = orderService.saveOrder(itemPurchaseForm.getUserId(), teaOrderList, tea_max);
+        Order saveOrder = orderService.saveOrder(itemPurchaseForm.getUserId(), teaOrderList);
 
         redirectAttributes.addAttribute("orderId", saveOrder.getId());
         redirectAttributes.addAttribute("status", true);

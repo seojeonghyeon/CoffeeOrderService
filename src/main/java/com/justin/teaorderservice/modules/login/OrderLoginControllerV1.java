@@ -56,7 +56,7 @@ public class OrderLoginControllerV1 {
         if(session != null){
             session.invalidate();
         }
-        return "redirect:";
+        return "redirect:/order/v1/home";
     }
 
 }

@@ -7,5 +7,5 @@ import java.util.List;
 public interface OrderService {
     Order findById(Long orderId);
     Order save(Order order);
-    Order saveOrder(String userId, List<TeaOrder> teaOrderList, int tea_max);
+    Order saveOrder(String userId, List<TeaOrder> teaOrderList);
 }

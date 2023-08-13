@@ -140,7 +140,7 @@ public class TeaApiControllerV1 {
             throw new ComplexException(errors);
         }
 
-        Order saveOrder = orderService.saveOrder(requestItemPurchase.getUserId(), teaOrderList, tea_max);
+        Order saveOrder = orderService.saveOrder(requestItemPurchase.getUserId(), teaOrderList);
 
         return ResponseEntity.status(HttpStatus.OK).body(saveOrder.getId().toString());
     }
