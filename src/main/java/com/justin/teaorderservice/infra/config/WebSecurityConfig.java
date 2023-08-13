@@ -1,4 +1,4 @@
-package com.justin.teaorderservice.modules.config;
+package com.justin.teaorderservice.infra.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

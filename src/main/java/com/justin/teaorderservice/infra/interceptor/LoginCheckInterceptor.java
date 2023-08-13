@@ -1,6 +1,6 @@
-package com.justin.teaorderservice.modules.interceptor;
+package com.justin.teaorderservice.infra.interceptor;
 
-import com.justin.teaorderservice.modules.session.SessionConst;
+import com.justin.teaorderservice.infra.session.SessionConst;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;

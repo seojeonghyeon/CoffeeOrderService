@@ -1,7 +1,7 @@
-package com.justin.teaorderservice.modules.exception;
+package com.justin.teaorderservice.infra.exception;
 
 
-import com.justin.teaorderservice.modules.exception.ComplexException;
+import com.justin.teaorderservice.infra.exception.ComplexException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;

@@ -1,8 +1,8 @@
-package com.justin.teaorderservice.modules.config;
+package com.justin.teaorderservice.infra.config;
 
-import com.justin.teaorderservice.modules.argumentresolver.LoginMemberArgumentResolver;
-import com.justin.teaorderservice.modules.interceptor.LogInterceptor;
-import com.justin.teaorderservice.modules.interceptor.LoginCheckInterceptor;
+import com.justin.teaorderservice.infra.argumentresolver.LoginMemberArgumentResolver;
+import com.justin.teaorderservice.infra.interceptor.LogInterceptor;
+import com.justin.teaorderservice.infra.interceptor.LoginCheckInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

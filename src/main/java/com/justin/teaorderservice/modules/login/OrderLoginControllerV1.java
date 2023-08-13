@@ -2,7 +2,7 @@ package com.justin.teaorderservice.modules.login;
 
 import com.justin.teaorderservice.modules.login.form.SimpleLoginForm;
 import com.justin.teaorderservice.modules.member.Member;
-import com.justin.teaorderservice.modules.session.SessionConst;
+import com.justin.teaorderservice.infra.session.SessionConst;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;

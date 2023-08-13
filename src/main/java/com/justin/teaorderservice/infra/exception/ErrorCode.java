@@ -1,4 +1,4 @@
-package com.justin.teaorderservice.modules.exception;
+package com.justin.teaorderservice.infra.exception;
 
 
 public enum ErrorCode {

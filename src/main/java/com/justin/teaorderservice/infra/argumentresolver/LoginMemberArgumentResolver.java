@@ -1,7 +1,6 @@
-package com.justin.teaorderservice.modules.argumentresolver;
+package com.justin.teaorderservice.infra.argumentresolver;
 
 import com.justin.teaorderservice.modules.member.Member;
-import com.justin.teaorderservice.modules.session.SessionConst;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
+import com.justin.teaorderservice.infra.session.SessionConst;
 
 @Slf4j
 public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {

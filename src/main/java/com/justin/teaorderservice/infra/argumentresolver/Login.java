@@ -1,4 +1,4 @@
-package com.justin.teaorderservice.modules.argumentresolver;
+package com.justin.teaorderservice.infra.argumentresolver;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

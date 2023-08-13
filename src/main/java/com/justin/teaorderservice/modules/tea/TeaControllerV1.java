@@ -1,6 +1,5 @@
 package com.justin.teaorderservice.modules.tea;
 
-import com.justin.teaorderservice.modules.argumentresolver.Login;
 import com.justin.teaorderservice.modules.member.Member;
 import com.justin.teaorderservice.modules.order.Order;
 import com.justin.teaorderservice.modules.order.OrderService;
@@ -17,7 +16,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 @Controller
@@ -29,7 +27,7 @@ public class TeaControllerV1 {
     private final OrderService orderService;
 
     @GetMapping
-    public String items(@Login Member loginMember, Model model){
+    public String items( Member loginMember, Model model){
 
         if(loginMember == null){
             return "redirect:/order/v1/login";

@@ -1,4 +1,4 @@
-package com.justin.teaorderservice.modules.interceptor;
+package com.justin.teaorderservice.infra.interceptor;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
