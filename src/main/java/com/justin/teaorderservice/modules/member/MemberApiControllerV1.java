@@ -58,5 +58,29 @@ public class MemberApiControllerV1 {
         Member saveMember = memberService.save(member);
         return ResponseEntity.status(HttpStatus.OK).body(saveMember.getUserId());
     }
+    
+    @GetMapping("/{userId}/detail")
+    public ResponseEntity<String> memberDetail(@PathVariable String userId) throws ComplexException{
+        Map<String, String> errors = new HashMap<>();
+        
+        Member member = memberService.findByUserId(userId);
+        log.info("get: member={}", member);
+        String phoneNumber = null;
+        if(member == null){
+            errors.put(
+                    userId,
+                    String.format(
+                            ErrorCode.NoExistPhoneNumber.getDescription()
+                    )
+            );
+        }else{
+            phoneNumber = member.getPhoneNumber();
+        }
+        
+        if(!errors.isEmpty()){
+            throw new ComplexException(errors);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(phoneNumber);
+    }
 
 }
