@@ -98,6 +98,20 @@
                         type="button" th:text="#{button.reset}">초기화
                 </button>
             </div>
+            <div class="col">
+                <button class="w-100 btn btn-secondary btn-lg"
+                        onclick="location.href='items.html'"
+                        th:onclick="|location.href='@{/order/v1/lists}'|"
+                        type="button" th:text="#{button.orderList}">주문 내역
+                </button>
+            </div>
+            <div class="col">
+                <button class="w-100 btn btn-secondary btn-lg"
+                        onclick="location.href='items.html'"
+                        th:onclick="|location.href='@{/charge/v1/points}'|"
+                        type="button" th:text="#{button.pointCharge}">포인트 충전
+                </button>
+            </div>
         </div>
 
     </form>
