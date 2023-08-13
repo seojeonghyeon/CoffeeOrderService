@@ -14,7 +14,7 @@ import java.util.TimeZone;
 
 @Slf4j
 @EnableScheduling
-@SpringBootApplication(exclude = SecurityAutoConfiguration.class)
+@SpringBootApplication
 public class App {
 
     public static void main(String[] args) {

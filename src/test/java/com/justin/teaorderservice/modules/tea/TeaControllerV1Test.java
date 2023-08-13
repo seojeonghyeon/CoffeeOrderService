@@ -1,4 +1,4 @@
-package com.justin.teaorderservice.modules.order;
+package com.justin.teaorderservice.modules.tea;
 
 import com.justin.teaorderservice.infra.MockMvcTest;
 import org.junit.jupiter.api.DisplayName;
