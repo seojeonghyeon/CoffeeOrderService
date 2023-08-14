@@ -10,6 +10,12 @@ import com.justin.teaorderservice.modules.order.response.ResponseItemPurchase;
 import com.justin.teaorderservice.modules.order.response.ResponseOrder;
 import com.justin.teaorderservice.modules.order.response.ResponseTeaOrder;
 import com.justin.teaorderservice.modules.tea.response.ResponseTea;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,6 +26,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+@Tag(
+        name = "Tea API Controller V1",
+        description = "Tea API Controller : V1"
+)
 @Slf4j
 @Controller
 @RequestMapping("/api/order/v1/teas")
@@ -29,6 +39,12 @@ public class TeaApiControllerV1 {
     private final TeaService teaService;
     private final OrderService orderService;
 
+    @Operation(summary = "Tea 리스트 확인", description = "Tea 리스트 확인")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Success", content = @Content(schema = @Schema(implementation = ResponseItemPurchase.class))),
+            @ApiResponse(responseCode = "400", description = "Request Fail", content = @Content(schema = @Schema(implementation = ResponseItemPurchase.class))),
+            @ApiResponse(responseCode = "500", description = "Server Error", content = @Content(schema = @Schema(implementation = ResponseItemPurchase.class)))
+    })
     @GetMapping
     ResponseEntity<ResponseItemPurchase> items(){
         List<Tea> teas = teaService.findAll();
@@ -52,6 +68,12 @@ public class TeaApiControllerV1 {
         return ResponseEntity.status(HttpStatus.OK).body(responseItemPurchase);
     }
 
+    @Operation(summary = "Tea 상세 정보", description = "Tea 상세 정보 확인")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Success", content = @Content(schema = @Schema(implementation = ResponseTea.class))),
+            @ApiResponse(responseCode = "400", description = "Request Fail", content = @Content(schema = @Schema(implementation = ResponseTea.class))),
+            @ApiResponse(responseCode = "500", description = "Server Error", content = @Content(schema = @Schema(implementation = ResponseTea.class)))
+    })
     @GetMapping("/{teaId}")
     public ResponseEntity<ResponseTea> tea(@PathVariable long teaId){
         Tea tea = teaService.findById(teaId);
@@ -67,6 +89,12 @@ public class TeaApiControllerV1 {
         return ResponseEntity.status(HttpStatus.OK).body(responseTea);
     }
 
+    @Operation(summary = "Tea 주문 정보", description = "Tea 주문 정보 확인")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Success", content = @Content(schema = @Schema(implementation = ResponseOrder.class))),
+            @ApiResponse(responseCode = "400", description = "Request Fail", content = @Content(schema = @Schema(implementation = ResponseOrder.class))),
+            @ApiResponse(responseCode = "500", description = "Server Error", content = @Content(schema = @Schema(implementation = ResponseOrder.class)))
+    })
     @GetMapping("/{orderId}/detail")
     public ResponseEntity<ResponseOrder> orderDetail(@PathVariable long orderId){
         Order order = orderService.findById(orderId);
@@ -91,6 +119,12 @@ public class TeaApiControllerV1 {
         return ResponseEntity.status(HttpStatus.OK).body(responseOrder);
     }
 
+    @Operation(summary = "Tea 주문", description = "Tea 주문 저장")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Success", content = @Content(schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "400", description = "Request Fail", content = @Content(schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "500", description = "Server Error", content = @Content(schema = @Schema(implementation = String.class)))
+    })
     @PostMapping
     public ResponseEntity<String> addOrder(final @RequestBody @Validated RequestItemPurchase requestItemPurchase) throws ComplexException{
 

@@ -1,3 +1,8 @@
 spring:
   messages:
     basename: messages, errors
+  security:
+    jwt:
+      header: Authorization
+      secret: JustinSecret
+      token_expiration_time: 86400
