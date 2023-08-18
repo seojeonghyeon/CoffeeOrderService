@@ -19,7 +19,7 @@ import java.util.List;
 
 @Slf4j
 @Controller
-@RequestMapping("/order/v1/teas")
+@RequestMapping("/view/order/v1/teas")
 @RequiredArgsConstructor
 public class TeaControllerV1 {
 

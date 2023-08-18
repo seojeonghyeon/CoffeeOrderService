@@ -12,6 +12,9 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.Arrays;
 
+/**
+ * SWAGGER CONFIG
+ */
 @OpenAPIDefinition(
         info = @Info(
                 title = "Tea Order Service API",

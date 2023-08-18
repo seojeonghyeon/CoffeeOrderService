@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Data
 @Builder
@@ -16,5 +17,5 @@ public class Member {
     private Integer point;
     private boolean disabled;
     private LocalDateTime createDate;
-    private Grade grade;
+    private Set<Authority> authorities;
 }

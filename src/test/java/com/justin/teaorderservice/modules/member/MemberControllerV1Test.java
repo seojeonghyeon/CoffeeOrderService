@@ -8,6 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.UUID;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -30,11 +31,10 @@ class MemberControllerV1Test {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-
     @DisplayName("고객 주문 화면 View")
     @Test
     void itemPurchaseForm() throws Exception {
-        mockMvc.perform(get("/order/v1/members/add"))
+        mockMvc.perform(get("/view/order/v1/members/add"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(view().name("members/v1/addMember"))
@@ -45,7 +45,7 @@ class MemberControllerV1Test {
     @DisplayName("회원 가입 처리 - 입력 값 정상")
     @Test
     void addMember_with_correct_input() throws Exception{
-        mockMvc.perform(post("/order/v1/members/add")
+        mockMvc.perform(post("/view/order/v1/members/add")
                         .param("phoneNumber","01012341235")
                         .param("simplePassword","1234")
                         .param("password","SEOjh1234!")
@@ -58,7 +58,7 @@ class MemberControllerV1Test {
     @DisplayName("회원 가입 처리 - 입력 값 오류")
     @Test
     void addMember_with_wrong_input() throws Exception{
-        mockMvc.perform(post("/order/v1/members/add")
+        mockMvc.perform(post("/view/order/v1/members/add")
                         .param("phoneNumber","01012341235")
                         .param("simplePassword","123")
                         .param("password","SEOjh1234!")
@@ -71,6 +71,11 @@ class MemberControllerV1Test {
     @DisplayName("회원 가입 정보 표시")
     @Test
     void memberDetail() throws Exception{
+
+        Authority authority = Authority.builder()
+                .authorityName("USER")
+                .build();
+
         String uuid = UUID.randomUUID().toString();
         Member member = Member.builder()
                 .userId(uuid)
@@ -80,7 +85,7 @@ class MemberControllerV1Test {
                 .createDate(LocalDateTime.now())
                 .disabled(false)
                 .point(Integer.valueOf(0))
-                .grade(Grade.User)
+                .authorities(Collections.singleton(authority))
                 .build();
         memberService.save(member);
 

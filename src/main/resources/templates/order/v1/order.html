@@ -40,9 +40,9 @@
             </thead>
             <tbody>
             <tr th:each="teaOrder : ${order.teaOrderList}">
-                <td><a href="item.html" th:href="@{|/order/v1/teas/${teaOrder.id}|}"
+                <td><a href="" th:href="@{|/order/v1/teas/${teaOrder.id}|}"
                        th:text="${teaOrder.id}">Tea ID</a></td>
-                <td><a href="item.html" th:href="@{|/order/v1/teas/${teaOrder.id}|}" th:text="${teaOrder.teaName}">Tea 이름</a>
+                <td><a href="" th:href="@{|/order/v1/teas/${teaOrder.id}|}" th:text="${teaOrder.teaName}">Tea 이름</a>
                 </td>
                 <td th:text="${teaOrder.price}">0</td>
                 <td th:text="${teaOrder.quantity}">0</td>

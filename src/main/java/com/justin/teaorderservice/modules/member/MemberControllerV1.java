@@ -14,11 +14,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.UUID;
 
 @Slf4j
 @Controller
-@RequestMapping("/order/v1/members")
+@RequestMapping("/view/order/v1/members")
 @RequiredArgsConstructor
 public class MemberControllerV1 {
 
@@ -37,6 +38,10 @@ public class MemberControllerV1 {
             return "members/v1/addMember";
         }
 
+        Authority authority = Authority.builder()
+                .authorityName("USER")
+                .build();
+
         Member member = Member.builder()
                 .userId(UUID.randomUUID().toString())
                 .encryptedPwd(passwordEncoder.encode(memberSaveForm.getPassword()))
@@ -45,7 +50,7 @@ public class MemberControllerV1 {
                 .createDate(LocalDateTime.now())
                 .disabled(false)
                 .point(Integer.valueOf(0))
-                .grade(Grade.User)
+                .authorities(Collections.singleton(authority))
                 .build();
 
         if(memberService.hasPhoneNumber(member.getPhoneNumber())){

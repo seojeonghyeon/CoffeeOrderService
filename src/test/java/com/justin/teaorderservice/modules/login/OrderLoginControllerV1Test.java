@@ -2,7 +2,7 @@ package com.justin.teaorderservice.modules.login;
 
 import com.justin.teaorderservice.infra.MockMvcTest;
 import com.justin.teaorderservice.infra.session.SessionConst;
-import com.justin.teaorderservice.modules.member.Grade;
+import com.justin.teaorderservice.modules.member.Authority;
 import com.justin.teaorderservice.modules.member.Member;
 import com.justin.teaorderservice.modules.member.MemberService;
 import org.junit.jupiter.api.DisplayName;
@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.UUID;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -48,6 +49,10 @@ class OrderLoginControllerV1Test {
     @DisplayName("Order Login 처리 - 입력 값 정상")
     @Test
     void simpleLoginV1_with_correct_input() throws Exception{
+        Authority authority = Authority.builder()
+                .authorityName("USER")
+                .build();
+
         Member member = Member.builder()
                 .userId(UUID.randomUUID().toString())
                 .encryptedPwd(passwordEncoder.encode("SEOjh1234!"))
@@ -56,7 +61,7 @@ class OrderLoginControllerV1Test {
                 .createDate(LocalDateTime.now())
                 .disabled(false)
                 .point(Integer.valueOf(0))
-                .grade(Grade.User)
+                .authorities(Collections.singleton(authority))
                 .build();
         memberService.save(member);
 
@@ -72,6 +77,11 @@ class OrderLoginControllerV1Test {
     @DisplayName("Order Login 처리 - 입력 값 오류")
     @Test
     void simpleLoginV1_with_wrong_input() throws Exception{
+
+        Authority authority = Authority.builder()
+                .authorityName("USER")
+                .build();
+
         Member member = Member.builder()
                 .userId(UUID.randomUUID().toString())
                 .encryptedPwd(passwordEncoder.encode("SEOjh1234!"))
@@ -80,7 +90,7 @@ class OrderLoginControllerV1Test {
                 .createDate(LocalDateTime.now())
                 .disabled(false)
                 .point(Integer.valueOf(0))
-                .grade(Grade.User)
+                .authorities(Collections.singleton(authority))
                 .build();
         memberService.save(member);
 
@@ -97,6 +107,10 @@ class OrderLoginControllerV1Test {
     @Test
     void logoutV1() throws Exception{
 
+        Authority authority = Authority.builder()
+                .authorityName("USER")
+                .build();
+
         Member member = Member.builder()
                 .userId(UUID.randomUUID().toString())
                 .encryptedPwd(passwordEncoder.encode("SEOjh1234!"))
@@ -105,7 +119,7 @@ class OrderLoginControllerV1Test {
                 .createDate(LocalDateTime.now())
                 .disabled(false)
                 .point(Integer.valueOf(0))
-                .grade(Grade.User)
+                .authorities(Collections.singleton(authority))
                 .build();
 
         MockHttpSession session = new MockHttpSession();

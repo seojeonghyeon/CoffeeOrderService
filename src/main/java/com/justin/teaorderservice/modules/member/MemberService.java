@@ -1,6 +1,8 @@
 package com.justin.teaorderservice.modules.member;
 
-public interface MemberService {
+import org.springframework.security.core.userdetails.UserDetailsService;
+
+public interface MemberService extends UserDetailsService {
     Member findByUserId(String userId);
     Member save(Member member);
     Member findByPhoneNumber(String phoneNumber);

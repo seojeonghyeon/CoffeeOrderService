@@ -2,6 +2,7 @@ package com.justin.teaorderservice.modules.member;
 
 import com.justin.teaorderservice.infra.exception.ComplexException;
 import com.justin.teaorderservice.infra.exception.ErrorCode;
+import com.justin.teaorderservice.modules.login.request.RequestLogin;
 import com.justin.teaorderservice.modules.member.request.RequestMemberSave;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -13,12 +14,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -47,6 +51,10 @@ public class MemberApiControllerV1 {
     public ResponseEntity<String> addMember(final @RequestBody @Validated RequestMemberSave requestMemberSave) throws ComplexException {
         Map<String, String> errors = new HashMap<>();
 
+        Authority authority = Authority.builder()
+                .authorityName("USER")
+                .build();
+
         Member member = Member.builder()
                 .userId(UUID.randomUUID().toString())
                 .encryptedPwd(passwordEncoder.encode(requestMemberSave.getPassword()))
@@ -55,7 +63,7 @@ public class MemberApiControllerV1 {
                 .createDate(LocalDateTime.now())
                 .disabled(false)
                 .point(Integer.valueOf(0))
-                .grade(Grade.User)
+                .authorities(Collections.singleton(authority))
                 .build();
 
         if(memberService.hasPhoneNumber(member.getPhoneNumber())){
@@ -82,16 +90,16 @@ public class MemberApiControllerV1 {
             @ApiResponse(responseCode = "400", description = "Request Fail", content = @Content(schema = @Schema(implementation = String.class))),
             @ApiResponse(responseCode = "500", description = "Server Error", content = @Content(schema = @Schema(implementation = String.class)))
     })
-    @GetMapping("/{userId}/detail")
-    public ResponseEntity<String> memberDetail(@PathVariable String userId) throws ComplexException{
+    @GetMapping("/detail")
+    @PreAuthorize("hasAnyAuthority('USER')")
+    public ResponseEntity<String> memberDetail(@AuthenticationPrincipal MemberAdapter memberAdapter) throws ComplexException{
         Map<String, String> errors = new HashMap<>();
-        
-        Member member = memberService.findByUserId(userId);
+        Member member = memberAdapter.getMember();
         log.info("get: member={}", member);
         String phoneNumber = null;
         if(member == null){
             errors.put(
-                    userId,
+                    member.getPhoneNumber(),
                     String.format(
                             ErrorCode.NoExistPhoneNumber.getDescription()
                     )

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @Controller
-@RequestMapping("/order/v1/login")
+@RequestMapping("/view/order/v1/login")
 @RequiredArgsConstructor
 public class OrderLoginControllerV1 {
 

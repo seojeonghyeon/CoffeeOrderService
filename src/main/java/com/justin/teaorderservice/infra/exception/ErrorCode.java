@@ -5,7 +5,9 @@ public enum ErrorCode {
     NoQuantity(4001,"No Enable Order Quantity"),
     LessQuantityThanOrderQuantity(4002,"Less Quantity %d than Order Quantity %d"),
     ExistPhoneNumber(4003,"Already the phone number is exist : %s"),
-    NoExistPhoneNumber(4004, "No exist phone number");
+    NoExistPhoneNumber(4004, "No exist phone number"),
+    LoginFail(4005, "Login Fail : No exist account"),
+    IDisDisabled(4006, "Login Fail : ID is Disabled");
 
     private final int code;
     private final String description;

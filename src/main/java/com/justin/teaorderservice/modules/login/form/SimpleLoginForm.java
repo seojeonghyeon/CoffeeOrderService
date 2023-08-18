@@ -1,7 +1,6 @@
 package com.justin.teaorderservice.modules.login.form;
 
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 

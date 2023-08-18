@@ -23,7 +23,7 @@ class TeaControllerV1Test {
     @DisplayName("고객 주문 화면 View")
     @Test
     void itemPurchaseForm() throws Exception {
-        mockMvc.perform(get("/order/v1/teas"))
+        mockMvc.perform(get("/view/order/v1/teas"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(view().name("order/v1/addItems"))
@@ -34,7 +34,7 @@ class TeaControllerV1Test {
     @DisplayName("Tea 설명 화면 View")
     @Test
     void tea() throws Exception {
-        mockMvc.perform(get("/order/v1/teas/1"))
+        mockMvc.perform(get("/view/order/v1/teas/1"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(view().name("order/v1/tea"))
@@ -47,7 +47,7 @@ class TeaControllerV1Test {
     void itemPurchaseForm_with_correct_input() throws Exception {
         String userId = UUID.randomUUID().toString();
 
-        mockMvc.perform(post("/order/v1/teas")
+        mockMvc.perform(post("/view/order/v1/teas")
                         .param("userId", userId)
                         .param("itemOrderFormList[0].id","1")
                         .param("itemOrderFormList[0].teaName", "Americano(Hot)")
@@ -70,7 +70,7 @@ class TeaControllerV1Test {
     void itemPurchaseForm_with_wrong_input() throws Exception {
         String userId = UUID.randomUUID().toString();
 
-        mockMvc.perform(post("/order/v1/teas")
+        mockMvc.perform(post("/view/order/v1/teas")
                         .param("userId", userId)
                         .param("itemOrderFormList[0].id","1")
                         .param("itemOrderFormList[0].teaName", "Americano(Hot)")
@@ -91,7 +91,7 @@ class TeaControllerV1Test {
     @DisplayName("고객 주문 내역 화면 View")
     @Test
     void orderDetail() throws Exception {
-        mockMvc.perform(get("/order/v1/teas/1/detail"))
+        mockMvc.perform(get("/view/order/v1/teas/1/detail"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(view().name("order/v1/order"))
