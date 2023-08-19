@@ -1,5 +1,6 @@
 package com.justin.teaorderservice.modules.member;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -9,6 +10,7 @@ import java.util.stream.Collectors;
 
 public class MemberAdapter extends User {
 
+    @Schema(description = "사용자 정보", nullable = false)
     private final Member member;
 
     public MemberAdapter(Member member) {

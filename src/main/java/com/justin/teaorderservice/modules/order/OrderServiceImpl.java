@@ -41,7 +41,7 @@ public class OrderServiceImpl implements OrderService{
             if(isNotZeroTheOrderQuantity) {
                 Tea tea = teaService.findById(teaOrder.getId());
                 Integer remaining = tea.getQuantity() - teaOrder.getOrderQuantity();
-                teaOrder.setOrderQuantity(remaining);
+                teaOrder.setOrderQuantity(teaOrder.getOrderQuantity());
                 tea.setQuantity(remaining);
                 teaService.update(tea.getId(), tea);
             }

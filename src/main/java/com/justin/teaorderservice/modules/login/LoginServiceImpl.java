@@ -1,6 +1,5 @@
 package com.justin.teaorderservice.modules.login;
 
-import com.justin.teaorderservice.infra.auth.SecurityUtil;
 import com.justin.teaorderservice.modules.member.Member;
 import com.justin.teaorderservice.modules.member.MemberRepository;
 import com.justin.teaorderservice.modules.member.MemberService;
@@ -8,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -18,7 +16,6 @@ public class LoginServiceImpl implements LoginService{
     private final MemberRepository memberRepository;
     private final MemberService memberService;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final SecurityUtil securityUtil;
 
     /**
      *
@@ -44,16 +41,5 @@ public class LoginServiceImpl implements LoginService{
         return memberRepository.findByPhoneNumber(phoneNumber)
                 .filter(member -> passwordEncoder.matches(password, member.getEncryptedPwd()))
                 .orElse(null);
-    }
-
-    @Override
-    public Member getMemberWithAuthorities(String phoneNumber) {
-        return memberService.findByPhoneNumber(phoneNumber);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public Member getMembersWithAuthorities() {
-        return securityUtil.getCurrentUsername().flatMap(memberRepository::findByPhoneNumber).orElseGet(()->null);
     }
 }

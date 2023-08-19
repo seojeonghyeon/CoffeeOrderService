@@ -2,6 +2,8 @@ package com.justin.teaorderservice.modules.tea;
 
 import com.justin.teaorderservice.infra.exception.ComplexException;
 import com.justin.teaorderservice.infra.exception.ErrorCode;
+import com.justin.teaorderservice.modules.member.Member;
+import com.justin.teaorderservice.modules.member.MemberAdapter;
 import com.justin.teaorderservice.modules.order.*;
 import com.justin.teaorderservice.modules.order.request.RequestItemOrder;
 import com.justin.teaorderservice.modules.order.request.RequestItemPurchase;
@@ -20,6 +22,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -46,6 +50,7 @@ public class TeaApiControllerV1 {
             @ApiResponse(responseCode = "500", description = "Server Error", content = @Content(schema = @Schema(implementation = ResponseItemPurchase.class)))
     })
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('USER','MANAGER','ADMIN')")
     ResponseEntity<ResponseItemPurchase> items(){
         List<Tea> teas = teaService.findAll();
 
@@ -96,8 +101,25 @@ public class TeaApiControllerV1 {
             @ApiResponse(responseCode = "500", description = "Server Error", content = @Content(schema = @Schema(implementation = ResponseOrder.class)))
     })
     @GetMapping("/{orderId}/detail")
-    public ResponseEntity<ResponseOrder> orderDetail(@PathVariable long orderId){
+    @PreAuthorize("hasAnyAuthority('USER','MANAGER','ADMIN')")
+    public ResponseEntity<ResponseOrder> orderDetail(@PathVariable long orderId, @AuthenticationPrincipal MemberAdapter memberAdapter) throws ComplexException {
+        Map<String, String> errors = new HashMap<>();
+
+        Member member = memberAdapter.getMember();
         Order order = orderService.findById(orderId);
+
+        if(!order.getUserId().equals(member.getUserId())){
+            errors.put(
+                    member.getPhoneNumber(),
+                    String.format(
+                            ErrorCode.NoMatchOrderIdWithUserId.getDescription()
+                    )
+            );
+        }
+        if(!errors.isEmpty()){
+            throw new ComplexException(errors);
+        }
+
         List<TeaOrder> teaOrderList = order.getTeaOrderList();
         List<ResponseTeaOrder> responseTeaOrderList = new ArrayList<>();
         for(TeaOrder teaOrder : teaOrderList){
@@ -126,9 +148,24 @@ public class TeaApiControllerV1 {
             @ApiResponse(responseCode = "500", description = "Server Error", content = @Content(schema = @Schema(implementation = String.class)))
     })
     @PostMapping
-    public ResponseEntity<String> addOrder(final @RequestBody @Validated RequestItemPurchase requestItemPurchase) throws ComplexException{
+    @PreAuthorize("hasAnyAuthority('USER','MANAGER','ADMIN')")
+    public ResponseEntity<String> addOrder(@AuthenticationPrincipal MemberAdapter memberAdapter, final @RequestBody @Validated RequestItemPurchase requestItemPurchase) throws ComplexException{
 
         Map<String, String> errors = new HashMap<>();
+        Member member = memberAdapter.getMember();
+
+        if(!requestItemPurchase.getUserId().equals(member.getUserId())){
+            errors.put(
+                    member.getPhoneNumber(),
+                    String.format(
+                            ErrorCode.NoMatchUserID.getDescription()
+                    )
+            );
+        }
+        if(!errors.isEmpty()){
+            throw new ComplexException(errors);
+        }
+
         List<Tea> teas = teaService.findAll();
         List<TeaOrder> teaOrderList = new ArrayList<>();
         List<RequestItemOrder> requestItemOrderList = requestItemPurchase.getRequestItemOrderList();
@@ -168,6 +205,16 @@ public class TeaApiControllerV1 {
                  * 사용자의 Point가 없을 경우
                  */
                 //추가 필요
+
+
+                TeaOrder teaOrder = TeaOrder.builder()
+                        .id(requestItemOrder.getId())
+                        .teaName(requestItemOrder.getTeaName())
+                        .price(requestItemOrder.getPrice())
+                        .orderQuantity(requestItemOrder.getOrderQuantity())
+                        .quantity(requestItemOrder.getQuantity())
+                        .build();
+                teaOrderList.add(teaOrder);
             }
         }
         if(!errors.isEmpty()){

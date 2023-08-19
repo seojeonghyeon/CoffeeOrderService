@@ -5,4 +5,4 @@ spring:
     jwt:
       header: Authorization
       secret: SnVzdGluU2VvLVRlYW9yZGVyc2VydmljZS1TcHJpbmdCb290LUpXVC1TZWNyZXQtVG9rZW4=
-      token_expiration_time: 86400
+      token_expiration_time: 864000

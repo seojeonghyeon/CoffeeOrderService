@@ -2,11 +2,17 @@ package com.justin.teaorderservice;
 
 import com.justin.teaorderservice.modules.member.Authority;
 import com.justin.teaorderservice.modules.member.AuthorityRepository;
+import com.justin.teaorderservice.modules.member.Member;
 import com.justin.teaorderservice.modules.tea.Tea;
 import com.justin.teaorderservice.modules.tea.TeaRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -14,6 +20,7 @@ public class TestDataInit {
 
     private final TeaRepository teaRepository;
     private final AuthorityRepository authorityRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @PostConstruct
     public void init(){
@@ -34,5 +41,21 @@ public class TestDataInit {
         authorityRepository.save(new Authority(1L,"ADMIN"));
         authorityRepository.save(new Authority(2L,"MANAGER"));
         authorityRepository.save(new Authority(3L,"USER"));
+
+        Authority authority = Authority.builder()
+                .authorityName("ADMIN")
+                .build();
+
+        String uuid = UUID.randomUUID().toString();
+        Member member = Member.builder()
+                .userId(uuid)
+                .encryptedPwd(passwordEncoder.encode("SEOjh1234!"))
+                .simpleEncryptedPwd(passwordEncoder.encode("1234"))
+                .phoneNumber("01011112222")
+                .createDate(LocalDateTime.now())
+                .disabled(false)
+                .point(Integer.valueOf(0))
+                .authorities(Collections.singleton(authority))
+                .build();
     }
 }
