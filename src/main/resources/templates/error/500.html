@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <link th:href="@{/css/bootstrap.min.css}"
-          href="../../css/bootstrap.min.css" rel="stylesheet">
+          href="../css/bootstrap.min.css" rel="stylesheet">
     <style>
         .container {
             max-width: 80%;
@@ -23,7 +23,16 @@
     </div>
 
     <h4 class="mb-3">500 Internal Server Error</h4>
-
+    <ul>
+        <li th:text="|timestamp: ${timestamp}|"></li>
+        <li th:text="|path: ${path}|"></li>
+        <li th:text="|status: ${status}|"></li>
+        <li th:text="|message: ${message}|"></li>
+        <li th:text="|error: ${error}|"></li>
+        <li th:text="|exception: ${exception}|"></li>
+        <li th:text="|errors: ${errors}|"></li>
+        <li th:text="|trace: ${trace}|"></li>
+    </ul>
 
 </div>
 </body>

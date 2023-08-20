@@ -20,11 +20,11 @@
 
     <div>
         <label for="orderId" th:text="#{label.order.id}">Order ID</label>
-        <input type="text" id="orderId" name="orderId" class="form-control" value="" th:value="${order.id}" readonly>
+        <input type="text" id="orderId" name="orderId" class="form-control" value="" th:value="${itemPurchaseForm.id}" readonly>
     </div>
     <div>
         <label for="userId" th:text="#{label.order.userId}">User ID</label>
-        <input type="text" id="userId" name="userId" class="form-control" value="" th:value="${order.userId}" readonly>
+        <input type="text" id="userId" name="userId" class="form-control" value="" th:value="${itemPurchaseForm.userId}" readonly>
     </div>
     <div>
         <label for="orderList" th:text="#{label.order.list}">주문 목록</label>
@@ -39,14 +39,14 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="teaOrder : ${order.teaOrderList}">
-                <td><a href="" th:href="@{|/order/v1/teas/${teaOrder.id}|}"
-                       th:text="${teaOrder.id}">Tea ID</a></td>
-                <td><a href="" th:href="@{|/order/v1/teas/${teaOrder.id}|}" th:text="${teaOrder.teaName}">Tea 이름</a>
+            <tr th:each="itemOrderForm : ${itemPurchaseForm.itemOrderFormList}">
+                <td><a href="" th:href="@{|/view/order/v1/teas/${itemOrderForm.id}|}"
+                       th:text="${itemOrderForm.id}">Tea ID</a></td>
+                <td><a href="" th:href="@{|/view/order/v1/teas/${itemOrderForm.id}|}" th:text="${itemOrderForm.teaName}">Tea 이름</a>
                 </td>
-                <td th:text="${teaOrder.price}">0</td>
-                <td th:text="${teaOrder.quantity}">0</td>
-                <td th:text="${teaOrder.orderQuantity}"></td>
+                <td th:text="${itemOrderForm.price}">0</td>
+                <td th:text="${itemOrderForm.quantity}">0</td>
+                <td th:text="${itemOrderForm.orderQuantity}"></td>
             </tr>
             </tbody>
         </table>

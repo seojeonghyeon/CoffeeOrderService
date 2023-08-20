@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Range;
+import org.springframework.format.annotation.NumberFormat;
 
 @Data
 @Builder
@@ -20,6 +21,7 @@ public class ItemOrderForm {
     @NotNull
     private String teaName;
 
+    @NumberFormat(pattern = "###,###")
     @NotNull
     @PositiveOrZero
     @Range(min = 0, max = 1000000)

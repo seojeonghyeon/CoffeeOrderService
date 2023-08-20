@@ -12,3 +12,8 @@ server:
   error:
     whitelabel:
       enabled: false
+    include-binding-errors: on_param
+    include-stacktrace: on_param
+    include-message: on_param
+    include-exception: true
+

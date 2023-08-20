@@ -13,7 +13,7 @@ import java.util.List;
 public class ItemPurchaseForm {
 
     @Null
-    private String id;
+    private Long id;
 
     @NotBlank
     private String userId;
