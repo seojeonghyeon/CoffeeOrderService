@@ -10,8 +10,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
@@ -56,7 +54,11 @@ public class WebSecurityConfig {
                 .requestMatchers("/image/**").permitAll()
                 .requestMatchers("/file/**").permitAll()
                 .requestMatchers("/css/**").permitAll()
+                .requestMatchers("/resources/**").permitAll()
 
+                /**
+                 * Swagger
+                 */
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers("/swagger-resources/**").permitAll()
@@ -64,15 +66,37 @@ public class WebSecurityConfig {
                 .requestMatchers("/swagger-ui/**").permitAll()
                 .requestMatchers("/swagger/**").permitAll()
 
+                /**
+                 * Docs
+                 */
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers("/docs/*").permitAll()
                 .requestMatchers("/v2/api-docs").permitAll()
                 .requestMatchers("/v3/api-docs/**").permitAll()
 
+                /**
+                 * VIEW
+                 */
                 .and()
                 .authorizeHttpRequests()
+                .requestMatchers("/").permitAll()
+                .requestMatchers("/index.html").permitAll()
+                .requestMatchers("/home.html").permitAll()
                 .requestMatchers("/view/**").permitAll()
+
+
+                /**
+                 * API
+                 *
+                 * URI : /api/order/v1/login
+                 * DESCRIPTION : Order Login
+                 *
+                 * URI : /api/order/v1/members/add
+                 * DESCRIPTION : Add USER Member
+                 */
+                .and()
+                .authorizeHttpRequests()
                 .requestMatchers("/api/order/v1/login").permitAll()
                 .requestMatchers("/api/order/v1/members/add").permitAll()
                 .anyRequest().authenticated()

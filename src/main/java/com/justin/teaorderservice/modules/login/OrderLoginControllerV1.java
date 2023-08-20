@@ -27,7 +27,7 @@ public class OrderLoginControllerV1 {
 
     @PostMapping
     public String simpleLoginV1(@Validated @ModelAttribute("simpleLoginForm") SimpleLoginForm simpleLoginForm, BindingResult bindingResult,
-                                HttpServletRequest request, @RequestParam(defaultValue = "/order/v1/teas") String redirectURL){
+                                HttpServletRequest request, @RequestParam(defaultValue = "/view/order/v1/teas") String redirectURL){
         if(bindingResult.hasErrors()){
             return "login/v1/simpleLoginForm";
         }
@@ -56,7 +56,7 @@ public class OrderLoginControllerV1 {
         if(session != null){
             session.invalidate();
         }
-        return "redirect:/order/v1/home";
+        return "redirect:/view/order/v1/home";
     }
 
 }

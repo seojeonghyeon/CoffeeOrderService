@@ -5,6 +5,8 @@ import com.justin.teaorderservice.modules.member.form.MemberSaveForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -62,7 +64,7 @@ public class MemberControllerV1 {
 
         Member saveMember = memberService.save(member);
         redirectAttributes.addAttribute("userId", saveMember.getUserId());
-        return "redirect:/order/v1/members/{userId}/detail";
+        return "redirect:/view/order/v1/members/{userId}/detail";
     }
 
     @GetMapping("/{userId}/detail")

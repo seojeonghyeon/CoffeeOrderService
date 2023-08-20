@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Slf4j
 @Controller
-@RequestMapping("/order/v1/home")
+@RequestMapping("/view/order/v1/home")
 @RequiredArgsConstructor
 public class OrderHomeController {
 

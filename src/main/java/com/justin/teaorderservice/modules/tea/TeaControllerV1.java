@@ -1,5 +1,6 @@
 package com.justin.teaorderservice.modules.tea;
 
+import com.justin.teaorderservice.infra.argumentresolver.Login;
 import com.justin.teaorderservice.modules.member.Member;
 import com.justin.teaorderservice.modules.order.Order;
 import com.justin.teaorderservice.modules.order.OrderService;
@@ -27,7 +28,7 @@ public class TeaControllerV1 {
     private final OrderService orderService;
 
     @GetMapping
-    public String items( Member loginMember, Model model){
+    public String items(@Login Member loginMember, Model model){
 
         if(loginMember == null){
             return "redirect:/order/v1/login";
@@ -132,7 +133,7 @@ public class TeaControllerV1 {
 
         redirectAttributes.addAttribute("orderId", saveOrder.getId());
         redirectAttributes.addAttribute("status", true);
-        return "redirect:/order/v1/teas/{orderId}/detail";
+        return "redirect:/view/order/v1/teas/{orderId}/detail";
     }
 
 
