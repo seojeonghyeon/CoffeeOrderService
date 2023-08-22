@@ -1,6 +1,7 @@
 package com.justin.teaorderservice.modules.order.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.justin.teaorderservice.modules.tea.response.ResponseTeaOrder;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;

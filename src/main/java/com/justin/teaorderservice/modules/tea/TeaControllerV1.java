@@ -16,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -93,6 +94,8 @@ public class TeaControllerV1 {
 
                 /* 사용자의 Point가 없을 경우 */
                 //추가 필요
+            }else{
+                teaOrderList.remove(i);
             }
         }
 

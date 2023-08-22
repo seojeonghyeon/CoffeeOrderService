@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,12 +20,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 
 @Tag(
@@ -39,6 +36,7 @@ public class MemberApiControllerV1 {
 
     private final MemberService memberService;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final ConversionService conversionService;
 
     @Operation(summary = "회원 가입", description = "Member 추가")
     @ApiResponses({
@@ -50,20 +48,8 @@ public class MemberApiControllerV1 {
     public ResponseEntity<String> addMember(final @RequestBody @Validated RequestMemberSave requestMemberSave) throws ComplexException {
         Map<String, String> errors = new HashMap<>();
 
-        Authority authority = Authority.builder()
-                .authorityName("USER")
-                .build();
-
-        Member member = Member.builder()
-                .userId(UUID.randomUUID().toString())
-                .encryptedPwd(passwordEncoder.encode(requestMemberSave.getPassword()))
-                .simpleEncryptedPwd(passwordEncoder.encode(requestMemberSave.getSimplePassword()))
-                .phoneNumber(requestMemberSave.getPhoneNumber())
-                .createDate(LocalDateTime.now())
-                .disabled(false)
-                .point(Integer.valueOf(0))
-                .authorities(Collections.singleton(authority))
-                .build();
+        requestMemberSave.encodePassword(passwordEncoder.encode(requestMemberSave.getPassword()), passwordEncoder.encode(requestMemberSave.getSimplePassword()));
+        Member member = conversionService.convert(requestMemberSave, Member.class);
 
         if(memberService.hasPhoneNumber(member.getPhoneNumber())){
             errors.put(

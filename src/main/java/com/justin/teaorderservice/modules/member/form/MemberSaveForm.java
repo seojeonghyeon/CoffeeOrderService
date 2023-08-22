@@ -25,4 +25,9 @@ public class MemberSaveForm {
     @NotEmpty
     private String simplePassword;
 
+    public void encodePassword(String encryptedPwd, String simpleEncryptedPwd){
+        this.password = encryptedPwd;
+        this.simplePassword = simpleEncryptedPwd;
+    }
+
 }

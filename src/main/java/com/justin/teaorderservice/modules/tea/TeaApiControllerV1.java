@@ -5,12 +5,11 @@ import com.justin.teaorderservice.infra.exception.ErrorCode;
 import com.justin.teaorderservice.modules.member.Member;
 import com.justin.teaorderservice.modules.member.MemberAdapter;
 import com.justin.teaorderservice.modules.order.*;
-import com.justin.teaorderservice.modules.order.request.RequestItemOrder;
 import com.justin.teaorderservice.modules.order.request.RequestItemPurchase;
 import com.justin.teaorderservice.modules.order.response.ResponseItemOrder;
 import com.justin.teaorderservice.modules.order.response.ResponseItemPurchase;
 import com.justin.teaorderservice.modules.order.response.ResponseOrder;
-import com.justin.teaorderservice.modules.order.response.ResponseTeaOrder;
+import com.justin.teaorderservice.modules.tea.response.ResponseTeaOrder;
 import com.justin.teaorderservice.modules.tea.response.ResponseTea;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -20,6 +19,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,6 +42,7 @@ public class TeaApiControllerV1 {
 
     private final TeaService teaService;
     private final OrderService orderService;
+    private final ConversionService conversionService;
 
     @Operation(summary = "Tea 리스트 확인", description = "Tea 리스트 확인")
     @ApiResponses({
@@ -53,19 +54,7 @@ public class TeaApiControllerV1 {
     @PreAuthorize("hasAnyAuthority('USER','MANAGER','ADMIN')")
     ResponseEntity<ResponseItemPurchase> items(){
         List<Tea> teas = teaService.findAll();
-
-        List<ResponseItemOrder> responseItemOrderList = new ArrayList<>();
-        for(Tea tea : teas){
-            ResponseItemOrder itemOrder = ResponseItemOrder.builder()
-                    .id(tea.getId())
-                    .teaName(tea.getTeaName())
-                    .price(tea.getPrice())
-                    .quantity(tea.getQuantity())
-                    .orderQuantity(Integer.valueOf(0))
-                    .build();
-            responseItemOrderList.add(itemOrder);
-        }
-
+        List<ResponseItemOrder> responseItemOrderList = conversionService.convert(teas, List.class);
         ResponseItemPurchase responseItemPurchase = ResponseItemPurchase.builder()
                 .userId(UUID.randomUUID().toString())
                 .itemOrderFormList(responseItemOrderList)
@@ -82,15 +71,7 @@ public class TeaApiControllerV1 {
     @GetMapping("/{teaId}")
     public ResponseEntity<ResponseTea> tea(@PathVariable long teaId){
         Tea tea = teaService.findById(teaId);
-        ResponseTea responseTea = ResponseTea.builder()
-                .id(tea.getId())
-                .teaImage(tea.getTeaImage())
-                .teaName(tea.getTeaName())
-                .teaImage(tea.getTeaImage())
-                .description(tea.getDescription())
-                .price(tea.getPrice())
-                .quantity(tea.getQuantity())
-                .build();
+        ResponseTea responseTea = conversionService.convert(tea, ResponseTea.class);
         return ResponseEntity.status(HttpStatus.OK).body(responseTea);
     }
 
@@ -121,17 +102,7 @@ public class TeaApiControllerV1 {
         }
 
         List<TeaOrder> teaOrderList = order.getTeaOrderList();
-        List<ResponseTeaOrder> responseTeaOrderList = new ArrayList<>();
-        for(TeaOrder teaOrder : teaOrderList){
-            ResponseTeaOrder responseTeaOrder = ResponseTeaOrder.builder()
-                    .id(teaOrder.getId())
-                    .teaName(teaOrder.getTeaName())
-                    .orderQuantity(teaOrder.getOrderQuantity())
-                    .quantity(teaOrder.getQuantity())
-                    .price(teaOrder.getPrice())
-                    .build();
-            responseTeaOrderList.add(responseTeaOrder);
-        }
+        List<ResponseTeaOrder> responseTeaOrderList = conversionService.convert(teaOrderList, List.class);
 
         ResponseOrder responseOrder = ResponseOrder.builder()
                 .id(order.getId())
@@ -166,18 +137,18 @@ public class TeaApiControllerV1 {
             throw new ComplexException(errors);
         }
 
+        Order order = conversionService.convert(requestItemPurchase, Order.class);
         List<Tea> teas = teaService.findAll();
-        List<TeaOrder> teaOrderList = new ArrayList<>();
-        List<RequestItemOrder> requestItemOrderList = requestItemPurchase.getRequestItemOrderList();
+        List<TeaOrder> teaOrderList = order.getTeaOrderList();
 
         int tea_max = teas.size();
 
         for(int i = 0; i < tea_max; ++i){
-            RequestItemOrder requestItemOrder = requestItemOrderList.get(i);
-            boolean isNotZeroTheOrderQuantity = requestItemOrder.getOrderQuantity() != 0;
+            TeaOrder teaOrder = teaOrderList.get(i);
+            boolean isNotZeroTheOrderQuantity = teaOrder.getOrderQuantity() != 0;
             if(isNotZeroTheOrderQuantity) {
                 Tea tea = teas.get(i);
-                Integer remaining = tea.getQuantity() - requestItemOrder.getOrderQuantity();
+                Integer remaining = tea.getQuantity() - teaOrder.getOrderQuantity();
                 boolean isNoRemaining = remaining < 0;
 
                 /**
@@ -185,18 +156,18 @@ public class TeaApiControllerV1 {
                  */
                 if(0 == tea.getQuantity()){
                     errors.put(
-                            requestItemOrderList.get(i).toString(),
+                            teaOrderList.get(i).toString(),
                             String.format(
                                     ErrorCode.NoQuantity.getDescription()
                             )
                     );
                 }else if(isNoRemaining){
                     errors.put(
-                            requestItemOrderList.get(i).toString(),
+                            teaOrderList.get(i).toString(),
                             String.format(
                                     ErrorCode.LessQuantityThanOrderQuantity.getDescription(),
                                     tea.getQuantity(),
-                                    requestItemOrder.getOrderQuantity()
+                                    teaOrder.getOrderQuantity()
                             )
                     );
                 }
@@ -206,15 +177,8 @@ public class TeaApiControllerV1 {
                  */
                 //추가 필요
 
-
-                TeaOrder teaOrder = TeaOrder.builder()
-                        .id(requestItemOrder.getId())
-                        .teaName(requestItemOrder.getTeaName())
-                        .price(requestItemOrder.getPrice())
-                        .orderQuantity(requestItemOrder.getOrderQuantity())
-                        .quantity(requestItemOrder.getQuantity())
-                        .build();
-                teaOrderList.add(teaOrder);
+            }else{
+                teaOrderList.remove(i);
             }
         }
         if(!errors.isEmpty()){
