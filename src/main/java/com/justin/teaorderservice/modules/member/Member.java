@@ -1,21 +1,22 @@
 package com.justin.teaorderservice.modules.member;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.Set;
 
-@Data
-@Builder
+@Getter
+@Setter
+@Builder @AllArgsConstructor
+@NoArgsConstructor
 public class Member {
     private Long id;
     private String userId;
     private String phoneNumber;
-    private String encryptedPwd;
-    private String simpleEncryptedPwd;
+    private String password;
+    private String simplePassword;
     private Integer point;
-    private boolean disabled;
+    private Boolean disabled;
     private LocalDateTime createDate;
     private Set<Authority> authorities;
 }

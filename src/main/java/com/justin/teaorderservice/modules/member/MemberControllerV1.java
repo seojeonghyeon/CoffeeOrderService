@@ -4,6 +4,7 @@ package com.justin.teaorderservice.modules.member;
 import com.justin.teaorderservice.modules.member.form.MemberSaveForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.UUID;
+
 @Slf4j
 @Controller
 @RequestMapping("/view/order/v1/members")
@@ -21,7 +24,7 @@ public class MemberControllerV1 {
 
     private final MemberService memberService;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final ConversionService conversionService;
+    private final ModelMapper modelMapper;
 
     @GetMapping("/add")
     public String addMember(@ModelAttribute MemberSaveForm memberSaveForm){
@@ -36,7 +39,8 @@ public class MemberControllerV1 {
         }
 
         memberSaveForm.encodePassword(passwordEncoder.encode(memberSaveForm.getPassword()), passwordEncoder.encode(memberSaveForm.getSimplePassword()));
-        Member member = conversionService.convert(memberSaveForm, Member.class);
+        Member member = modelMapper.map(memberSaveForm, Member.class);
+        member.setUserId(UUID.randomUUID().toString());
 
         if(memberService.hasPhoneNumber(member.getPhoneNumber())){
             bindingResult.reject("hasPhoneNumber",

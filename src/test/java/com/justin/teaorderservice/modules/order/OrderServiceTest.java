@@ -1,7 +1,7 @@
 package com.justin.teaorderservice.modules.order;
 
 import com.justin.teaorderservice.infra.MockMvcTest;
-import com.justin.teaorderservice.modules.tea.TeaOrder;
+import com.justin.teaorderservice.modules.teaorder.TeaOrder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

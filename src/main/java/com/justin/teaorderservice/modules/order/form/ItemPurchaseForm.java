@@ -4,12 +4,14 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
+
 import java.util.List;
 
-@Data
-@Builder
+@Getter
+@Setter
+@Builder @AllArgsConstructor
+@NoArgsConstructor
 public class ItemPurchaseForm {
 
     @Null

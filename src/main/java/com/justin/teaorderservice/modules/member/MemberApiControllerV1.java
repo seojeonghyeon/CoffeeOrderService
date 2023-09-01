@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +37,7 @@ public class MemberApiControllerV1 {
 
     private final MemberService memberService;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final ConversionService conversionService;
+    private final ModelMapper modelMapper;
 
     @Operation(summary = "회원 가입", description = "Member 추가")
     @ApiResponses({
@@ -49,7 +50,7 @@ public class MemberApiControllerV1 {
         Map<String, String> errors = new HashMap<>();
 
         requestMemberSave.encodePassword(passwordEncoder.encode(requestMemberSave.getPassword()), passwordEncoder.encode(requestMemberSave.getSimplePassword()));
-        Member member = conversionService.convert(requestMemberSave, Member.class);
+        Member member = modelMapper.map(requestMemberSave, Member.class);
 
         if(memberService.hasPhoneNumber(member.getPhoneNumber())){
             errors.put(

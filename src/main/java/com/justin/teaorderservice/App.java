@@ -21,13 +21,4 @@ public class App {
         SpringApplication.run(App.class, args);
     }
 
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder(){return new BCryptPasswordEncoder();}
-
-    @PostConstruct
-    public void started(){
-        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
-        log.info("현재 시각 : "+new Date());
-    }
-
 }

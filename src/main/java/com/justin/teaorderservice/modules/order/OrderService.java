@@ -1,7 +1,7 @@
 package com.justin.teaorderservice.modules.order;
 
 
-import com.justin.teaorderservice.modules.tea.TeaOrder;
+import com.justin.teaorderservice.modules.teaorder.TeaOrder;
 import java.util.List;
 
 public interface OrderService {

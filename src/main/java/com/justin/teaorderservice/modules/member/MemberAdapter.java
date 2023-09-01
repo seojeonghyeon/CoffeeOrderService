@@ -14,7 +14,7 @@ public class MemberAdapter extends User {
     private final Member member;
 
     public MemberAdapter(Member member) {
-        super(member.getPhoneNumber(), member.getEncryptedPwd(), authorities(member.getAuthorities()));
+        super(member.getPhoneNumber(), member.getPassword(), authorities(member.getAuthorities()));
         this.member = member;
     }
 

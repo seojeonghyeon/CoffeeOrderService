@@ -1,11 +1,12 @@
 package com.justin.teaorderservice.modules.member;
 
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @Builder
+@NoArgsConstructor
 public class Authority {
     private Long id;
     private String authorityName;

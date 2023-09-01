@@ -26,7 +26,7 @@ public class LoginServiceImpl implements LoginService{
     @Override
     public Member simpleLogin(String phoneNumber, String simplePassword) {
         return memberRepository.findByPhoneNumber(phoneNumber)
-                .filter(member -> passwordEncoder.matches(simplePassword, member.getSimpleEncryptedPwd()))
+                .filter(member -> passwordEncoder.matches(simplePassword, member.getSimplePassword()))
                 .orElse(null);
     }
 
@@ -39,7 +39,7 @@ public class LoginServiceImpl implements LoginService{
     @Override
     public Member login(String phoneNumber, String password) {
         return memberRepository.findByPhoneNumber(phoneNumber)
-                .filter(member -> passwordEncoder.matches(password, member.getEncryptedPwd()))
+                .filter(member -> passwordEncoder.matches(password, member.getPassword()))
                 .orElse(null);
     }
 }

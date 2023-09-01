@@ -17,7 +17,7 @@ public class MemberServiceImpl implements  MemberService{
 
     @Override
     public Member findByUserId(String userId) {
-        return memberRepository.findByUserId(userId).filter(member -> member.isDisabled() == false).orElse(null);
+        return memberRepository.findByUserId(userId).filter(member -> member.getDisabled() == false).orElse(null);
     }
 
     @Override
@@ -27,7 +27,7 @@ public class MemberServiceImpl implements  MemberService{
 
     @Override
     public Member findByPhoneNumber(String phoneNumber) {
-        return memberRepository.findByPhoneNumber(phoneNumber).filter(member -> member.isDisabled() == false).orElse(null);
+        return memberRepository.findByPhoneNumber(phoneNumber).filter(member -> member.getDisabled() == false).orElse(null);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class MemberServiceImpl implements  MemberService{
     @Override
     public UserDetails loadUserByUsername(String username) {
         Member findMember = memberRepository.findByUserId(username)
-                .filter(member -> member.isDisabled() == false)
+                .filter(member -> member.getDisabled() == false)
                 .orElseThrow(() -> new UsernameNotFoundException(String.format("Not found in Database : {}", username)));
         return new MemberAdapter(findMember);
     }

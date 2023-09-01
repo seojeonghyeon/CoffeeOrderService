@@ -4,6 +4,6 @@ import java.util.List;
 
 public interface TeaService {
     List<Tea> findAll();
-    Tea findById(Long teaId);
+    Tea findById(Long id);
     void update(Long teaId, Tea tea);
 }

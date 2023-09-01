@@ -1,7 +1,7 @@
 package com.justin.teaorderservice.modules.order;
 
 import com.justin.teaorderservice.modules.tea.Tea;
-import com.justin.teaorderservice.modules.tea.TeaOrder;
+import com.justin.teaorderservice.modules.teaorder.TeaOrder;
 import com.justin.teaorderservice.modules.tea.TeaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,20 +35,20 @@ public class OrderServiceImpl implements OrderService{
         /**
          * 재고 감소
          */
-        for(int i = 0; i < orderSize; ++i){
-            TeaOrder teaOrder = teaOrderList.get(i);
-            boolean isNotZeroTheOrderQuantity = teaOrder.getOrderQuantity() != 0;
-            if(isNotZeroTheOrderQuantity) {
-                Tea tea = teaService.findById(teaOrder.getId());
-                Integer remaining = tea.getQuantity() - teaOrder.getOrderQuantity();
+        teaOrderList.stream().forEach(teaOrder -> {
+            Tea tea = teaService.findById(teaOrder.getId());
+            Integer remaining = tea.getQuantity() - teaOrder.getOrderQuantity();
+            if(remaining >= 0){
                 teaOrder.setOrderQuantity(teaOrder.getOrderQuantity());
                 tea.setQuantity(remaining);
                 teaService.update(tea.getId(), tea);
+
+                /**
+                 * 사용자 Point 감소
+                 */
             }
-        }
-        /**
-         * 사용자 Point 감소
-         */
+        });
+
 
         /**
          * 주문 저장

@@ -1,22 +1,24 @@
 package com.justin.teaorderservice.modules.order.form;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.PositiveOrZero;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.NumberFormat;
+import org.springframework.lang.Nullable;
 
-@Data
-@Builder
+@Getter
+@Setter
+@Builder @AllArgsConstructor
 @NoArgsConstructor
-@AllArgsConstructor
 public class ItemOrderForm {
 
     @NotNull
     private Long id;
+
+    @NotNull
+    private String teaId;
 
     @NotNull
     private String teaName;
@@ -32,7 +34,7 @@ public class ItemOrderForm {
     @Range(min = 0)
     private Integer quantity;
 
-    @NotNull
+    @Nullable
     @PositiveOrZero
     @Range(min = 0, max = 1000)
     private Integer orderQuantity;

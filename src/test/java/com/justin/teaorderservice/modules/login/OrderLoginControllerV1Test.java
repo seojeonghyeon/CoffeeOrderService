@@ -55,8 +55,8 @@ class OrderLoginControllerV1Test {
 
         Member member = Member.builder()
                 .userId(UUID.randomUUID().toString())
-                .encryptedPwd(passwordEncoder.encode("SEOjh1234!"))
-                .simpleEncryptedPwd(passwordEncoder.encode("1234"))
+                .password(passwordEncoder.encode("SEOjh1234!"))
+                .simplePassword(passwordEncoder.encode("1234"))
                 .phoneNumber("01012341234")
                 .createDate(LocalDateTime.now())
                 .disabled(false)
@@ -84,8 +84,8 @@ class OrderLoginControllerV1Test {
 
         Member member = Member.builder()
                 .userId(UUID.randomUUID().toString())
-                .encryptedPwd(passwordEncoder.encode("SEOjh1234!"))
-                .simpleEncryptedPwd(passwordEncoder.encode("1234"))
+                .password(passwordEncoder.encode("SEOjh1234!"))
+                .simplePassword(passwordEncoder.encode("1234"))
                 .phoneNumber("01012341234")
                 .createDate(LocalDateTime.now())
                 .disabled(false)
@@ -113,8 +113,8 @@ class OrderLoginControllerV1Test {
 
         Member member = Member.builder()
                 .userId(UUID.randomUUID().toString())
-                .encryptedPwd(passwordEncoder.encode("SEOjh1234!"))
-                .simpleEncryptedPwd(passwordEncoder.encode("1234"))
+                .password(passwordEncoder.encode("SEOjh1234!"))
+                .simplePassword(passwordEncoder.encode("1234"))
                 .phoneNumber("01012341234")
                 .createDate(LocalDateTime.now())
                 .disabled(false)

@@ -21,8 +21,8 @@ public class TeaServiceImpl implements TeaService {
     }
 
     @Override
-    public Tea findById(Long teaId) {
-        return teaRepository.findById(teaId);
+    public Tea findById(Long id) {
+        return teaRepository.findById(id);
     }
 
     @Transactional
