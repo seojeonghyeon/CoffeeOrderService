@@ -2,6 +2,7 @@ package com.justin.teaorderservice.modules.order;
 
 import com.justin.teaorderservice.infra.MockMvcTest;
 import com.justin.teaorderservice.modules.teaorder.TeaOrder;
+import com.justin.teaorderservice.modules.teaorder.TeaOrderService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,6 +24,9 @@ class OrderServiceTest {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private TeaOrderService teaOrderService;
+
     @BeforeEach
     void orderSave(){
         List<TeaOrder> teaOrderList = new ArrayList<>();
@@ -38,8 +42,8 @@ class OrderServiceTest {
 
         Order order = Order.builder()
                 .userId("e31e376e-fe1e-47ab-ac13-3e16e81e0333")
-                .teaOrderList(teaOrderList)
                 .build();
+        teaOrderList.forEach(getTeaOrder -> teaOrderService.save(teaOrder));
         Order saveOrder = orderService.save(order);
     }
 

@@ -40,7 +40,7 @@ public class OrderLoginControllerV1 {
         if(member == null){
             bindingResult.reject("loginFail", new Object[]{}, null);
             return "login/v1/simpleLoginForm";
-        }else if(member.isDisabled()){
+        }else if(member.getDisabled()){
             bindingResult.reject("isDisabled", new Object[]{}, null);
             return "login/v1/simpleLoginForm";
         }

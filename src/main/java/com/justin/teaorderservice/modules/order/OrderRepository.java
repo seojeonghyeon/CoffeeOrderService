@@ -25,11 +25,6 @@ public class OrderRepository {
         return new ArrayList<>(store.values());
     }
 
-    public void update(Long orderId, Order updateParam){
-        Order findOrder = findById(orderId);
-        findOrder.setTeaOrderList(updateParam.getTeaOrderList());
-    }
-
     public void clearStore(){
         store.clear();
     }
