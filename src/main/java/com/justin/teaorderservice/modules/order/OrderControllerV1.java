@@ -39,7 +39,7 @@ public class OrderControllerV1 {
 
         List<Tea> teas = teaService.findAll();
         List<ItemOrderForm> itemOrderFormList = new ArrayList<>();
-        teas.stream().forEach(tea -> itemOrderFormList.add(modelMapper.map(tea, ItemOrderForm.class)));
+        teas.forEach(tea -> itemOrderFormList.add(modelMapper.map(tea, ItemOrderForm.class)));
 
         ItemPurchaseForm itemPurchaseForm = ItemPurchaseForm.builder()
                 .userId(loginMember.getUserId())
@@ -62,45 +62,47 @@ public class OrderControllerV1 {
     @PostMapping
     public String addOrder(@Validated @ModelAttribute("itemPurchaseForm") ItemPurchaseForm itemPurchaseForm, BindingResult bindingResult,
                            RedirectAttributes redirectAttributes){
-        /* Validation 상의 오류가 존재할 경우 */
         if(bindingResult.hasErrors()){
             log.info("error={}",bindingResult);
             return "order/v1/addItems";
         }
 
+        String userId = itemPurchaseForm.getUserId();
         List<ItemOrderForm> itemOrderFormList = itemPurchaseForm.getItemOrderFormList();
         List<TeaOrder> teaOrderList = new ArrayList<>();
-        itemOrderFormList.stream().forEach(order -> {
+        itemOrderFormList.forEach(order -> {
             if(order.getOrderQuantity() != null && order.getOrderQuantity() != 0){
                 teaOrderList.add(modelMapper.map(order, TeaOrder.class));
             }
         });
 
-        for(TeaOrder teaOrder : teaOrderList){
-            Tea tea = teaService.findById(teaOrder.getTeaId());
-            if(tea != null){
-                boolean isNoRemaining = tea.getQuantity() - teaOrder.getOrderQuantity() < 0;
-                if(isNoRemaining){
-                    bindingResult.reject("noRemaining",
-                            new Object[]{teaOrder.getOrderQuantity(), tea.getQuantity()}, null);
-                }
-                /* Point가 없는 경우 */
-            }else{
-                bindingResult.reject("noTea",
-                        new Object[]{}, null);
-            }
-        }
+        teaOrderList.forEach(teaOrder -> validation(userId, teaOrder, bindingResult));
 
-        /* Process 처리 상의 오류가 존재할 경우 */
         if(bindingResult.hasErrors()){
             log.info("error={}",bindingResult);
             return "order/v1/addItems";
         }
 
-        Order saveOrder = orderService.saveOrder(itemPurchaseForm.getUserId(), teaOrderList);
+        Order saveOrder = orderService.saveOrder(userId, teaOrderList);
 
         redirectAttributes.addAttribute("orderId", saveOrder.getId());
         redirectAttributes.addAttribute("status", true);
         return "redirect:/view/order/v1/orders/{orderId}/detail";
     }
+
+    private void validation(String userId, TeaOrder teaOrder, BindingResult bindingResult){
+        Tea tea = teaService.findById(teaOrder.getTeaId());
+        if(tea != null){
+            boolean isNoRemaining = tea.getQuantity() - teaOrder.getOrderQuantity() < 0;
+            if(isNoRemaining){
+                bindingResult.reject("noRemaining",
+                        new Object[]{teaOrder.getOrderQuantity(), tea.getQuantity()}, null);
+            }
+            /* Point가 없는 경우 */
+        }else{
+            bindingResult.reject("noTea",
+                    new Object[]{}, null);
+        }
+    }
+
 }

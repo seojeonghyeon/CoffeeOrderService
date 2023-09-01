@@ -9,7 +9,8 @@ public enum ErrorCode {
     LoginFail(4005, "Login Fail : No exist account"),
     IDisDisabled(4006, "Login Fail : ID is Disabled"),
     NoMatchOrderIdWithUserId(4007, "Order ID isn't in User ID"),
-    NoMatchUserID(4008, "User ID isn't match");
+    NoMatchUserID(4008, "User ID isn't match"),
+    NoTea(4009, "No Tea");
 
     private final int code;
     private final String description;

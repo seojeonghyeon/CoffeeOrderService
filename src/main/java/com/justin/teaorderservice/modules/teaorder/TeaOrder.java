@@ -14,5 +14,12 @@ public class TeaOrder {
     private Integer price;
     private Integer quantity;
     private Integer orderQuantity;
-    private Boolean disabled;
+
+    @Builder.Default
+    private Boolean disabled = true;
+
+    public void updateQuantity(Integer quantity){
+        this.quantity = quantity;
+        this.disabled = false;
+    }
 }

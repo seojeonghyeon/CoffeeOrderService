@@ -30,4 +30,5 @@ public class TeaServiceImpl implements TeaService {
     public void update(Long teaId, Tea tea) {
         teaRepository.update(teaId, tea);
     }
+
 }

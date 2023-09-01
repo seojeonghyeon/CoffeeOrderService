@@ -1,5 +1,7 @@
 package com.justin.teaorderservice.modules.tea;
 
+import com.justin.teaorderservice.modules.member.Member;
+import com.justin.teaorderservice.modules.member.MemberAdapter;
 import com.justin.teaorderservice.modules.order.response.ResponseItemOrder;
 import com.justin.teaorderservice.modules.order.response.ResponseItemPurchase;
 import com.justin.teaorderservice.modules.tea.response.ResponseTea;
@@ -15,6 +17,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,13 +44,14 @@ public class TeaApiControllerV1 {
     })
     @GetMapping
     @PreAuthorize("hasAnyAuthority('USER','MANAGER','ADMIN')")
-    ResponseEntity<ResponseItemPurchase> items(){
+    ResponseEntity<ResponseItemPurchase> items(@AuthenticationPrincipal MemberAdapter memberAdapter){
+        Member member = memberAdapter.getMember();
         List<Tea> teas = teaService.findAll();
         List<ResponseItemOrder> responseItemOrderList = new ArrayList<>();
-        teas.stream().forEach(tea -> responseItemOrderList.add(modelMapper.map(tea, ResponseItemOrder.class)));
+        teas.forEach(tea -> responseItemOrderList.add(modelMapper.map(tea, ResponseItemOrder.class)));
 
         ResponseItemPurchase responseItemPurchase = ResponseItemPurchase.builder()
-                .userId(UUID.randomUUID().toString())
+                .userId(member.getUserId())
                 .itemOrderFormList(responseItemOrderList)
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(responseItemPurchase);
