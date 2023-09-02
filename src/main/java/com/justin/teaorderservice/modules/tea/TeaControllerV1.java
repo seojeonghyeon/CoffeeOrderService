@@ -21,11 +21,4 @@ public class TeaControllerV1 {
         return "order/v1/tea";
     }
 
-
-
-
-
-
-
-
 }
