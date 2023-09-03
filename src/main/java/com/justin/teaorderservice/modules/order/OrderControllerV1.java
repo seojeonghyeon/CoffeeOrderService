@@ -2,6 +2,7 @@ package com.justin.teaorderservice.modules.order;
 
 import com.justin.teaorderservice.infra.argumentresolver.Login;
 import com.justin.teaorderservice.modules.member.Member;
+import com.justin.teaorderservice.modules.member.MemberService;
 import com.justin.teaorderservice.modules.teaorder.TeaOrderService;
 import com.justin.teaorderservice.modules.teaorder.form.ItemOrderForm;
 import com.justin.teaorderservice.modules.order.form.ItemPurchaseForm;
@@ -20,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * NAME : Order View Controller V1
@@ -31,6 +33,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderControllerV1 {
 
+    private final MemberService memberService;
     private final TeaService teaService;
     private final OrderService orderService;
     private final TeaOrderService teaOrderService;
@@ -107,6 +110,7 @@ public class OrderControllerV1 {
         String userId = itemPurchaseForm.getUserId();
         List<ItemOrderForm> itemOrderFormList = itemPurchaseForm.getItemOrderFormList();
         List<TeaOrder> teaOrderList = new ArrayList<>();
+        AtomicInteger totalCost = new AtomicInteger();
         itemOrderFormList.forEach(itemOrderForm -> {
             if(itemOrderForm.getOrderQuantity() != null && itemOrderForm.getOrderQuantity() != 0){
                 TeaOrder teaOrder = TeaOrder.builder()
@@ -118,10 +122,11 @@ public class OrderControllerV1 {
                         .disabled(false)
                         .build();
                 teaOrderList.add(teaOrder);
+                totalCost.set(totalCost.intValue()+teaOrder.getPrice());
             }
         });
-
-        teaOrderList.forEach(teaOrder -> validation(userId, teaOrder, bindingResult));
+        validation(userId, totalCost.intValue(), bindingResult);
+        teaOrderList.forEach(teaOrder -> validation(teaOrder, bindingResult));
 
         if(bindingResult.hasErrors()){
             log.info("error={}",bindingResult);
@@ -135,7 +140,7 @@ public class OrderControllerV1 {
         return "redirect:/view/order/v1/orders/{orderId}/detail";
     }
 
-    private void validation(String userId, TeaOrder teaOrder, BindingResult bindingResult){
+    private void validation(TeaOrder teaOrder, BindingResult bindingResult){
         Tea tea = teaService.findById(teaOrder.getTeaId());
         if(tea != null){
             boolean isNoRemaining = tea.getQuantity() - teaOrder.getOrderQuantity() < 0;
@@ -143,10 +148,17 @@ public class OrderControllerV1 {
                 bindingResult.reject("noRemaining",
                         new Object[]{teaOrder.getOrderQuantity(), tea.getQuantity()}, null);
             }
-            /* Point가 없는 경우 */
         }else{
             bindingResult.reject("noTea",
                     new Object[]{}, null);
+        }
+    }
+
+    private void validation(String userId, Integer totalCost, BindingResult bindingResult){
+        Member member = memberService.findByUserId(userId);
+        if(totalCost.compareTo(member.getPoint()) > 0){
+            bindingResult.reject("lessThePoint",
+                    new Object[]{member.getPoint(), totalCost}, null);
         }
     }
 

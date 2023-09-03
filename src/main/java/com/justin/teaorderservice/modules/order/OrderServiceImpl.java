@@ -1,5 +1,7 @@
 package com.justin.teaorderservice.modules.order;
 
+import com.justin.teaorderservice.modules.member.Member;
+import com.justin.teaorderservice.modules.member.MemberService;
 import com.justin.teaorderservice.modules.tea.Tea;
 import com.justin.teaorderservice.modules.teaorder.TeaOrder;
 import com.justin.teaorderservice.modules.tea.TeaService;
@@ -9,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 @Service
@@ -18,6 +21,7 @@ public class OrderServiceImpl implements OrderService{
 
     private final OrderRepository orderRepository;
     private final TeaOrderService teaOrderService;
+    private final MemberService memberService;
 
     @Override
     public Order findById(Long orderId) {
@@ -50,6 +54,12 @@ public class OrderServiceImpl implements OrderService{
             teaOrderService.save(teaOrder);
         });
 
+        AtomicInteger totalCost = new AtomicInteger();
+        teaOrderList.stream().filter(teaOrder -> teaOrder.getDisabled()==false)
+                .forEach(teaOrder -> totalCost.set(totalCost.intValue() + teaOrder.getPrice().intValue()));
+        Member member = memberService.findByUserId(userId);
+        member.setPoint(member.getPoint() - totalCost.intValue());
+        memberService.save(member);
         return saveOrder;
     }
 
