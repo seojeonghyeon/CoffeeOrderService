@@ -46,7 +46,7 @@ public class OrderLoginApiControllerV1 {
                             ErrorCode.LoginFail.getDescription()
                     )
             );
-        }else if(member.isDisabled()){
+        }else if(member.getDisabled()){
             errors.put(
                     requestLogin.getPhoneNumber(),
                     String.format(

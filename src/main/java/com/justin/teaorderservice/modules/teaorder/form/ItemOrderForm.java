@@ -1,4 +1,4 @@
-package com.justin.teaorderservice.modules.order.form;
+package com.justin.teaorderservice.modules.teaorder.form;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
@@ -16,9 +16,6 @@ public class ItemOrderForm {
 
     @NotNull
     private Long id;
-
-    @NotNull
-    private String teaId;
 
     @NotNull
     private String teaName;

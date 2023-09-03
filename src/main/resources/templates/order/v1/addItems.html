@@ -41,7 +41,6 @@
                 <thead>
                 <tr>
                     <th th:text="#{label.item.id}">Tea ID</th>
-                    <th th:text="#{label.item.teaId}">Tea ID</th>
                     <th th:text="#{label.item.itemName}">상품명</th>
                     <th th:text="#{label.item.price}">가격</th>
                     <th th:text="#{label.item.quantity}">재고 수량</th>
@@ -54,10 +53,6 @@
                     <td>
                         <input th:field="*{itemOrderFormList[__${itemOrderFormStat.index}__].id}"
                            class="form-control" readonly/>
-                    </td>
-                    <td>
-                        <input th:field="*{itemOrderFormList[__${itemOrderFormStat.index}__].teaId}"
-                               class="form-control" readonly/>
                     </td>
                     <td>
                         <input th:field="*{itemOrderFormList[__${itemOrderFormStat.index}__].teaName}"

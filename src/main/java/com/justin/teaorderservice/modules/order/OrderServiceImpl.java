@@ -3,6 +3,7 @@ package com.justin.teaorderservice.modules.order;
 import com.justin.teaorderservice.modules.tea.Tea;
 import com.justin.teaorderservice.modules.teaorder.TeaOrder;
 import com.justin.teaorderservice.modules.tea.TeaService;
+import com.justin.teaorderservice.modules.teaorder.TeaOrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,7 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService{
 
     private final OrderRepository orderRepository;
-    private final TeaService teaService;
+    private final TeaOrderService teaOrderService;
 
     @Override
     public Order findById(Long orderId) {
@@ -24,40 +25,32 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
+    public Order findByUserIdAndId(String userId, Long id) {
+        return orderRepository.findUserIdAndId(userId, id).filter(order -> order.getDisabled()==false).orElse(null);
+    }
+
+    @Override
     public Order save(Order order) {
         return orderRepository.save(order);
     }
 
-    @Transactional
+
     @Override
     public Order saveOrder(String userId, List<TeaOrder> teaOrderList) {
-        int orderSize = teaOrderList.size();
-        /**
-         * 재고 감소
-         */
-        teaOrderList.stream().forEach(teaOrder -> {
-            Tea tea = teaService.findById(teaOrder.getId());
-            Integer remaining = tea.getQuantity() - teaOrder.getOrderQuantity();
-            if(remaining >= 0){
-                teaOrder.setOrderQuantity(teaOrder.getOrderQuantity());
-                tea.setQuantity(remaining);
-                teaService.update(tea.getId(), tea);
+        teaOrderList.stream().forEach(teaOrder -> teaOrderService.update(userId, teaOrder));
 
-                /**
-                 * 사용자 Point 감소
-                 */
-            }
-        });
-
-
-        /**
-         * 주문 저장
-         */
         Order order = Order.builder()
                 .userId(userId)
-                .teaOrderList(teaOrderList)
+                .disabled(false)
                 .build();
         Order saveOrder = this.save(order);
+
+        teaOrderList.stream().forEach(teaOrder -> {
+            teaOrder.setOrderId(saveOrder.getId());
+            teaOrderService.save(teaOrder);
+        });
+
         return saveOrder;
     }
+
 }
