@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <link th:href="@{/css/bootstrap.min.css}"
+          href="../css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            max-width: 80%;
+        }
+        .field-error {
+            border-color: #dc3545;
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="py-5 text-center">
+        <h2>Point 충전 완료</h2>
+    </div>
+
+    <h4 class="mb-3">회원 정보</h4>
+    <div>
+        <label for="point" th:text="#{label.members.point}">Point</label>
+        <input type="text" id="point" th:id="*{point}" th:value="*{point}" class="form-control" readonly>
+    </div>
+    <hr class="my-4">
+    <div class="row">
+        <div class="col">
+            <button class="w-100 btn btn-secondary btn-lg" onclick="location.href='items.html'"
+                    th:onclick="|location.href='@{/view/order/v1/orders}'|"
+                    type="button" th:text="#{button.order}">주문하기</button>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

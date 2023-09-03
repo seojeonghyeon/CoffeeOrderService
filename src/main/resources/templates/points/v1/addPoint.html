@@ -53,13 +53,6 @@
                             수량 오류
                         </div>
                     </td>
-                    <td>
-                        <button class="w-100 btn btn-secondary btn-lg"
-                                onclick="location.href='items.html'"
-                                th:onclick="|location.href='@{|/view/order/v1/teas/${itemOrderForm.id}|}'|"
-                                type="button" th:text="#{label.item.detail}">Tea Detail
-                        </button>
-                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -68,7 +61,7 @@
 
         <div class="row">
             <div class="col">
-                <button class="w-100 btn btn-primary btn-lg" type="submit" th:type="submit" th:text="#{button.pointCharge}">포인트 충전</button>
+                <button class="w-100 btn btn-primary btn-lg" type="submit" th:type="submit" th:text="#{button.addPoint}">포인트 충전</button>
             </div>
             <div class="col">
                 <button class="w-100 btn btn-secondary btn-lg"

@@ -19,4 +19,13 @@ public class Member {
     private Boolean disabled;
     private LocalDateTime createDate;
     private Set<Authority> authorities;
+<<<<<<< Updated upstream
+=======
+
+    public void setUser(String userId){
+        this.userId = userId;
+        this.point = Integer.valueOf(0);
+        this.disabled = false;
+    }
+>>>>>>> Stashed changes
 }
