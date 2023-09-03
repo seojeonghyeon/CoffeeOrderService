@@ -22,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequiredArgsConstructor
 public class PointController {
 
+    private final PointService pointService;
     private final MemberService memberService;
 
     @GetMapping("/add")
@@ -29,9 +30,9 @@ public class PointController {
         if(loginMember == null){
             return "redirect:/order/v1/login";
         }
-        Member getMember = memberService.findByUserId(loginMember.getUserId());
+        Integer point = pointService.findPointById(loginMember.getUserId());
         PointAddForm pointAddForm = PointAddForm.builder()
-                .point(getMember.getPoint())
+                .point(point)
                 .addPoint(Integer.valueOf(0))
                 .build();
         model.addAttribute("pointAddForm", pointAddForm);
@@ -49,32 +50,29 @@ public class PointController {
             return "order/v1/addItems";
         }
 
-        Member member = memberService.findByUserId(loginMember.getUserId());
-        validation(member, pointAddForm, bindingResult);
+        Integer point = pointService.findPointById(loginMember.getUserId());
+        validation(point, pointAddForm.getPoint(), bindingResult);
         if(bindingResult.hasErrors()){
             log.info("error={}",bindingResult);
             return "order/v1/addItems";
         }
-        member.setPoint(member.getPoint()+pointAddForm.getAddPoint());
-        Member saveMember = memberService.save(member);
+        loginMember.setPoint(point+pointAddForm.getAddPoint());
+        Member saveMember = memberService.save(loginMember);
 
         redirectAttributes.addAttribute("point", saveMember.getPoint());
         return "redirect:/view/order/v1/points/detail";
 
     }
 
-    private void validation(Member member, PointAddForm pointAddForm, BindingResult bindingResult){
-        if(member.getPoint() != pointAddForm.getPoint()){
-            bindingResult.reject("noMatchPoint", new Object[]{member.getPoint(), pointAddForm.getPoint()}, null);
+    private void validation(Integer point, Integer getPoint, BindingResult bindingResult){
+        if(point != getPoint){
+            bindingResult.reject("noMatchPoint", new Object[]{point, getPoint}, null);
         }
     }
 
     @GetMapping("/detail")
     public String pointDetail(@Login Member loginMember, Model model){
-        Member member = memberService.findByUserId(loginMember.getUserId());
-        Integer point;
-        if(member == null) point = 0;
-        else point = member.getPoint();
+        Integer point = pointService.findPointById(loginMember.getUserId());
         model.addAttribute("point", point);
         return "points/v1/addResult";
     }
