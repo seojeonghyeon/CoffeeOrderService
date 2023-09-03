@@ -18,9 +18,6 @@ public class ItemOrderForm {
     private Long id;
 
     @NotNull
-    private String teaId;
-
-    @NotNull
     private String teaName;
 
     @NumberFormat(pattern = "###,###")

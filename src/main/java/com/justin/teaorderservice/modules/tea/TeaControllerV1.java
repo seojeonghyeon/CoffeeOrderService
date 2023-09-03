@@ -18,7 +18,7 @@ public class TeaControllerV1 {
     public String tea(@PathVariable long teaId, Model model){
         Tea tea = teaService.findById(teaId);
         model.addAttribute("tea", tea);
-        return "order/v1/tea";
+        return "tea/v1/tea";
     }
 
 }

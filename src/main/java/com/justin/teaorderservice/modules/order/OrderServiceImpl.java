@@ -25,6 +25,11 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
+    public Order findByUserIdAndId(String userId, Long id) {
+        return orderRepository.findUserIdAndId(userId, id).filter(order -> order.getDisabled()==false).orElse(null);
+    }
+
+    @Override
     public Order save(Order order) {
         return orderRepository.save(order);
     }

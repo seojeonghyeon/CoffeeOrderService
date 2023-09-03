@@ -2,10 +2,7 @@ package com.justin.teaorderservice.modules.order;
 
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 public class OrderRepository {
@@ -20,6 +17,12 @@ public class OrderRepository {
 
     public Order findById(Long id){
         return store.get(id);
+    }
+    public Optional<Order> findUserIdAndId(String userId, Long id){
+        return findAll().stream()
+                .filter(order -> order.getId().equals(id))
+                .filter(order -> order.getUserId().equals(userId))
+                .findFirst();
     }
     public List<Order> findAll(){
         return new ArrayList<>(store.values());

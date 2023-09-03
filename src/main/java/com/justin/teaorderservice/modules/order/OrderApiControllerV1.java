@@ -53,11 +53,10 @@ public class OrderApiControllerV1 {
     @PreAuthorize("hasAnyAuthority('USER','MANAGER','ADMIN')")
     public ResponseEntity<ResponseOrder> orderDetail(@PathVariable long orderId, @AuthenticationPrincipal MemberAdapter memberAdapter) throws ComplexException {
         Map<String, String> errors = new HashMap<>();
-
         Member member = memberAdapter.getMember();
-        Order order = orderService.findById(orderId);
+        Order order = orderService.findByUserIdAndId(member.getUserId(), orderId);
 
-        if(!order.getUserId().equals(member.getUserId())){
+        if(order == null){
             errors.put(
                     member.getPhoneNumber(),
                     String.format(
@@ -71,7 +70,16 @@ public class OrderApiControllerV1 {
 
         List<TeaOrder> teaOrderList = teaOrderService.findByOrderId(order.getId());
         List<ResponseTeaOrder> responseTeaOrderList = new ArrayList<>();
-        teaOrderList.stream().forEach(teaOrder -> responseTeaOrderList.add(modelMapper.map(teaOrder, ResponseTeaOrder.class)));
+        teaOrderList.stream().forEach(teaOrder -> {
+            ResponseTeaOrder responseTeaOrder = ResponseTeaOrder.builder()
+                    .id(teaOrder.getTeaId())
+                    .orderQuantity(teaOrder.getOrderQuantity())
+                    .price(teaOrder.getPrice())
+                    .quantity(teaOrder.getQuantity())
+                    .teaName(teaOrder.getTeaName())
+                    .build();
+            responseTeaOrderList.add(responseTeaOrder);
+        });
 
         ResponseOrder responseOrder = ResponseOrder.builder()
                 .id(order.getId())
@@ -111,7 +119,14 @@ public class OrderApiControllerV1 {
         List<TeaOrder> teaOrderList = new ArrayList<>();
         requestItemOrderList.forEach(requestItemOrder -> {
             if(requestItemOrder.getOrderQuantity() != null && requestItemOrder.getOrderQuantity() != 0) {
-                teaOrderList.add(modelMapper.map(requestItemOrder, TeaOrder.class));
+                TeaOrder teaOrder = TeaOrder.builder()
+                        .teaId(requestItemOrder.getId())
+                        .orderQuantity(requestItemOrder.getOrderQuantity())
+                        .quantity(requestItemOrder.getQuantity())
+                        .price(requestItemOrder.getPrice())
+                        .disabled(false)
+                        .build();
+                teaOrderList.add(teaOrder);
             }
         });
 

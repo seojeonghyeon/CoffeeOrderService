@@ -27,7 +27,7 @@ public class OrderLoginControllerV1 {
 
     @PostMapping
     public String simpleLoginV1(@Validated @ModelAttribute("simpleLoginForm") SimpleLoginForm simpleLoginForm, BindingResult bindingResult,
-                                HttpServletRequest request, @RequestParam(defaultValue = "/view/order/v1/teas") String redirectURL){
+                                HttpServletRequest request, @RequestParam(defaultValue = "/view/order/v1/orders") String redirectURL){
         if(bindingResult.hasErrors()){
             return "login/v1/simpleLoginForm";
         }

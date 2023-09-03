@@ -15,6 +15,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.UUID;
 
+/**
+ * NAME : Member View Controller V1
+ * DESCRIPTION : Member View Controller : V1
+ */
 @Slf4j
 @Controller
 @RequestMapping("/view/order/v1/members")
@@ -25,11 +29,22 @@ public class MemberControllerV1 {
     private final BCryptPasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
 
+    /**
+     * @param memberSaveForm 회원 가입 양식
+     * @return 회원가입 페이지
+     */
     @GetMapping("/add")
     public String addMember(@ModelAttribute MemberSaveForm memberSaveForm){
         return "members/v1/addMember";
     }
 
+    /**
+     *
+     * @param memberSaveForm 회원 가입 양식
+     * @param bindingResult Validation
+     * @param redirectAttributes Redirect
+     * @return 회원 가입 내역 확인
+     */
     @PostMapping("/add")
     public String saveMember(@ModelAttribute @Validated MemberSaveForm memberSaveForm, BindingResult bindingResult,
                              RedirectAttributes redirectAttributes){
@@ -39,7 +54,7 @@ public class MemberControllerV1 {
 
         memberSaveForm.encodePassword(passwordEncoder.encode(memberSaveForm.getPassword()), passwordEncoder.encode(memberSaveForm.getSimplePassword()));
         Member member = modelMapper.map(memberSaveForm, Member.class);
-        member.setUserId(UUID.randomUUID().toString());
+        member.setUser(UUID.randomUUID().toString());
 
         if(memberService.hasPhoneNumber(member.getPhoneNumber())){
             bindingResult.reject("hasPhoneNumber",
@@ -53,6 +68,12 @@ public class MemberControllerV1 {
         return "redirect:/view/order/v1/members/{userId}/detail";
     }
 
+    /**
+     *
+     * @param userId 사용자 ID
+     * @param model model
+     * @return 회원 가입 내역 확인 페이지
+     */
     @GetMapping("/{userId}/detail")
     public String memberDetail(@PathVariable String userId, Model model){
         Member member = memberService.findByUserId(userId);

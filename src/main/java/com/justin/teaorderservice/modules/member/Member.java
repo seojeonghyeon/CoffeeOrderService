@@ -19,4 +19,9 @@ public class Member {
     private Boolean disabled;
     private LocalDateTime createDate;
     private Set<Authority> authorities;
+
+    public void setUser(String userId){
+        this.userId = userId;
+        this.disabled = false;
+    }
 }
