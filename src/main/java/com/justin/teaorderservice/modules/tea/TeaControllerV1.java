@@ -6,6 +6,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * NAME : Tea View Controller V1
+ * DESCRIPTION : Tea View Controller : V1
+ */
 @Slf4j
 @Controller
 @RequestMapping("/view/order/v1/teas")
@@ -14,6 +18,11 @@ public class TeaControllerV1 {
 
     private final TeaService teaService;
 
+    /**
+     * @param teaId Tea ID
+     * @param model model
+     * @return Tea 상세 페이지
+     */
     @GetMapping("/{teaId}")
     public String tea(@PathVariable long teaId, Model model){
         Tea tea = teaService.findById(teaId);
