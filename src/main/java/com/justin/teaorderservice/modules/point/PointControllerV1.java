@@ -16,15 +16,24 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+/**
+ * NAME : Point View Controller V1
+ * DESCRIPTION : Point View Controller : V1
+ */
 @Slf4j
 @Controller
 @RequestMapping("/view/order/v1/points")
 @RequiredArgsConstructor
-public class PointController {
+public class PointControllerV1 {
 
     private final PointService pointService;
     private final MemberService memberService;
 
+    /**
+     * @param loginMember Session 정보
+     * @param model model
+     * @return Point 충전 페이지
+     */
     @GetMapping("/add")
     public String points(@Login Member loginMember, Model model){
         if(loginMember == null){
@@ -39,6 +48,13 @@ public class PointController {
         return "points/v1/addPoint";
     }
 
+    /**
+     * @param loginMember Session
+     * @param pointAddForm Point 충전 양식
+     * @param bindingResult Validation
+     * @param redirectAttributes Redirect
+     * @return Redirect URL
+     */
     @PostMapping("/add")
     public String addPoint(@Login Member loginMember, @Validated @ModelAttribute("pointAddForm") PointAddForm pointAddForm, BindingResult bindingResult,
                            RedirectAttributes redirectAttributes){
@@ -70,6 +86,11 @@ public class PointController {
         }
     }
 
+    /**
+     * @param loginMember Session
+     * @param model model
+     * @return Point 충전 결과 페이지
+     */
     @GetMapping("/detail")
     public String pointDetail(@Login Member loginMember, Model model){
         Integer point = pointService.findPointById(loginMember.getUserId());
