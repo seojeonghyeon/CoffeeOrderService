@@ -1,6 +1,7 @@
 package com.justin.teaorderservice.modules.teaorder;
 
 import com.justin.teaorderservice.modules.tea.Tea;
+import com.justin.teaorderservice.modules.tea.TeaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -12,28 +13,24 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class TeaOrderService implements TeaOrderService{
+public class TeaOrderService{
 
     private final TeaOrderRepository teaOrderRepository;
     private final TeaService teaService;
 
-    @Override
     public List<TeaOrder> findByOrderId(Long orderId) {
         return teaOrderRepository.findByOrderId(orderId);
     }
 
-    @Override
     public TeaOrder findById(Long id) {
         return teaOrderRepository.findById(id);
     }
 
-    @Override
     public TeaOrder save(TeaOrder teaOrder) {
         return teaOrderRepository.save(teaOrder);
     }
 
     @Transactional
-    @Override
     public void update(String userId, TeaOrder teaOrder) {
         /**
          * 사용자 Point 감소

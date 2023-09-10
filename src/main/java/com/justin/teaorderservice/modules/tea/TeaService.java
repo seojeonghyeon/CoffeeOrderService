@@ -11,22 +11,19 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class TeaService implements TeaService {
+public class TeaService{
 
     private final TeaRepository teaRepository;
 
-    @Override
     public List<Tea> findAll() {
         return teaRepository.findAll();
     }
 
-    @Override
     public Tea findById(Long id) {
         return teaRepository.findById(id);
     }
 
     @Transactional
-    @Override
     public void update(Long teaId, Tea tea) {
         teaRepository.update(teaId, tea);
     }

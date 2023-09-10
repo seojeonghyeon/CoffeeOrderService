@@ -1,6 +1,7 @@
 package com.justin.teaorderservice.modules.order;
 
 import com.justin.teaorderservice.modules.teaorder.TeaOrder;
+import com.justin.teaorderservice.modules.teaorder.TeaOrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -11,28 +12,23 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class OrderService implements OrderService{
+public class OrderService{
 
     private final OrderRepository orderRepository;
     private final TeaOrderService teaOrderService;
 
-    @Override
     public Order findById(Long orderId) {
         return orderRepository.findById(orderId);
     }
 
-    @Override
     public Order findByUserIdAndId(String userId, Long id) {
         return orderRepository.findUserIdAndId(userId, id).filter(order -> order.getDisabled()==false).orElse(null);
     }
 
-    @Override
     public Order save(Order order) {
         return orderRepository.save(order);
     }
 
-
-    @Override
     public Order saveOrder(String userId, List<TeaOrder> teaOrderList) {
         teaOrderList.stream().forEach(teaOrder -> teaOrderService.update(userId, teaOrder));
 

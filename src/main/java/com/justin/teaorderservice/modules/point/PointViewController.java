@@ -2,6 +2,7 @@ package com.justin.teaorderservice.modules.point;
 
 import com.justin.teaorderservice.infra.argumentresolver.Login;
 import com.justin.teaorderservice.modules.member.Member;
+import com.justin.teaorderservice.modules.member.MemberService;
 import com.justin.teaorderservice.modules.point.form.PointAddForm;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

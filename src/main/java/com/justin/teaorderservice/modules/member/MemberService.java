@@ -11,32 +11,27 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class MemberService implements  MemberService{
+public class MemberService{
 
     private final MemberRepository memberRepository;
 
-    @Override
     public Member findByUserId(String userId) {
         return memberRepository.findByUserId(userId).filter(member -> member.getDisabled() == false).orElse(null);
     }
 
-    @Override
     public Member save(Member member) {
         return memberRepository.save(member);
     }
 
-    @Override
     public Member findByPhoneNumber(String phoneNumber) {
         return memberRepository.findByPhoneNumber(phoneNumber).filter(member -> member.getDisabled() == false).orElse(null);
     }
 
-    @Override
     public boolean hasPhoneNumber(String phoneNumber) {
         return findByPhoneNumber(phoneNumber) != null;
     }
 
     @Transactional
-    @Override
     public UserDetails loadUserByUsername(String username) {
         Member findMember = memberRepository.findByUserId(username)
                 .filter(member -> member.getDisabled() == false)
