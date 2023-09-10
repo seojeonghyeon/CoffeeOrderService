@@ -7,6 +7,8 @@ import com.justin.teaorderservice.modules.tea.Tea;
 import com.justin.teaorderservice.modules.tea.TeaRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +24,7 @@ public class TestDataInit {
     private final AuthorityRepository authorityRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
-    @PostConstruct
+    @EventListener(ApplicationReadyEvent.class)
     public void init(){
         teaRepository.save(new Tea("Americano(Hot)", 2000, 10000,
                 "https://cdn.paris.spl.li/wp-content/uploads/200406_HOT%E1%84%8B%E1%85%A1%E1%84%86%E1%85%A6%E1%84%85%E1%85%B5%E1%84%8F%E1%85%A1%E1%84%82%E1%85%A9-1280x1280.jpg",

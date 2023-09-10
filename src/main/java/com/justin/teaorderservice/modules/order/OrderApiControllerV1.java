@@ -2,6 +2,7 @@ package com.justin.teaorderservice.modules.order;
 
 import com.justin.teaorderservice.infra.exception.ComplexException;
 import com.justin.teaorderservice.infra.exception.ErrorCode;
+import com.justin.teaorderservice.infra.exception.ResponseError;
 import com.justin.teaorderservice.modules.member.Member;
 import com.justin.teaorderservice.modules.member.MemberAdapter;
 import com.justin.teaorderservice.modules.teaorder.request.RequestItemOrder;
@@ -52,20 +53,15 @@ public class OrderApiControllerV1 {
     @GetMapping("/{orderId}/detail")
     @PreAuthorize("hasAnyAuthority('USER','MANAGER','ADMIN')")
     public ResponseEntity<ResponseOrder> orderDetail(@PathVariable long orderId, @AuthenticationPrincipal MemberAdapter memberAdapter) throws ComplexException {
-        Map<String, String> errors = new HashMap<>();
         Member member = memberAdapter.getMember();
         Order order = orderService.findByUserIdAndId(member.getUserId(), orderId);
 
         if(order == null){
-            errors.put(
-                    member.getPhoneNumber(),
-                    String.format(
-                            ErrorCode.NoMatchOrderIdWithUserId.getDescription()
-                    )
-            );
-        }
-        if(!errors.isEmpty()){
-            throw new ComplexException(errors);
+            ResponseError responseError = ResponseError.builder()
+                    .errorCode(ErrorCode.NO_MATCH_ORDER_ID_WITH_USER_ID)
+                    .target(member.getPhoneNumber())
+                    .build();
+            throw new ComplexException(responseError);
         }
 
         List<TeaOrder> teaOrderList = teaOrderService.findByOrderId(order.getId());
@@ -98,20 +94,14 @@ public class OrderApiControllerV1 {
     @PostMapping
     @PreAuthorize("hasAnyAuthority('USER','MANAGER','ADMIN')")
     public ResponseEntity<String> addOrder(@AuthenticationPrincipal MemberAdapter memberAdapter, final @RequestBody @Validated RequestItemPurchase requestItemPurchase) throws ComplexException{
-
-        Map<String, String> errors = new HashMap<>();
         Member member = memberAdapter.getMember();
 
         if(!requestItemPurchase.getUserId().equals(member.getUserId())){
-            errors.put(
-                    member.getPhoneNumber(),
-                    String.format(
-                            ErrorCode.NoMatchUserID.getDescription()
-                    )
-            );
-        }
-        if(!errors.isEmpty()){
-            throw new ComplexException(errors);
+            ResponseError responseError = ResponseError.builder()
+                    .errorCode(ErrorCode.NO_MATCH_USER_ID)
+                    .target(member.getPhoneNumber())
+                    .build();
+            throw new ComplexException(responseError);
         }
 
         String userId = member.getUserId();
@@ -130,38 +120,40 @@ public class OrderApiControllerV1 {
             }
         });
 
-        teaOrderList.forEach(teaOrder -> validation(userId, teaOrder, errors));
-
-        if(!errors.isEmpty()){
-            throw new ComplexException(errors);
-        }
+        teaOrderList.forEach(teaOrder -> {
+            ResponseError responseError = validation(userId, teaOrder);
+            if(responseError != null){
+                try {
+                    throw new ComplexException(responseError);
+                } catch (ComplexException e) {
+                    log.info("ResponseError's target : {} and value : {}", responseError.getTarget(), responseError.getErrorCode());
+                }
+            }
+        });
 
         Order saveOrder = orderService.saveOrder(userId, teaOrderList);
 
         return ResponseEntity.status(HttpStatus.OK).body(saveOrder.getId().toString());
     }
 
-    private void validation(String userId, TeaOrder teaOrder, Map<String, String> errors){
+    private ResponseError validation(String userId, TeaOrder teaOrder){
+        ResponseError responseError = null;
         Tea tea = teaService.findById(teaOrder.getTeaId());
         if(tea != null){
             boolean isNoRemaining = tea.getQuantity() - teaOrder.getOrderQuantity() < 0;
             if(isNoRemaining){
-                errors.put(
-                        teaOrder.getTeaName(),
-                        String.format(
-                                ErrorCode.NoQuantity.getDescription()
-                        )
-                );
+                responseError = ResponseError.builder()
+                        .errorCode(ErrorCode.NO_QUANTITY)
+                        .target(teaOrder.getTeaName())
+                        .build();
             }
             /* Point가 없는 경우 */
         }else{
-            errors.put(
-                    teaOrder.getTeaName(),
-                    String.format(
-                            ErrorCode.NoTea.getDescription()
-                    )
-            );
+             responseError = ResponseError.builder()
+                    .errorCode(ErrorCode.NO_TEA)
+                    .target(teaOrder.getTeaName())
+                    .build();
         }
-
+        return responseError;
     }
 }

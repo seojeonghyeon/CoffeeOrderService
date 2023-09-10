@@ -3,6 +3,7 @@ package com.justin.teaorderservice.modules.login;
 import com.justin.teaorderservice.infra.auth.JwtTokenProvider;
 import com.justin.teaorderservice.infra.exception.ComplexException;
 import com.justin.teaorderservice.infra.exception.ErrorCode;
+import com.justin.teaorderservice.infra.exception.ResponseError;
 import com.justin.teaorderservice.modules.login.request.RequestLogin;
 import com.justin.teaorderservice.modules.member.Member;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,7 +33,6 @@ public class OrderLoginApiControllerV1 {
 
     @PostMapping
     public ResponseEntity<String> loginV1(final @RequestBody @Validated RequestLogin requestLogin) throws ComplexException {
-        Map<String, String> errors = new HashMap<>();
 
         Member member = loginService.login(
                 requestLogin.getPhoneNumber(),
@@ -40,24 +40,19 @@ public class OrderLoginApiControllerV1 {
         );
 
         if(member == null){
-            errors.put(
-                    requestLogin.getPhoneNumber(),
-                    String.format(
-                            ErrorCode.LoginFail.getDescription()
-                    )
-            );
+            ResponseError responseError = ResponseError.builder()
+                    .errorCode(ErrorCode.LOGIN_FAIL)
+                    .target(requestLogin.getPhoneNumber())
+                    .build();
+            throw new ComplexException(responseError);
         }else if(member.getDisabled()){
-            errors.put(
-                    requestLogin.getPhoneNumber(),
-                    String.format(
-                            ErrorCode.IDisDisabled.getDescription()
-                    )
-            );
+            ResponseError responseError = ResponseError.builder()
+                    .errorCode(ErrorCode.IS_DISABLED_ID)
+                    .target(requestLogin.getPhoneNumber())
+                    .build();
+            throw new ComplexException(responseError);
         }
 
-        if(!errors.isEmpty()){
-            throw new ComplexException(errors);
-        }
         String token = jwtTokenProvider.createToken(member.getUserId());
         log.info(token);
 

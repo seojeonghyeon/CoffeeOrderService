@@ -28,8 +28,7 @@ public class ApiControllerAdvice {
     }
 
     @ExceptionHandler({ComplexException.class})
-    public ResponseEntity<Map<String, String>> handleValidationException(ComplexException exception){
-        Map<String, String> errors = exception.getErrors();
-        return ResponseEntity.badRequest().body(errors);
+    public ResponseEntity<ResponseError> handleValidationException(ComplexException exception){
+        return ResponseEntity.badRequest().body(exception.getResponseError());
     }
 }

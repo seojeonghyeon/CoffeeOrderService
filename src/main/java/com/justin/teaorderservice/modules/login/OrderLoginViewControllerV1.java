@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/view/order/v1/login")
 @RequiredArgsConstructor
-public class OrderLoginControllerV1 {
+public class OrderLoginViewControllerV1 {
 
     private final LoginService loginService;
 

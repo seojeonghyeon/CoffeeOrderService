@@ -29,7 +29,7 @@ import java.util.List;
 @Controller
 @RequestMapping("/view/order/v1/orders")
 @RequiredArgsConstructor
-public class OrderControllerV1 {
+public class OrderViewControllerV1 {
 
     private final TeaService teaService;
     private final OrderService orderService;

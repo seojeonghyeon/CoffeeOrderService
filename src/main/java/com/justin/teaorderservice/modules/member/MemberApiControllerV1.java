@@ -2,6 +2,7 @@ package com.justin.teaorderservice.modules.member;
 
 import com.justin.teaorderservice.infra.exception.ComplexException;
 import com.justin.teaorderservice.infra.exception.ErrorCode;
+import com.justin.teaorderservice.infra.exception.ResponseError;
 import com.justin.teaorderservice.modules.member.request.RequestMemberSave;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -47,24 +48,16 @@ public class MemberApiControllerV1 {
     })
     @PostMapping("/add")
     public ResponseEntity<String> addMember(final @RequestBody @Validated RequestMemberSave requestMemberSave) throws ComplexException {
-        Map<String, String> errors = new HashMap<>();
-
         requestMemberSave.encodePassword(passwordEncoder.encode(requestMemberSave.getPassword()), passwordEncoder.encode(requestMemberSave.getSimplePassword()));
         Member member = modelMapper.map(requestMemberSave, Member.class);
         member.setUser(UUID.randomUUID().toString());
 
         if(memberService.hasPhoneNumber(member.getPhoneNumber())){
-            errors.put(
-                    requestMemberSave.getPhoneNumber(),
-                    String.format(
-                            ErrorCode.ExistPhoneNumber.getDescription(),
-                            requestMemberSave.getPhoneNumber()
-                    )
-            );
-        }
-
-        if(!errors.isEmpty()){
-            throw new ComplexException(errors);
+            ResponseError responseError = ResponseError.builder()
+                    .errorCode(ErrorCode.EXIST_PHONE_NUMBER)
+                    .target(requestMemberSave.getPhoneNumber())
+                    .build();
+            throw new ComplexException(responseError);
         }
 
         Member saveMember = memberService.save(member);
@@ -80,24 +73,20 @@ public class MemberApiControllerV1 {
     @GetMapping("/detail")
     @PreAuthorize("hasAnyAuthority('USER','MANAGER','ADMIN')")
     public ResponseEntity<String> memberDetail(@AuthenticationPrincipal MemberAdapter memberAdapter) throws ComplexException{
-        Map<String, String> errors = new HashMap<>();
         Member member = memberAdapter.getMember();
-        log.info("get: member={}", member);
+        log.info("get: member={}", member); //memberId 정도만 아니면 키값정도만
         String phoneNumber = null;
+
         if(member == null){
-            errors.put(
-                    member.getPhoneNumber(),
-                    String.format(
-                            ErrorCode.NoExistPhoneNumber.getDescription()
-                    )
-            );
+            ResponseError responseError = ResponseError.builder()
+                    .errorCode(ErrorCode.NO_EXIST_PHONE_NUMBER)
+                    .target(member.getPhoneNumber())
+                    .build();
+            throw new ComplexException(responseError);
         }else{
             phoneNumber = member.getPhoneNumber();
         }
-        
-        if(!errors.isEmpty()){
-            throw new ComplexException(errors);
-        }
+
         return ResponseEntity.status(HttpStatus.OK).body(phoneNumber);
     }
 

@@ -3,15 +3,15 @@ package com.justin.teaorderservice.infra.exception;
 
 import java.util.Map;
 
-public class ComplexException extends Exception{
+public class ComplexException extends Exception {
 
-    private final Map<String, String> errors;
+    private final ResponseError responseError;
 
-    public ComplexException(Map<String, String> errors){
-        this.errors = errors;
+    public ComplexException(ResponseError responseError){
+        this.responseError = responseError;
     }
 
-    public Map<String, String> getErrors() {
-        return errors;
+    public ResponseError getResponseError() {
+        return responseError;
     }
 }

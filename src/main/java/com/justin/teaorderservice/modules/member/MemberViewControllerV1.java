@@ -23,16 +23,12 @@ import java.util.UUID;
 @Controller
 @RequestMapping("/view/order/v1/members")
 @RequiredArgsConstructor
-public class MemberControllerV1 {
+public class MemberViewControllerV1 {
 
     private final MemberService memberService;
     private final BCryptPasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
 
-    /**
-     * @param memberSaveForm 회원 가입 양식
-     * @return 회원가입 페이지
-     */
     @GetMapping("/add")
     public String addMember(@ModelAttribute MemberSaveForm memberSaveForm){
         return "members/v1/addMember";
