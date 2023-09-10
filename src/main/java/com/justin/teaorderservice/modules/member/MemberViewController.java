@@ -23,7 +23,7 @@ import java.util.UUID;
 @Controller
 @RequestMapping("/view/order/v1/members")
 @RequiredArgsConstructor
-public class MemberViewControllerV1 {
+public class MemberViewController {
 
     private final MemberService memberService;
     private final BCryptPasswordEncoder passwordEncoder;

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/view/order/v1/teas")
 @RequiredArgsConstructor
-public class TeaViewControllerV1 {
+public class TeaViewController {
 
     private final TeaService teaService;
 

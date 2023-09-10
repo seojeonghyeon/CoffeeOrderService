@@ -9,10 +9,8 @@ import com.justin.teaorderservice.modules.teaorder.request.RequestItemOrder;
 import com.justin.teaorderservice.modules.order.request.RequestItemPurchase;
 import com.justin.teaorderservice.modules.order.response.ResponseOrder;
 import com.justin.teaorderservice.modules.tea.Tea;
-import com.justin.teaorderservice.modules.tea.TeaService;
 import com.justin.teaorderservice.modules.teaorder.response.ResponseTeaOrder;
 import com.justin.teaorderservice.modules.teaorder.TeaOrder;
-import com.justin.teaorderservice.modules.teaorder.TeaOrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -30,15 +28,13 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Controller
 @RequestMapping("/api/order/v1/orders")
 @RequiredArgsConstructor
-public class OrderApiControllerV1 {
+public class OrderApiController {
     private final TeaService teaService;
     private final OrderService orderService;
     private final TeaOrderService teaOrderService;

@@ -34,7 +34,7 @@ import java.util.UUID;
 @Controller
 @RequestMapping("/api/order/v1/members")
 @RequiredArgsConstructor
-public class MemberApiControllerV1 {
+public class MemberApiController {
 
     private final MemberService memberService;
     private final BCryptPasswordEncoder passwordEncoder;

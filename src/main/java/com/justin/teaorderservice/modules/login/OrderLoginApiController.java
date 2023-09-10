@@ -14,10 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
-
-
 @Tag(
         name = "Order Login API Controller V1",
         description = "Order Login API Controller : V1"
@@ -26,7 +22,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/order/v1/login")
 @RequiredArgsConstructor
-public class OrderLoginApiControllerV1 {
+public class OrderLoginApiController {
 
     private final LoginService loginService;
     private final JwtTokenProvider jwtTokenProvider;

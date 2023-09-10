@@ -31,7 +31,7 @@ import java.util.*;
 @Controller
 @RequestMapping("/api/order/v1/teas")
 @RequiredArgsConstructor
-public class TeaApiControllerV1 {
+public class TeaApiController {
 
     private final TeaService teaService;
     private final ModelMapper modelMapper;
