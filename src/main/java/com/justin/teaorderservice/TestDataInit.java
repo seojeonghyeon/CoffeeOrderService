@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.UUID;
 
-@Component
 @RequiredArgsConstructor
 public class TestDataInit {
 

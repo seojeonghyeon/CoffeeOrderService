@@ -24,7 +24,6 @@ public class App {
         SpringApplication.run(App.class, args);
     }
 
-
     @Bean
     @Profile("local")
     public TestDataInit testDataInit(TeaRepository teaRepository, AuthorityRepository authorityRepository, BCryptPasswordEncoder passwordEncoder){

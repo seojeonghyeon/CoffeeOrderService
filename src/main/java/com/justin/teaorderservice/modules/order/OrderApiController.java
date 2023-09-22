@@ -40,7 +40,6 @@ public class OrderApiController {
     private final TeaService teaService;
     private final OrderService orderService;
     private final TeaOrderService teaOrderService;
-    private final ModelMapper modelMapper;
 
     @Operation(summary = "Tea 주문 정보", description = "Tea 주문 정보 확인")
     @ApiResponses({
@@ -93,14 +92,6 @@ public class OrderApiController {
     @PreAuthorize("hasAnyAuthority('USER','MANAGER','ADMIN')")
     public ResponseEntity<String> addOrder(@AuthenticationPrincipal MemberAdapter memberAdapter, final @RequestBody @Validated RequestItemPurchase requestItemPurchase) throws ComplexException{
         Member member = memberAdapter.getMember();
-
-        if(!requestItemPurchase.getUserId().equals(member.getUserId())){
-            ResponseError responseError = ResponseError.builder()
-                    .errorCode(ErrorCode.NO_MATCH_USER_ID)
-                    .target(member.getPhoneNumber())
-                    .build();
-            throw new ComplexException(responseError);
-        }
 
         String userId = member.getUserId();
         List<RequestItemOrder> requestItemOrderList = requestItemPurchase.getRequestItemOrderList();

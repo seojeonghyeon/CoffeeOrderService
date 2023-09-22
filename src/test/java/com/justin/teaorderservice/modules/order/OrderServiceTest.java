@@ -3,9 +3,11 @@ package com.justin.teaorderservice.modules.order;
 import com.justin.teaorderservice.infra.MockMvcTest;
 import com.justin.teaorderservice.modules.teaorder.TeaOrder;
 import com.justin.teaorderservice.modules.teaorder.TeaOrderService;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
+@Slf4j
 @MockMvcTest
 class OrderServiceTest {
 
@@ -57,6 +60,12 @@ class OrderServiceTest {
                                 .equals(order.getUserId())
                 );
 
+    }
+
+    @Test
+    void proxyCheck(){
+        log.info("aop class = {}", orderService.getClass());
+        assertThat(AopUtils.isAopProxy(orderService)).isTrue();
     }
 
 }
