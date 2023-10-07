@@ -1,5 +1,8 @@
 package com.justin.teaorderservice.modules.tea;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import lombok.*;
 
 @Getter
@@ -7,6 +10,9 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 public class Tea {
+
+    @Id @GeneratedValue
+    @Column(name = "tea_id")
     private Long id;
     private String teaName;
     private Integer price;

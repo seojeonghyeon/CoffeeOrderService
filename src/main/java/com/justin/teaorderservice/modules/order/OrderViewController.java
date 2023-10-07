@@ -53,7 +53,7 @@ public class OrderViewController {
         teas.forEach(tea -> itemOrderFormList.add(modelMapper.map(tea, ItemOrderForm.class)));
 
         ItemPurchaseForm itemPurchaseForm = ItemPurchaseForm.builder()
-                .userId(loginMember.getUserId())
+                .userId(loginMember.getMemberId())
                 .itemOrderFormList(itemOrderFormList)
                 .build();
 
@@ -69,7 +69,7 @@ public class OrderViewController {
      */
     @GetMapping("/{orderId}/detail")
     public String orderDetail(@Login Member loginMember, @PathVariable long orderId, Model model) {
-        Order order = orderService.findByUserIdAndId(loginMember.getUserId(), orderId);
+        Order order = orderService.findByUserIdAndId(loginMember.getMemberId(), orderId);
         if (order != null) {
             List<TeaOrder> teaOrderList = teaOrderService.findByOrderId(orderId);
             ItemPurchaseForm itemPurchaseForm = modelMapper.map(order, ItemPurchaseForm.class);
@@ -77,7 +77,7 @@ public class OrderViewController {
             teaOrderList.forEach(teaOrder -> {
                 ItemOrderForm itemOrderForm = ItemOrderForm.builder()
                         .id(teaOrder.getTeaId())
-                        .orderQuantity(teaOrder.getOrderQuantity())
+                        .orderQuantity(teaOrder.getQuantity())
                         .price(teaOrder.getPrice())
                         .quantity(teaOrder.getQuantity())
                         .teaName(teaOrder.getTeaName())
@@ -138,10 +138,10 @@ public class OrderViewController {
     private void validation(String userId, TeaOrder teaOrder, BindingResult bindingResult){
         Tea tea = teaService.findById(teaOrder.getTeaId());
         if(tea != null){
-            boolean isNoRemaining = tea.getQuantity() - teaOrder.getOrderQuantity() < 0;
+            boolean isNoRemaining = tea.getQuantity() - teaOrder.getQuantity() < 0;
             if(isNoRemaining){
                 bindingResult.reject("noRemaining",
-                        new Object[]{teaOrder.getOrderQuantity(), tea.getQuantity()}, null);
+                        new Object[]{teaOrder.getQuantity(), tea.getQuantity()}, null);
             }
             /* Point가 없는 경우 */
         }else{

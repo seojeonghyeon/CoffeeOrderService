@@ -54,7 +54,7 @@ class OrderLoginControllerV1Test {
                 .build();
 
         Member member = Member.builder()
-                .userId(UUID.randomUUID().toString())
+                .memberId(UUID.randomUUID().toString())
                 .password(passwordEncoder.encode("SEOjh1234!"))
                 .simplePassword(passwordEncoder.encode("1234"))
                 .phoneNumber("01012341234")
@@ -83,7 +83,7 @@ class OrderLoginControllerV1Test {
                 .build();
 
         Member member = Member.builder()
-                .userId(UUID.randomUUID().toString())
+                .memberId(UUID.randomUUID().toString())
                 .password(passwordEncoder.encode("SEOjh1234!"))
                 .simplePassword(passwordEncoder.encode("1234"))
                 .phoneNumber("01012341234")
@@ -112,7 +112,7 @@ class OrderLoginControllerV1Test {
                 .build();
 
         Member member = Member.builder()
-                .userId(UUID.randomUUID().toString())
+                .memberId(UUID.randomUUID().toString())
                 .password(passwordEncoder.encode("SEOjh1234!"))
                 .simplePassword(passwordEncoder.encode("1234"))
                 .phoneNumber("01012341234")

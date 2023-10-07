@@ -38,25 +38,25 @@ class OrderServiceTest {
         Order order = Order.builder()
                 .userId("e31e376e-fe1e-47ab-ac13-3e16e81e0333")
                 .disabled(false)
-                .createdAt(ZonedDateTime.now())
+                .orderDate(ZonedDateTime.now())
                 .build();
 
         List<TeaOrder> teaOrderList = new ArrayList<>();
         TeaOrder teaOrder = TeaOrder.builder()
                 .id(1L)
-                .orderQuantity(1)
+                .quantity(1)
                 .price(1000)
                 .quantity(20)
                 .teaName("Americano(Hot)")
                 .disabled(false)
-                .order()
+                .order(order)
                 .build();
 
         teaOrderList.add(teaOrder);
 
 
         teaOrderList.forEach(getTeaOrder -> teaOrderService.save(teaOrder));
-        Order saveOrder = orderService.save(order);
+        orderService.save(order);
     }
 
     @DisplayName("주문 ID 조회")

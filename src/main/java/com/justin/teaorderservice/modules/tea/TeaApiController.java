@@ -51,7 +51,7 @@ public class TeaApiController {
         teas.forEach(tea -> responseItemOrderList.add(modelMapper.map(tea, ResponseItemOrder.class)));
 
         ResponseItemPurchase responseItemPurchase = ResponseItemPurchase.builder()
-                .userId(member.getUserId())
+                .userId(member.getMemberId())
                 .itemOrderFormList(responseItemOrderList)
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(responseItemPurchase);

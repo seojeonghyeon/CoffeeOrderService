@@ -4,9 +4,8 @@ package com.justin.teaorderservice.modules.order;
 import com.justin.teaorderservice.modules.teaorder.TeaOrder;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.beans.factory.annotation.Value;
-
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Table
@@ -15,20 +14,22 @@ import java.util.List;
 @Builder @AllArgsConstructor
 @NoArgsConstructor
 public class Order {
-
     @Id @GeneratedValue
+    @Column(name = "order_id")
     private Long id;
 
     private String userId;
 
-    @Value("${order.pay-status.pending}")
-    private String payStatus;
+    private String status;
 
     @OneToMany(mappedBy = "order")
-    @OrderBy("teaId")
-    private List<TeaOrder> teaOrderList;
+    private List<TeaOrder> teaOrderList = new ArrayList<>();
 
-    private ZonedDateTime createdAt;
+    private ZonedDateTime orderDate;
 
     private Boolean disabled;
+
+    public Integer getTotalPrice(){
+        return teaOrderList.stream().mapToInt(TeaOrder::getTotalPrice).sum();
+    }
 }

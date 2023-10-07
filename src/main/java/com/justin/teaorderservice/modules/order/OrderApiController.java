@@ -20,7 +20,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -51,7 +50,7 @@ public class OrderApiController {
     @PreAuthorize("hasAnyAuthority('USER','MANAGER','ADMIN')")
     public ResponseEntity<ResponseOrder> orderDetail(@PathVariable long orderId, @AuthenticationPrincipal MemberAdapter memberAdapter) throws ComplexException {
         Member member = memberAdapter.getMember();
-        Order order = orderService.findByUserIdAndId(member.getUserId(), orderId);
+        Order order = orderService.findByUserIdAndId(member.getMemberId(), orderId);
 
         if(order == null){
             ResponseError responseError = ResponseError.builder()
@@ -66,7 +65,7 @@ public class OrderApiController {
         teaOrderList.stream().forEach(teaOrder -> {
             ResponseTeaOrder responseTeaOrder = ResponseTeaOrder.builder()
                     .id(teaOrder.getTeaId())
-                    .orderQuantity(teaOrder.getOrderQuantity())
+                    .orderQuantity(teaOrder.getQuantity())
                     .price(teaOrder.getPrice())
                     .quantity(teaOrder.getQuantity())
                     .teaName(teaOrder.getTeaName())
@@ -93,7 +92,7 @@ public class OrderApiController {
     public ResponseEntity<String> addOrder(@AuthenticationPrincipal MemberAdapter memberAdapter, final @RequestBody @Validated RequestItemPurchase requestItemPurchase) throws ComplexException{
         Member member = memberAdapter.getMember();
 
-        String userId = member.getUserId();
+        String userId = member.getMemberId();
         List<RequestItemOrder> requestItemOrderList = requestItemPurchase.getRequestItemOrderList();
         List<TeaOrder> teaOrderList = new ArrayList<>();
         requestItemOrderList.forEach(requestItemOrder -> {
@@ -129,7 +128,7 @@ public class OrderApiController {
         ResponseError responseError = null;
         Tea tea = teaService.findById(teaOrder.getTeaId());
         if(tea != null){
-            boolean isNoRemaining = tea.getQuantity() - teaOrder.getOrderQuantity() < 0;
+            boolean isNoRemaining = tea.getQuantity() - teaOrder.getQuantity() < 0;
             if(isNoRemaining){
                 responseError = ResponseError.builder()
                         .errorCode(ErrorCode.NO_QUANTITY)

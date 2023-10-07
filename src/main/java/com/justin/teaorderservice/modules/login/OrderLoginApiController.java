@@ -49,7 +49,7 @@ public class OrderLoginApiController {
             throw new ComplexException(responseError);
         }
 
-        String token = jwtTokenProvider.createToken(member.getUserId());
+        String token = jwtTokenProvider.createToken(member.getMemberId());
         log.info(token);
 
         return ResponseEntity.status(HttpStatus.OK).body(token);

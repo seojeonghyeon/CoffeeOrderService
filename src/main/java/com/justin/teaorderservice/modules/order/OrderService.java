@@ -45,7 +45,7 @@ public class OrderService{
         Order order = Order.builder()
                 .userId(userId)
                 .disabled(false)
-                .payStatus(PENDING)
+                .status(PENDING)
                 .build();
         Order saveOrder = this.save(order);
 

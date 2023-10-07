@@ -5,12 +5,10 @@ import com.justin.teaorderservice.modules.member.AuthorityRepository;
 import com.justin.teaorderservice.modules.member.Member;
 import com.justin.teaorderservice.modules.tea.Tea;
 import com.justin.teaorderservice.modules.tea.TeaRepository;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -49,7 +47,7 @@ public class TestDataInit {
 
         String uuid = UUID.randomUUID().toString();
         Member member = Member.builder()
-                .userId(uuid)
+                .memberId(uuid)
                 .password(passwordEncoder.encode("SEOjh1234!"))
                 .simplePassword(passwordEncoder.encode("1234"))
                 .phoneNumber("01011112222")

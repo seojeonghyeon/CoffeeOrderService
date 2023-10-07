@@ -11,8 +11,9 @@ import java.util.Set;
 @NoArgsConstructor
 public class Member {
     private Long id;
-    private String userId;
-    private String phoneNumber;
+    private String memberId;
+    private String memberName;
+    private String email;
     private String password;
     private String simplePassword;
     private Integer point;
@@ -20,8 +21,8 @@ public class Member {
     private LocalDateTime createDate;
     private Set<Authority> authorities;
 
-    public void setUser(String userId){
-        this.userId = userId;
+    public void setMember(String userId){
+        this.memberId = userId;
         this.disabled = false;
     }
 }

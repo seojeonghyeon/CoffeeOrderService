@@ -39,7 +39,7 @@ public class PointViewController {
         if(loginMember == null){
             return "redirect:/order/v1/login";
         }
-        Integer point = pointService.findPointById(loginMember.getUserId());
+        Integer point = pointService.findPointById(loginMember.getMemberId());
         PointAddForm pointAddForm = PointAddForm.builder()
                 .point(point)
                 .addPoint(Integer.valueOf(0))
@@ -66,7 +66,7 @@ public class PointViewController {
             return "order/v1/addItems";
         }
 
-        Integer point = pointService.findPointById(loginMember.getUserId());
+        Integer point = pointService.findPointById(loginMember.getMemberId());
         validation(point, pointAddForm.getPoint(), bindingResult);
         if(bindingResult.hasErrors()){
             log.info("error={}",bindingResult);
@@ -93,7 +93,7 @@ public class PointViewController {
      */
     @GetMapping("/detail")
     public String pointDetail(@Login Member loginMember, Model model){
-        Integer point = pointService.findPointById(loginMember.getUserId());
+        Integer point = pointService.findPointById(loginMember.getMemberId());
         model.addAttribute("point", point);
         return "points/v1/addResult";
     }

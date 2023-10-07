@@ -50,7 +50,7 @@ public class MemberViewController {
 
         memberSaveForm.encodePassword(passwordEncoder.encode(memberSaveForm.getPassword()), passwordEncoder.encode(memberSaveForm.getSimplePassword()));
         Member member = modelMapper.map(memberSaveForm, Member.class);
-        member.setUser(UUID.randomUUID().toString());
+        member.setMember(UUID.randomUUID().toString());
 
         if(memberService.hasPhoneNumber(member.getPhoneNumber())){
             bindingResult.reject("hasPhoneNumber",
@@ -60,7 +60,7 @@ public class MemberViewController {
         }
 
         Member saveMember = memberService.save(member);
-        redirectAttributes.addAttribute("userId", saveMember.getUserId());
+        redirectAttributes.addAttribute("userId", saveMember.getMemberId());
         return "redirect:/view/order/v1/members/{userId}/detail";
     }
 

@@ -21,8 +21,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import java.util.HashMap;
-import java.util.Map;
+
 import java.util.UUID;
 
 
@@ -50,7 +49,7 @@ public class MemberApiController {
     public ResponseEntity<String> addMember(final @RequestBody @Validated RequestMemberSave requestMemberSave) throws ComplexException {
         requestMemberSave.encodePassword(passwordEncoder.encode(requestMemberSave.getPassword()), passwordEncoder.encode(requestMemberSave.getSimplePassword()));
         Member member = modelMapper.map(requestMemberSave, Member.class);
-        member.setUser(UUID.randomUUID().toString());
+        member.setMember(UUID.randomUUID().toString());
 
         if(memberService.hasPhoneNumber(member.getPhoneNumber())){
             ResponseError responseError = ResponseError.builder()
@@ -61,7 +60,7 @@ public class MemberApiController {
         }
 
         Member saveMember = memberService.save(member);
-        return ResponseEntity.status(HttpStatus.OK).body(saveMember.getUserId());
+        return ResponseEntity.status(HttpStatus.OK).body(saveMember.getMemberId());
     }
 
     @Operation(summary = "회원 가입 여부 확인", description = "사용자의 ID에 대해 등록된 핸드폰 번호가 있는 지 확인 한다.")

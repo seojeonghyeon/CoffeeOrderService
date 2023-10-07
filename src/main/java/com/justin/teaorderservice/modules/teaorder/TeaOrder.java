@@ -1,10 +1,10 @@
 package com.justin.teaorderservice.modules.teaorder;
 
 import com.justin.teaorderservice.modules.order.Order;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.justin.teaorderservice.modules.tea.Tea;
+import jakarta.persistence.*;
 import lombok.*;
+import static jakarta.persistence.FetchType.*;
 
 @Table
 @Getter
@@ -14,24 +14,23 @@ import lombok.*;
 public class TeaOrder {
 
     @Id @GeneratedValue
+    @Column(name = "tea_order_id")
     private Long id;
 
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "order_id")
     private Order order;
 
-    private Long teaId;
+    @OneToOne(fetch = LAZY, cascade = CascadeType.ALL)
+    private Tea tea;
 
-    private String teaName;
-
-    private Integer price;
-
+    private Integer orderPrice;
     private Integer quantity;
-    private Integer orderQuantity;
 
     @Builder.Default
     private Boolean disabled = true;
 
-    public void updateQuantity(Integer quantity){
-        this.quantity = quantity;
-        this.disabled = false;
+    public Integer getTotalPrice(){
+        return orderPrice * quantity;
     }
 }
