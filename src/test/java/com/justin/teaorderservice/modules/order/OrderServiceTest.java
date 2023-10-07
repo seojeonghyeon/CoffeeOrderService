@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +34,13 @@ class OrderServiceTest {
 
     @BeforeEach
     void orderSave(){
+
+        Order order = Order.builder()
+                .userId("e31e376e-fe1e-47ab-ac13-3e16e81e0333")
+                .disabled(false)
+                .createdAt(ZonedDateTime.now())
+                .build();
+
         List<TeaOrder> teaOrderList = new ArrayList<>();
         TeaOrder teaOrder = TeaOrder.builder()
                 .id(1L)
@@ -39,13 +48,13 @@ class OrderServiceTest {
                 .price(1000)
                 .quantity(20)
                 .teaName("Americano(Hot)")
+                .disabled(false)
+                .order()
                 .build();
 
         teaOrderList.add(teaOrder);
 
-        Order order = Order.builder()
-                .userId("e31e376e-fe1e-47ab-ac13-3e16e81e0333")
-                .build();
+
         teaOrderList.forEach(getTeaOrder -> teaOrderService.save(teaOrder));
         Order saveOrder = orderService.save(order);
     }

@@ -8,6 +8,14 @@ spring:
       token_expiration_time: 864000
   profiles:
     active: local
+  datasource:
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+    url: jdbc:h2:mem:teaorderdb;
+  h2:
+    console:
+      enabled: true
 
 server:
   error:
@@ -17,4 +25,12 @@ server:
     include-stacktrace: on_param
     include-message: on_param
     include-exception: true
+
+order:
+  pay-status:
+    pending: "PENDING"
+    confirmed: "CONFIRMED"
+    canceled: "CANCELED"
+    rejected: "REJECTED"
+    completed: "COMPLETED"
 

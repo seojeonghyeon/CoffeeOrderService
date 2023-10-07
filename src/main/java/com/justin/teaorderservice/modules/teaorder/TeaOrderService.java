@@ -23,7 +23,7 @@ public class TeaOrderService{
     }
 
     public TeaOrder findById(Long id) {
-        return teaOrderRepository.findById(id);
+        return teaOrderRepository.findById(id).orElse(null);
     }
 
     public TeaOrder save(TeaOrder teaOrder) {
