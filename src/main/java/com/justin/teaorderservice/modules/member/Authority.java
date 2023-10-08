@@ -1,11 +1,11 @@
 package com.justin.teaorderservice.modules.member;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter @Setter
@@ -18,8 +18,11 @@ public class Authority {
 
     private String authorityName;
 
-    public Authority(Long id, String authorityName){
-        this.id = id;
-        this.authorityName = authorityName;
-    }
+    @ManyToMany
+    @JoinTable(
+            name = "member_authorities",
+            joinColumns = @JoinColumn(name = "authority_id"),
+            inverseJoinColumns = @JoinColumn(name = "member_id")
+    )
+    private Set<Member> members = new HashSet<>();
 }

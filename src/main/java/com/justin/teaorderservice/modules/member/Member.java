@@ -33,14 +33,15 @@ public class Member {
 
     private LocalDateTime createDate;
 
+    @ManyToMany(mappedBy = "members")
     private Set<Authority> authorities;
 
     @JsonIgnore
     @OneToMany(mappedBy = "member")
     private List<Order> orders;
 
-    public void setMember(String userId){
-        this.memberId = userId;
-        this.disabled = false;
+    public void setAuthorities(Authority authority){
+        this.authorities.add(authority);
+        authority.getMembers().add(this);
     }
 }
