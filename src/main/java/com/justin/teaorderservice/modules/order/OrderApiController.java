@@ -89,59 +89,19 @@ public class OrderApiController {
     })
     @PostMapping
     @PreAuthorize("hasAnyAuthority('USER','MANAGER','ADMIN')")
-    public ResponseEntity<String> addOrder(@AuthenticationPrincipal MemberAdapter memberAdapter, final @RequestBody @Validated RequestItemPurchase requestItemPurchase) throws ComplexException{
+    public ResponseEntity<String> addOrder(@AuthenticationPrincipal MemberAdapter memberAdapter, final @RequestBody @Validated RequestItemPurchase requestItemPurchase){
         Member member = memberAdapter.getMember();
-
-        String userId = member.getMemberId();
-        List<RequestItemOrder> requestItemOrderList = requestItemPurchase.getRequestItemOrderList();
+        List<RequestItemOrder> requestItemOrders = requestItemPurchase.getRequestItemOrderList();
+        Long memberId = member.getId();
         List<TeaOrder> teaOrderList = new ArrayList<>();
-        requestItemOrderList.forEach(requestItemOrder -> {
+        requestItemOrders.forEach(requestItemOrder -> {
             if(requestItemOrder.getOrderQuantity() != null && requestItemOrder.getOrderQuantity() != 0) {
-                TeaOrder teaOrder = TeaOrder.builder()
-                        .teaId(requestItemOrder.getId())
-                        .orderQuantity(requestItemOrder.getOrderQuantity())
-                        .quantity(requestItemOrder.getQuantity())
-                        .price(requestItemOrder.getPrice())
-                        .disabled(false)
-                        .build();
+                TeaOrder teaOrder = teaOrderService.teaOrder(requestItemOrder.getId(), requestItemOrder.getPrice(), requestItemOrder.getOrderQuantity());
                 teaOrderList.add(teaOrder);
             }
         });
-
-        teaOrderList.forEach(teaOrder -> {
-            ResponseError responseError = validation(userId, teaOrder);
-            if(responseError != null){
-                try {
-                    throw new ComplexException(responseError);
-                } catch (ComplexException e) {
-                    log.info("ResponseError's target : {} and value : {}", responseError.getTarget(), responseError.getErrorCode());
-                }
-            }
-        });
-
-        Order saveOrder = orderService.saveOrder(userId, teaOrderList);
-
-        return ResponseEntity.status(HttpStatus.OK).body(saveOrder.getId().toString());
-    }
-
-    private ResponseError validation(String userId, TeaOrder teaOrder){
-        ResponseError responseError = null;
-        Tea tea = teaService.findById(teaOrder.getTeaId());
-        if(tea != null){
-            boolean isNoRemaining = tea.getStockQuantity() - teaOrder.getQuantity() < 0;
-            if(isNoRemaining){
-                responseError = ResponseError.builder()
-                        .errorCode(ErrorCode.NO_QUANTITY)
-                        .target(teaOrder.getTeaName())
-                        .build();
-            }
-            /* Point가 없는 경우 */
-        }else{
-             responseError = ResponseError.builder()
-                    .errorCode(ErrorCode.NO_TEA)
-                    .target(teaOrder.getTeaName())
-                    .build();
-        }
-        return responseError;
+        TeaOrder[] teaOrders = teaOrderList.toArray(TeaOrder[]::new);
+        Long orderId = orderService.order(memberId, teaOrders);
+        return ResponseEntity.status(HttpStatus.OK).body(orderId.toString());
     }
 }

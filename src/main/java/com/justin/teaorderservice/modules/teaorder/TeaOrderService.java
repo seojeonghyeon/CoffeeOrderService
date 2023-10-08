@@ -1,6 +1,7 @@
 package com.justin.teaorderservice.modules.teaorder;
 
 import com.justin.teaorderservice.modules.tea.Tea;
+import com.justin.teaorderservice.modules.tea.TeaRepository;
 import com.justin.teaorderservice.modules.tea.TeaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,12 +12,12 @@ import java.util.List;
 
 @Slf4j
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class TeaOrderService{
 
     private final TeaOrderRepository teaOrderRepository;
-    private final TeaService teaService;
+    private final TeaRepository teaRepository;
 
     public List<TeaOrder> findByOrderId(Long orderId) {
         return teaOrderRepository.findByOrderId(orderId);
@@ -26,22 +27,14 @@ public class TeaOrderService{
         return teaOrderRepository.findById(id).orElse(null);
     }
 
+    @Transactional
     public TeaOrder save(TeaOrder teaOrder) {
         return teaOrderRepository.save(teaOrder);
     }
 
-    @Transactional
-    public void update(String userId, TeaOrder teaOrder) {
-        /**
-         * 사용자 Point 감소
-         */
-
-        Tea tea = teaService.findById(teaOrder.getTeaId());
-        Integer remaining = tea.getStockQuantity() - teaOrder.getQuantity();
-        if(remaining >= 0){
-            teaOrder.updateQuantity(remaining);
-            tea.setStockQuantity(remaining);
-            teaService.update(tea.getId(), tea);
-        }
+    public TeaOrder teaOrder(Long teaId, Integer orderPrice, Integer orderQuantity){
+        Tea tea = teaRepository.findOne(teaId);
+        TeaOrder teaOrder = TeaOrder.createTeaOrder(tea,orderPrice, orderQuantity);
+        return teaOrder;
     }
 }

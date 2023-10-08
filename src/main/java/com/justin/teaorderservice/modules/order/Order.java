@@ -33,7 +33,7 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<TeaOrder> teaOrders = new ArrayList<>();
 
     private ZonedDateTime orderDate;

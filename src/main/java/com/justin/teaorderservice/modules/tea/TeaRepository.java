@@ -1,37 +1,30 @@
 package com.justin.teaorderservice.modules.tea;
 
+import jakarta.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
 @Repository
+@RequiredArgsConstructor
 public class TeaRepository {
-    private static final Map<Long, Tea> store = new HashMap<>();
-    private static long sequence = 0L;
+    private final EntityManager em;
 
-    public Tea save(Tea tea) {
-        tea.setId(++sequence);
-        store.put(tea.getId(), tea);
-        return tea;
+    public void save(Tea tea){
+        if(tea.getId() == null){
+            em.persist(tea);
+        }else{
+            em.merge(tea);
+        }
     }
 
-    public Tea findById(Long id) {
-        return store.get(id);
+    public Tea findOne(Long id){
+        return em.find(Tea.class, id);
     }
 
-    public List<Tea> findAll() {
-        return new ArrayList<>(store.values());
+    public List<Tea> findAll(){
+        return em.createQuery("select t from Tea t", Tea.class)
+                .getResultList();
     }
-
-    public void update(Long teaId, Tea updateParam) {
-        Tea findTea = findById(teaId);
-        findTea.setTeaName(updateParam.getTeaName());
-        findTea.setPrice(updateParam.getPrice());
-        findTea.setStockQuantity(updateParam.getStockQuantity());
-    }
-
-    public void clearStore() {
-        store.clear();
-    }
-
 }

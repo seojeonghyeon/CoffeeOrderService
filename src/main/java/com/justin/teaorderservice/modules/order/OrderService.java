@@ -1,6 +1,10 @@
 package com.justin.teaorderservice.modules.order;
 
+import com.justin.teaorderservice.modules.member.Member;
+import com.justin.teaorderservice.modules.member.MemberRepository;
+import com.justin.teaorderservice.modules.tea.TeaRepository;
 import com.justin.teaorderservice.modules.teaorder.TeaOrder;
+import com.justin.teaorderservice.modules.teaorder.TeaOrderRepository;
 import com.justin.teaorderservice.modules.teaorder.TeaOrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,26 +14,33 @@ import java.util.List;
 
 @Slf4j
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class OrderService{
+
     private final OrderRepository orderRepository;
-    private final TeaOrderService teaOrderService;
+    private final TeaRepository teaRepository;
+    private final MemberRepository memberRepository;
 
     public Order findById(Long orderId) {
         return orderRepository.findById(orderId).orElse(null);
     }
 
     public Order findByUserIdAndId(String userId, Long id) {
-        return orderRepository.findByUserIdAndId(userId, id).filter(order -> order.getDisabled()==false).orElse(null);
+        return orderRepository.findByUserIdAndId(userId, id).orElse(null);
     }
 
+    @Transactional
     public Order save(Order order) {
         return orderRepository.save(order);
     }
 
-    public Order order(String memberId, List<TeaOrder> teaOrderList) {
-
+    @Transactional
+    public Long order(Long memberId, TeaOrder... teaOrders) {
+        Member member = memberRepository.findOne(memberId);
+        Order order = Order.createOrder(member, teaOrders);
+        orderRepository.save(order);
+        return order.getId();
     }
 
 }
