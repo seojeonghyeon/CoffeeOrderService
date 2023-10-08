@@ -1,4 +1,4 @@
-package com.justin.teaorderservice.infra.exception;
+package com.justin.teaorderservice.infra.auth;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

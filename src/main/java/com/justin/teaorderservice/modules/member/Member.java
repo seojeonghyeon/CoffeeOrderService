@@ -13,6 +13,7 @@ import java.util.Set;
 @Table(name = "members")
 @Getter @Setter
 @Builder  @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Member {
     @Id @GeneratedValue
     @Column(name = "member_id")

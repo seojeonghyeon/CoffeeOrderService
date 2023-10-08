@@ -9,6 +9,7 @@ import static jakarta.persistence.FetchType.*;
 @Entity
 @Getter @Setter
 @Builder @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class TeaOrder {
 
     @Id @GeneratedValue
@@ -27,6 +28,17 @@ public class TeaOrder {
     private Integer quantity;
 
     private Boolean disabled;
+
+    public static TeaOrder createTeaOrder(Tea tea, Integer orderPrice, Integer quantity){
+        TeaOrder teaOrder = TeaOrder.builder()
+                .tea(tea)
+                .orderPrice(orderPrice)
+                .quantity(quantity)
+                .disabled(false)
+                .build();
+        tea.removeStock(quantity);
+        return teaOrder;
+    }
 
     public void cancel(){
         setDisabled(true);

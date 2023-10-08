@@ -28,7 +28,7 @@ public class OrderService{
         return orderRepository.save(order);
     }
 
-    public Order saveOrder(String userId, List<TeaOrder> teaOrderList) {
+    public Order order(String memberId, List<TeaOrder> teaOrderList) {
 
     }
 

@@ -1,6 +1,10 @@
 package com.justin.teaorderservice.modules.order;
 
 
+import com.justin.teaorderservice.infra.exception.AlreadyCompletedOrderException;
+import com.justin.teaorderservice.infra.exception.AlreadyNotPendingOrderException;
+import com.justin.teaorderservice.infra.exception.ErrorCode;
+import com.justin.teaorderservice.infra.exception.NotEnoughPointException;
 import com.justin.teaorderservice.modules.member.Member;
 import com.justin.teaorderservice.modules.teaorder.TeaOrder;
 import jakarta.persistence.*;
@@ -16,6 +20,7 @@ import static jakarta.persistence.FetchType.*;
 @Entity
 @Getter @Setter
 @Builder @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class Order {
     @Id @GeneratedValue
     @Column(name = "order_id")
@@ -34,26 +39,27 @@ public class Order {
     private ZonedDateTime orderDate;
 
     public static Order createOrder(Member member, TeaOrder... teaOrders){
-        Order order = new Order();
-        order.setMember(member);
+        Order order = Order.builder()
+                .member(member)
+                .status(OrderStatus.PENDING)
+                .orderDate(ZonedDateTime.now())
+                .build();
         for (TeaOrder teaOrder : teaOrders) {
             order.addTeaOrder(teaOrder);
         }
-        order.setStatus(OrderStatus.PENDING);
-        order.setOrderDate(ZonedDateTime.now());
-        order.deductOrder();
+        order.deductPoint();
         return order;
     }
 
-    public void deductOrder(){
+    public void deductPoint(){
         if(status != OrderStatus.PENDING){
-            throw new IllegalStateException("이미 처리된 주문 이어서 주문 처리 불가능 합니다.");
+            throw new AlreadyNotPendingOrderException(ErrorCode.ALREADY_NOT_PENDING_ORDER);
         }
         this.setStatus(member.getPoint() - getTotalPrice() >= 0 ? OrderStatus.CONFIRMED : OrderStatus.REJECTED);
         if(status == OrderStatus.CONFIRMED){
             member.setPoint(member.getPoint() - getTotalPrice());
         } else if (status == OrderStatus.REJECTED) {
-            throw new IllegalStateException("잔액이 부족 합니다.");
+            throw new NotEnoughPointException(ErrorCode.NOT_ENOUGH_POINT);
         }
     }
 
@@ -73,7 +79,7 @@ public class Order {
 
     public void cancel(){
         if(status == OrderStatus.COMPLETED){
-            throw new IllegalStateException("이미 완료된 주문 이어서 취소가 불가능 합니다.");
+            throw new AlreadyCompletedOrderException(ErrorCode.ALREADY_COMPLETED_ORDER);
         }
         this.setStatus(OrderStatus.CANCELED);
         teaOrders.forEach(TeaOrder::cancel);

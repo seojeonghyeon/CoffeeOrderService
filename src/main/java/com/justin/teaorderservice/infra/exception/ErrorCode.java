@@ -10,7 +10,11 @@ public enum ErrorCode {
     IS_DISABLED_ID(4006, false, "Login Fail : ID is Disabled"),
     NO_MATCH_ORDER_ID_WITH_USER_ID(4007, false, "Order ID isn't in User ID"),
     NO_MATCH_USER_ID(4008, false, "User ID isn't match"),
-    NO_TEA(4009, false, "No Tea");
+    NO_TEA(4009, false, "No Tea"),
+    NOT_ENOUGH_POINT(4010, false, "Not enough point"),
+    NOT_ENOUGH_STOCK(4011, false, "Not enough stock"),
+    ALREADY_COMPLETED_ORDER(4012, false, "Already completed order"),
+    ALREADY_NOT_PENDING_ORDER(4013, false, "Already not pending order");
 
     private final int code;
     private final Boolean disabled;

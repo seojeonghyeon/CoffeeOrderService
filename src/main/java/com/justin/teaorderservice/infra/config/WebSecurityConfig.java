@@ -1,8 +1,8 @@
 package com.justin.teaorderservice.infra.config;
 
 import com.justin.teaorderservice.infra.auth.JwtAuthenticationFilter;
-import com.justin.teaorderservice.infra.exception.JwtAccessDeniedHandler;
-import com.justin.teaorderservice.infra.exception.JwtAuthenticationEntryPoint;
+import com.justin.teaorderservice.infra.auth.JwtAccessDeniedHandler;
+import com.justin.teaorderservice.infra.auth.JwtAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
