@@ -6,11 +6,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import static jakarta.persistence.FetchType.*;
 
-@Table
-@Getter
-@Setter
-@Builder @AllArgsConstructor
-@NoArgsConstructor
+@Entity
+@Getter @Setter
+@Builder @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TeaOrder {
 
     @Id @GeneratedValue
@@ -21,14 +19,19 @@ public class TeaOrder {
     @JoinColumn(name = "order_id")
     private Order order;
 
-    @OneToOne(fetch = LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "tea_id")
     private Tea tea;
 
     private Integer orderPrice;
     private Integer quantity;
 
-    @Builder.Default
-    private Boolean disabled = true;
+    private Boolean disabled;
+
+    public void cancel(){
+        setDisabled(true);
+        getTea().addStock(quantity);
+    }
 
     public Integer getTotalPrice(){
         return orderPrice * quantity;

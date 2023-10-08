@@ -26,11 +26,3 @@ server:
     include-message: on_param
     include-exception: true
 
-order:
-  pay-status:
-    pending: "PENDING"
-    confirmed: "CONFIRMED"
-    canceled: "CANCELED"
-    rejected: "REJECTED"
-    completed: "COMPLETED"
-

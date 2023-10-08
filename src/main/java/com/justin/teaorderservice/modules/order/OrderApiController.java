@@ -128,7 +128,7 @@ public class OrderApiController {
         ResponseError responseError = null;
         Tea tea = teaService.findById(teaOrder.getTeaId());
         if(tea != null){
-            boolean isNoRemaining = tea.getQuantity() - teaOrder.getQuantity() < 0;
+            boolean isNoRemaining = tea.getStockQuantity() - teaOrder.getQuantity() < 0;
             if(isNoRemaining){
                 responseError = ResponseError.builder()
                         .errorCode(ErrorCode.NO_QUANTITY)

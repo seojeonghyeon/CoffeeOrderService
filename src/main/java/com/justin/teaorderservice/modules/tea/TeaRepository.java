@@ -27,7 +27,7 @@ public class TeaRepository {
         Tea findTea = findById(teaId);
         findTea.setTeaName(updateParam.getTeaName());
         findTea.setPrice(updateParam.getPrice());
-        findTea.setQuantity(updateParam.getQuantity());
+        findTea.setStockQuantity(updateParam.getStockQuantity());
     }
 
     public void clearStore() {

@@ -37,10 +37,10 @@ public class TeaOrderService{
          */
 
         Tea tea = teaService.findById(teaOrder.getTeaId());
-        Integer remaining = tea.getQuantity() - teaOrder.getQuantity();
+        Integer remaining = tea.getStockQuantity() - teaOrder.getQuantity();
         if(remaining >= 0){
             teaOrder.updateQuantity(remaining);
-            tea.setQuantity(remaining);
+            tea.setStockQuantity(remaining);
             teaService.update(tea.getId(), tea);
         }
     }

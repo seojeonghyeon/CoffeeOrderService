@@ -138,10 +138,10 @@ public class OrderViewController {
     private void validation(String userId, TeaOrder teaOrder, BindingResult bindingResult){
         Tea tea = teaService.findById(teaOrder.getTeaId());
         if(tea != null){
-            boolean isNoRemaining = tea.getQuantity() - teaOrder.getQuantity() < 0;
+            boolean isNoRemaining = tea.getStockQuantity() - teaOrder.getQuantity() < 0;
             if(isNoRemaining){
                 bindingResult.reject("noRemaining",
-                        new Object[]{teaOrder.getQuantity(), tea.getQuantity()}, null);
+                        new Object[]{teaOrder.getQuantity(), tea.getStockQuantity()}, null);
             }
             /* Point가 없는 경우 */
         }else{
