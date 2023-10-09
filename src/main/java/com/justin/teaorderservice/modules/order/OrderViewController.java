@@ -90,57 +90,25 @@ public class OrderViewController {
      * @return 주문 내역 확인
      */
     @PostMapping
-    public String addOrder(@Validated @ModelAttribute("itemPurchaseForm") ItemPurchaseForm itemPurchaseForm, BindingResult bindingResult,
+    public String addOrder(@Login Member loginMember, @Validated @ModelAttribute("itemPurchaseForm") ItemPurchaseForm itemPurchaseForm, BindingResult bindingResult,
                            RedirectAttributes redirectAttributes){
         if(bindingResult.hasErrors()){
             log.info("error={}",bindingResult);
             return "order/v1/addItems";
         }
 
-        String userId = itemPurchaseForm.getUserId();
+        Long memberId = loginMember.getId();
         List<ItemOrderForm> itemOrderFormList = itemPurchaseForm.getItemOrderFormList();
-        List<TeaOrder> teaOrderList = new ArrayList<>();
-        itemOrderFormList.forEach(itemOrderForm -> {
-            if(itemOrderForm.getOrderQuantity() != null && itemOrderForm.getOrderQuantity() != 0){
-                TeaOrder teaOrder = TeaOrder.builder()
-                        .teaId(itemOrderForm.getId())
-                        .orderQuantity(itemOrderForm.getOrderQuantity())
-                        .quantity(itemOrderForm.getQuantity())
-                        .price(itemOrderForm.getPrice())
-                        .teaName(itemOrderForm.getTeaName())
-                        .disabled(false)
-                        .build();
-                teaOrderList.add(teaOrder);
-            }
-        });
+        List<TeaOrder> teaOrders = itemOrderFormList.stream()
+                .filter(itemOrderForm -> itemOrderForm.getOrderQuantity() != null && itemOrderForm.getOrderQuantity() != 0)
+                .map(itemOrderForm -> teaOrderService.teaOrder(itemOrderForm.getId(), itemOrderForm.getPrice(), itemOrderForm.getOrderQuantity()))
+                .collect(Collectors.toList());
+        Long orderId = orderService.order(memberId, teaOrders.toArray(TeaOrder[]::new));
 
-        teaOrderList.forEach(teaOrder -> validation(userId, teaOrder, bindingResult));
-
-        if(bindingResult.hasErrors()){
-            log.info("error={}",bindingResult);
-            return "order/v1/addItems";
-        }
-
-        Order saveOrder = orderService.saveOrder(userId, teaOrderList);
-
-        redirectAttributes.addAttribute("orderId", saveOrder.getId());
+        redirectAttributes.addAttribute("orderId", orderId);
         redirectAttributes.addAttribute("status", true);
         return "redirect:/view/order/v1/orders/{orderId}/detail";
     }
 
-    private void validation(String userId, TeaOrder teaOrder, BindingResult bindingResult){
-        Tea tea = teaService.findById(teaOrder.getTeaId());
-        if(tea != null){
-            boolean isNoRemaining = tea.getStockQuantity() - teaOrder.getQuantity() < 0;
-            if(isNoRemaining){
-                bindingResult.reject("noRemaining",
-                        new Object[]{teaOrder.getQuantity(), tea.getStockQuantity()}, null);
-            }
-            /* Point가 없는 경우 */
-        }else{
-            bindingResult.reject("noTea",
-                    new Object[]{}, null);
-        }
-    }
 
 }
