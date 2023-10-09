@@ -23,16 +23,17 @@ public class OrderService{
     private final MemberRepository memberRepository;
 
     public Order findById(Long orderId) {
-        return orderRepository.findById(orderId).orElse(null);
+        return orderRepository.findOne(orderId);
     }
 
-    public Order findByUserIdAndId(String userId, Long id) {
-        return orderRepository.findByUserIdAndId(userId, id).orElse(null);
+    public Order findByUserIdAndId(Long memberId, Long id) {
+        Order order = orderRepository.findOne(id);
+        return memberId == order.getMember().getId() ? order : null;
     }
 
     @Transactional
-    public Order save(Order order) {
-        return orderRepository.save(order);
+    public void save(Order order) {
+        orderRepository.save(order);
     }
 
     @Transactional

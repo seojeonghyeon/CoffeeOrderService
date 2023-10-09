@@ -20,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * NAME : Order View Controller V1
@@ -69,21 +70,13 @@ public class OrderViewController {
      */
     @GetMapping("/{orderId}/detail")
     public String orderDetail(@Login Member loginMember, @PathVariable long orderId, Model model) {
-        Order order = orderService.findByUserIdAndId(loginMember.getMemberId(), orderId);
+        Order order = orderService.findByUserIdAndId(loginMember.getId(), orderId);
         if (order != null) {
             List<TeaOrder> teaOrderList = teaOrderService.findByOrderId(orderId);
             ItemPurchaseForm itemPurchaseForm = modelMapper.map(order, ItemPurchaseForm.class);
-            List<ItemOrderForm> itemOrderFormList = new ArrayList<>();
-            teaOrderList.forEach(teaOrder -> {
-                ItemOrderForm itemOrderForm = ItemOrderForm.builder()
-                        .id(teaOrder.getTeaId())
-                        .orderQuantity(teaOrder.getQuantity())
-                        .price(teaOrder.getPrice())
-                        .quantity(teaOrder.getQuantity())
-                        .teaName(teaOrder.getTeaName())
-                        .build();
-                itemOrderFormList.add(itemOrderForm);
-            });
+            List<ItemOrderForm> itemOrderFormList = teaOrderList.stream()
+                    .map(ItemOrderForm::createItemOrderForm)
+                    .collect(Collectors.toList());
             itemPurchaseForm.setItemOrderFormList(itemOrderFormList);
             model.addAttribute("itemPurchaseForm", itemPurchaseForm);
         }

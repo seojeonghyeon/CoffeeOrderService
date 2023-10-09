@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Controller
@@ -50,7 +51,7 @@ public class OrderApiController {
     @PreAuthorize("hasAnyAuthority('USER','MANAGER','ADMIN')")
     public ResponseEntity<ResponseOrder> orderDetail(@PathVariable long orderId, @AuthenticationPrincipal MemberAdapter memberAdapter) throws ComplexException {
         Member member = memberAdapter.getMember();
-        Order order = orderService.findByUserIdAndId(member.getMemberId(), orderId);
+        Order order = orderService.findByUserIdAndId(member.getId(), orderId);
 
         if(order == null){
             ResponseError responseError = ResponseError.builder()
@@ -92,16 +93,11 @@ public class OrderApiController {
     public ResponseEntity<String> addOrder(@AuthenticationPrincipal MemberAdapter memberAdapter, final @RequestBody @Validated RequestItemPurchase requestItemPurchase){
         Member member = memberAdapter.getMember();
         List<RequestItemOrder> requestItemOrders = requestItemPurchase.getRequestItemOrderList();
-        Long memberId = member.getId();
-        List<TeaOrder> teaOrderList = new ArrayList<>();
-        requestItemOrders.forEach(requestItemOrder -> {
-            if(requestItemOrder.getOrderQuantity() != null && requestItemOrder.getOrderQuantity() != 0) {
-                TeaOrder teaOrder = teaOrderService.teaOrder(requestItemOrder.getId(), requestItemOrder.getPrice(), requestItemOrder.getOrderQuantity());
-                teaOrderList.add(teaOrder);
-            }
-        });
-        TeaOrder[] teaOrders = teaOrderList.toArray(TeaOrder[]::new);
-        Long orderId = orderService.order(memberId, teaOrders);
+        List<TeaOrder> teaOrders = requestItemOrders.stream()
+                .filter(requestItemOrder -> requestItemOrder.getOrderQuantity() != null && requestItemOrder.getOrderQuantity() != 0)
+                .map(requestItemOrder -> teaOrderService.teaOrder(requestItemOrder.getId(), requestItemOrder.getPrice(), requestItemOrder.getOrderQuantity()))
+                .collect(Collectors.toList());
+        Long orderId = orderService.order(member.getId(), teaOrders.toArray(TeaOrder[]::new));
         return ResponseEntity.status(HttpStatus.OK).body(orderId.toString());
     }
 }
