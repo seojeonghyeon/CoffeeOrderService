@@ -1,6 +1,7 @@
 package com.justin.teaorderservice.modules.teaorder.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.justin.teaorderservice.modules.tea.Tea;
 import com.justin.teaorderservice.modules.teaorder.TeaOrder;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
@@ -32,6 +33,16 @@ public class ResponseTeaOrder {
                 .price(teaOrder.getOrderPrice())
                 .quantity(teaOrder.getQuantity())
                 .teaName(teaOrder.getTea().getTeaName())
+                .build();
+        return responseTeaOrder;
+    }
+    public static ResponseTeaOrder createResponseTeaOrder(Tea tea){
+        ResponseTeaOrder responseTeaOrder = ResponseTeaOrder.builder()
+                .id(tea.getId())
+                .orderQuantity(0)
+                .price(tea.getPrice())
+                .quantity(tea.getStockQuantity())
+                .teaName(tea.getTeaName())
                 .build();
         return responseTeaOrder;
     }

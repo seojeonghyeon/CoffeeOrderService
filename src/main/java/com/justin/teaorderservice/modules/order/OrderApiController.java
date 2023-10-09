@@ -3,6 +3,8 @@ package com.justin.teaorderservice.modules.order;
 import com.justin.teaorderservice.infra.exception.ComplexException;
 import com.justin.teaorderservice.modules.member.Member;
 import com.justin.teaorderservice.modules.member.MemberAdapter;
+import com.justin.teaorderservice.modules.tea.Tea;
+import com.justin.teaorderservice.modules.tea.TeaService;
 import com.justin.teaorderservice.modules.teaorder.TeaOrderService;
 import com.justin.teaorderservice.modules.teaorder.request.RequestItemOrder;
 import com.justin.teaorderservice.modules.order.request.RequestItemPurchase;
@@ -31,6 +33,24 @@ import java.util.List;
 public class OrderApiController {
     private final OrderService orderService;
     private final TeaOrderService teaOrderService;
+    private final TeaService teaService;
+
+
+    @Operation(summary = "Tea 주문 가능 정보", description = "Tea 주문 가능 정보")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Success", content = @Content(schema = @Schema(implementation = ResponseOrder.class))),
+            @ApiResponse(responseCode = "400", description = "Request Fail", content = @Content(schema = @Schema(implementation = ResponseOrder.class))),
+            @ApiResponse(responseCode = "500", description = "Server Error", content = @Content(schema = @Schema(implementation = ResponseOrder.class)))
+    })
+    @GetMapping
+    @PreAuthorize("hasAnyAuthority('USER','MANAGER','ADMIN')")
+    public ResponseEntity<ResponseOrder> items(@AuthenticationPrincipal MemberAdapter memberAdapter){
+        Member member = memberAdapter.getMember();
+        List<Tea> teas = teaService.findAll();
+        List<ResponseTeaOrder> responseTeaOrders = teas.stream().map(ResponseTeaOrder::createResponseTeaOrder).toList();
+        ResponseOrder responseOrder = ResponseOrder.createResponseOrder(member.getMemberName(), responseTeaOrders);
+        return ResponseEntity.status(HttpStatus.OK).body(responseOrder);
+    }
 
     @Operation(summary = "Tea 주문 정보", description = "Tea 주문 정보 확인")
     @ApiResponses({

@@ -32,5 +32,12 @@ public class ItemPurchaseForm {
                 .build();
         return itemPurchaseForm;
     }
+    public static ItemPurchaseForm createItemPurchaseForm(String userName, List<ItemOrderForm> itemOrderFormList){
+        ItemPurchaseForm itemPurchaseForm = ItemPurchaseForm.builder()
+                .userId(userName)
+                .itemOrderFormList(itemOrderFormList)
+                .build();
+        return itemPurchaseForm;
+    }
 
 }

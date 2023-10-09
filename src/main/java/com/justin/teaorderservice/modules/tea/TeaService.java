@@ -20,12 +20,7 @@ public class TeaService{
     }
 
     public Tea findById(Long id) {
-        return teaRepository.findById(id);
-    }
-
-    @Transactional
-    public void update(Long teaId, Tea tea) {
-        teaRepository.update(teaId, tea);
+        return teaRepository.findOne(id);
     }
 
 }

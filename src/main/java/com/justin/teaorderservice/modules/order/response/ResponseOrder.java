@@ -30,4 +30,11 @@ public class ResponseOrder {
                 .build();
         return responseOrder;
     }
+    public static ResponseOrder createResponseOrder(String userName, List<ResponseTeaOrder> responseTeaOrderList){
+        ResponseOrder responseOrder = ResponseOrder.builder()
+                .userId(userName)
+                .teaOrderList(responseTeaOrderList)
+                .build();
+        return responseOrder;
+    }
 }

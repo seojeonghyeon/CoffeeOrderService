@@ -1,5 +1,6 @@
 package com.justin.teaorderservice.modules.teaorder.form;
 
+import com.justin.teaorderservice.modules.tea.Tea;
 import com.justin.teaorderservice.modules.teaorder.TeaOrder;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
@@ -43,6 +44,16 @@ public class ItemOrderForm {
                 .price(teaOrder.getOrderPrice())
                 .quantity(teaOrder.getQuantity())
                 .teaName(teaOrder.getTea().getTeaName())
+                .build();
+        return itemOrderForm;
+    }
+    public static ItemOrderForm createItemOrderForm(Tea tea){
+        ItemOrderForm itemOrderForm = ItemOrderForm.builder()
+                .id(tea.getId())
+                .price(tea.getPrice())
+                .orderQuantity(0)
+                .teaName(tea.getTeaName())
+                .quantity(tea.getStockQuantity())
                 .build();
         return itemOrderForm;
     }
