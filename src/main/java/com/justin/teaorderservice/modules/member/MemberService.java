@@ -23,12 +23,12 @@ public class MemberService{
         return memberRepository.save(member);
     }
 
-    public Member findByPhoneNumber(String phoneNumber) {
-        return memberRepository.findByPhoneNumber(phoneNumber).filter(member -> member.getDisabled() == false).orElse(null);
+    public Member findByEmail(String email) {
+        return memberRepository.findByEmail(email).stream().filter(member -> member.getDisabled;
     }
 
-    public boolean hasPhoneNumber(String phoneNumber) {
-        return findByPhoneNumber(phoneNumber) != null;
+    public boolean hasEmail(String email) {
+        return memberRepository.findByEmail(email) != null;
     }
 
     @Transactional

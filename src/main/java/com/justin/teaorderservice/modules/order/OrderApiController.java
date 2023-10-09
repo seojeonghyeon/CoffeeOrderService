@@ -35,7 +35,6 @@ public class OrderApiController {
     private final TeaOrderService teaOrderService;
     private final TeaService teaService;
 
-
     @Operation(summary = "Tea 주문 가능 정보", description = "Tea 주문 가능 정보")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(schema = @Schema(implementation = ResponseOrder.class))),

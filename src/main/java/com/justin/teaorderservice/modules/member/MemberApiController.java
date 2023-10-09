@@ -22,6 +22,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 
@@ -48,8 +50,8 @@ public class MemberApiController {
     @PostMapping("/add")
     public ResponseEntity<String> addMember(final @RequestBody @Validated RequestMemberSave requestMemberSave) throws ComplexException {
         requestMemberSave.encodePassword(passwordEncoder.encode(requestMemberSave.getPassword()), passwordEncoder.encode(requestMemberSave.getSimplePassword()));
-        Member member = modelMapper.map(requestMemberSave, Member.class);
-        member.setMember(UUID.randomUUID().toString());
+        Member member = Member.createUserMember(requestMemberSave.getEmail(), requestMemberSave.getPassword(), requestMemberSave.getSimplePassword());
+        
 
         if(memberService.hasPhoneNumber(member.getPhoneNumber())){
             ResponseError responseError = ResponseError.builder()

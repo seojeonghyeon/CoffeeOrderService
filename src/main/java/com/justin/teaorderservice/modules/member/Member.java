@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -32,9 +34,9 @@ public class Member {
 
     private Boolean disabled;
 
-    private LocalDateTime createDate;
+    private ZonedDateTime createDate;
 
-    @ManyToMany(mappedBy = "members")
+    @ManyToMany(mappedBy = "members", cascade = CascadeType.ALL)
     private Set<Authority> authorities;
 
     @JsonIgnore
@@ -44,5 +46,22 @@ public class Member {
     public void setAuthorities(Authority authority){
         this.authorities.add(authority);
         authority.getMembers().add(this);
+    }
+
+    public static Member createUserMember(String email, String password, String simplePassword){
+        Set<Authority> authorities = new HashSet<>();
+        authorities.add(Authority.createUserAuthority());
+
+        Member member = Member.builder()
+                .memberName(AdjectiveWord.getWordOne() + AnimalWord.getWordOne())
+                .email(email)
+                .password(password)
+                .simplePassword(simplePassword)
+                .point(0)
+                .disabled(false)
+                .createDate(ZonedDateTime.now())
+                .authorities(authorities)
+                .build();
+        return member;
     }
 }

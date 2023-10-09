@@ -26,4 +26,11 @@ public class Authority {
             inverseJoinColumns = @JoinColumn(name = "member_id")
     )
     private Set<Member> members = new HashSet<>();
+
+    public static Authority createUserAuthority(){
+        Authority authority = Authority.builder()
+                .authorityName("USER")
+                .build();
+        return authority;
+    }
 }
