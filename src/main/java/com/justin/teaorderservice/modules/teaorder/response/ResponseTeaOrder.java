@@ -1,13 +1,13 @@
 package com.justin.teaorderservice.modules.teaorder.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.justin.teaorderservice.modules.teaorder.TeaOrder;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
-@Data
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@Builder
+@Getter @Setter
+@JsonInclude(JsonInclude.Include.NON_NULL) @AllArgsConstructor
+@Builder @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ResponseTeaOrder {
 
     @Schema(description = "Tea 고유 식별 번호", nullable = false, example = "1")
@@ -24,4 +24,15 @@ public class ResponseTeaOrder {
 
     @Schema(description = "Tea 주문 수량", nullable = false, example = "1")
     private Integer orderQuantity;
+
+    public static ResponseTeaOrder createResponseTeaOrder(TeaOrder teaOrder){
+        ResponseTeaOrder responseTeaOrder = ResponseTeaOrder.builder()
+                .id(teaOrder.getTea().getId())
+                .orderQuantity(teaOrder.getQuantity())
+                .price(teaOrder.getOrderPrice())
+                .quantity(teaOrder.getQuantity())
+                .teaName(teaOrder.getTea().getTeaName())
+                .build();
+        return responseTeaOrder;
+    }
 }

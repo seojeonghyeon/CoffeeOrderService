@@ -9,10 +9,9 @@ import lombok.*;
 
 import java.util.List;
 
-@Getter
-@Setter
+@Getter @Setter
 @Builder @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ItemPurchaseForm {
 
     @Null
@@ -24,5 +23,14 @@ public class ItemPurchaseForm {
     @NotNull
     @Valid
     private List<ItemOrderForm> itemOrderFormList;
+
+    public static ItemPurchaseForm createItemPurchaseForm(Long id, String userName, List<ItemOrderForm> itemOrderFormList){
+        ItemPurchaseForm itemPurchaseForm = ItemPurchaseForm.builder()
+                .id(id)
+                .userId(userName)
+                .itemOrderFormList(itemOrderFormList)
+                .build();
+        return itemPurchaseForm;
+    }
 
 }
