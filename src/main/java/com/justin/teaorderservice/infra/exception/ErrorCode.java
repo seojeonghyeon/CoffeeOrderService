@@ -14,7 +14,9 @@ public enum ErrorCode {
     NOT_ENOUGH_POINT(4010, false, "Not enough point"),
     NOT_ENOUGH_STOCK(4011, false, "Not enough stock"),
     ALREADY_COMPLETED_ORDER(4012, false, "Already completed order"),
-    ALREADY_NOT_PENDING_ORDER(4013, false, "Already not pending order");
+    ALREADY_NOT_PENDING_ORDER(4013, false, "Already not pending order"),
+    EXIST_EMAIL(4014,false, "Already the email is exist : %s"),
+    NO_EXIST_EMAIL(4015, false, "No exist email");
 
     private final int code;
     private final Boolean disabled;

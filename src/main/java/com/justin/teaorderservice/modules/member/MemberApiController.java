@@ -48,21 +48,21 @@ public class MemberApiController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생", content = @Content(schema = @Schema(implementation = String.class)))
     })
     @PostMapping("/add")
-    public ResponseEntity<String> addMember(final @RequestBody @Validated RequestMemberSave requestMemberSave) throws ComplexException {
+    public ResponseEntity<Long> addMember(final @RequestBody @Validated RequestMemberSave requestMemberSave) throws ComplexException {
         requestMemberSave.encodePassword(passwordEncoder.encode(requestMemberSave.getPassword()), passwordEncoder.encode(requestMemberSave.getSimplePassword()));
         Member member = Member.createUserMember(requestMemberSave.getEmail(), requestMemberSave.getPassword(), requestMemberSave.getSimplePassword());
         
 
-        if(memberService.hasPhoneNumber(member.getPhoneNumber())){
+        if(memberService.hasEmail(member.getEmail())){
             ResponseError responseError = ResponseError.builder()
-                    .errorCode(ErrorCode.EXIST_PHONE_NUMBER)
-                    .target(requestMemberSave.getPhoneNumber())
+                    .errorCode(ErrorCode.EXIST_EMAIL)
+                    .target(requestMemberSave.getEmail())
                     .build();
             throw new ComplexException(responseError);
         }
 
         Member saveMember = memberService.save(member);
-        return ResponseEntity.status(HttpStatus.OK).body(saveMember.getMemberId());
+        return ResponseEntity.status(HttpStatus.OK).body(saveMember.getId());
     }
 
     @Operation(summary = "회원 가입 여부 확인", description = "사용자의 ID에 대해 등록된 핸드폰 번호가 있는 지 확인 한다.")
@@ -76,19 +76,19 @@ public class MemberApiController {
     public ResponseEntity<String> memberDetail(@AuthenticationPrincipal MemberAdapter memberAdapter) throws ComplexException{
         Member member = memberAdapter.getMember();
         log.info("get: member={}", member); //memberId 정도만 아니면 키값정도만
-        String phoneNumber = null;
+        String email = null;
 
         if(member == null){
             ResponseError responseError = ResponseError.builder()
-                    .errorCode(ErrorCode.NO_EXIST_PHONE_NUMBER)
-                    .target(member.getPhoneNumber())
+                    .errorCode(ErrorCode.NO_EXIST_EMAIL)
+                    .target(member.getEmail())
                     .build();
             throw new ComplexException(responseError);
         }else{
-            phoneNumber = member.getPhoneNumber();
+            email = member.getEmail();
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(phoneNumber);
+        return ResponseEntity.status(HttpStatus.OK).body(email);
     }
 
 }

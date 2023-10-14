@@ -7,6 +7,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static java.lang.String.format;
+
 @Slf4j
 @Service
 @Transactional(readOnly = true)
@@ -15,8 +17,8 @@ public class MemberService{
 
     private final MemberRepository memberRepository;
 
-    public Member findByUserId(String userId) {
-        return memberRepository.findByUserId(userId).filter(member -> member.getDisabled() == false).orElse(null);
+    public Member findByMemberId(Long memberId) {
+        return memberRepository.findById(memberId).filter(member -> !member.getDisabled()).orElse(null);
     }
 
     public Member save(Member member) {
@@ -24,18 +26,18 @@ public class MemberService{
     }
 
     public Member findByEmail(String email) {
-        return memberRepository.findByEmail(email).stream().filter(member -> member.getDisabled;
+        return memberRepository.findByEmail(email).orElse(null);
     }
 
     public boolean hasEmail(String email) {
-        return memberRepository.findByEmail(email) != null;
+        return memberRepository.findByEmail(email).isPresent();
     }
 
     @Transactional
-    public UserDetails loadUserByUsername(String username) {
-        Member findMember = memberRepository.findByUserId(username)
-                .filter(member -> member.getDisabled() == false)
-                .orElseThrow(() -> new UsernameNotFoundException(String.format("Not found in Database : {}", username)));
+    public UserDetails loadUserByUsername(String email) {
+        Member findMember = memberRepository.findByEmail(email)
+                .filter(member -> !member.getDisabled())
+                .orElseThrow(() -> new UsernameNotFoundException(format("Not found in Database : {}", email)));
         return new MemberAdapter(findMember);
     }
 }

@@ -19,16 +19,15 @@ import java.util.List;
 public class OrderService{
 
     private final OrderRepository orderRepository;
-    private final TeaRepository teaRepository;
     private final MemberRepository memberRepository;
 
     public Order findById(Long orderId) {
-        return orderRepository.findOne(orderId);
+        return orderRepository.findById(orderId).orElse(null);
     }
 
     public Order findByUserIdAndId(Long memberId, Long id) {
-        Order order = orderRepository.findOne(id);
-        return memberId == order.getMember().getId() ? order : null;
+        Member findMember = memberRepository.findById(memberId).orElse(null);
+        return orderRepository.findOrderByMemberAndId(findMember, id).orElse(null);
     }
 
     @Transactional
@@ -38,8 +37,8 @@ public class OrderService{
 
     @Transactional
     public Long order(Long memberId, TeaOrder... teaOrders) {
-        Member member = memberRepository.findOne(memberId);
-        Order order = Order.createOrder(member, teaOrders);
+        Member findMember = memberRepository.findById(memberId).orElse(null);
+        Order order = Order.createOrder(findMember, teaOrders);
         orderRepository.save(order);
         return order.getId();
     }

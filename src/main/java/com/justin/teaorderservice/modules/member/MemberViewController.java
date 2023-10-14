@@ -13,8 +13,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.UUID;
-
 /**
  * NAME : Member View Controller V1
  * DESCRIPTION : Member View Controller : V1
@@ -50,17 +48,16 @@ public class MemberViewController {
 
         memberSaveForm.encodePassword(passwordEncoder.encode(memberSaveForm.getPassword()), passwordEncoder.encode(memberSaveForm.getSimplePassword()));
         Member member = modelMapper.map(memberSaveForm, Member.class);
-        member.setMember(UUID.randomUUID().toString());
 
-        if(memberService.hasPhoneNumber(member.getPhoneNumber())){
+        if(memberService.hasEmail(member.getEmail())){
             bindingResult.reject("hasPhoneNumber",
-                    new Object[]{member.getPhoneNumber()}, null);
+                    new Object[]{member.getEmail()}, null);
             log.info("error={}",bindingResult);
             return "members/v1/addMember";
         }
 
         Member saveMember = memberService.save(member);
-        redirectAttributes.addAttribute("userId", saveMember.getMemberId());
+        redirectAttributes.addAttribute("userId", saveMember.getId());
         return "redirect:/view/order/v1/members/{userId}/detail";
     }
 
@@ -71,14 +68,14 @@ public class MemberViewController {
      * @return 회원 가입 내역 확인 페이지
      */
     @GetMapping("/{userId}/detail")
-    public String memberDetail(@PathVariable String userId, Model model){
-        Member member = memberService.findByUserId(userId);
+    public String memberDetail(@PathVariable Long userId, Model model){
+        Member member = memberService.findByMemberId(userId);
         log.info("get: member={}", member);
-        String phoneNumber;
-        if(member == null) phoneNumber = "가입 정보가 존재하지 않습니다";
-        else phoneNumber = member.getPhoneNumber();
+        String email;
+        if(member == null) email = "가입 정보가 존재 하지 않습니다";
+        else email = member.getEmail();
 
-        model.addAttribute("phoneNumber", phoneNumber);
+        model.addAttribute("email", email);
         return "members/v1/addResult";
     }
 
