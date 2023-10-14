@@ -17,9 +17,12 @@ spring:
     console:
       enabled: true
   jpa:
+    hibernate:
+      ddl-auto: create
     properties:
       hibernate:
         default_batch_fetch_size: 100
+        format_sql: true
     open-in-view: false
 
 server:
@@ -30,4 +33,6 @@ server:
     include-stacktrace: on_param
     include-message: on_param
     include-exception: true
-
+logging:
+  level:
+    org.hibernate.sql: debug

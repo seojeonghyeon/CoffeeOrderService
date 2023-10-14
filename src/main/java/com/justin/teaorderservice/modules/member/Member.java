@@ -20,25 +20,16 @@ public class Member {
     @Id @GeneratedValue
     @Column(name = "member_id")
     private Long id;
-
     private String memberName; // Adjective + Animal Name
-
     @Column(unique = true)
     private String email; //for duplicate validation in multi thread environment
-
     private String password; //General
-
     private String simplePassword; //with Refresh Token
-
     private Integer point;
-
     private Boolean disabled;
-
     private ZonedDateTime createDate;
-
     @ManyToMany(mappedBy = "members", cascade = CascadeType.ALL)
     private Set<Authority> authorities;
-
     @JsonIgnore
     @OneToMany(mappedBy = "member")
     private List<Order> orders;
