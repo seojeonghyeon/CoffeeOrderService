@@ -50,8 +50,9 @@ public class WebSecurityConfig {
 
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/h2/**").permitAll()
+                .requestMatchers("/**").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
+                .requestMatchers("/h2-console/login.jsp").permitAll()
                 .requestMatchers("/favicon.ico").permitAll()
                 .requestMatchers("/error").permitAll()
                 .requestMatchers("/image/**").permitAll()

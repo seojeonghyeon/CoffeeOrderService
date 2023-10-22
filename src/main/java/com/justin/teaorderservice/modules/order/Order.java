@@ -17,7 +17,7 @@ import java.util.List;
 import static jakarta.persistence.FetchType.*;
 
 @Table(name = "orders") @Entity
-@Getter @Builder
+@Getter @Builder @Setter(AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Order extends BaseEntity {
@@ -37,10 +37,9 @@ public class Order extends BaseEntity {
 
 
     public static Order createOrder(Member member, TeaOrder... teaOrders){
-        Order order = Order.builder()
-                .member(member)
-                .status(OrderStatus.PENDING)
-                .build();
+        Order order = new Order();
+        order.setMember(member);
+        order.setStatus(OrderStatus.PENDING);
         for (TeaOrder teaOrder : teaOrders) {
             order.addTeaOrder(teaOrder);
         }

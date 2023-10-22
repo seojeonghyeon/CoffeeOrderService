@@ -28,17 +28,14 @@ public class Authority {
     )
     private Set<Member> members = new HashSet<>();
 
-    public static Authority createUserAuthority(){
-        Authority authority = Authority.builder()
-                .authorityName("USER")
-                .build();
+    public static Authority creatAuthority(String role){
+        Authority authority = new Authority();
+        authority.setAuthorityName(role);
         return authority;
     }
 
-    public static Authority creatAuthority(String role){
-        Authority authority = Authority.builder()
-                .authorityName(role)
-                .build();
-        return authority;
+    public void setMember(Member member){
+        this.members.add(member);
+        member.getAuthorities().add(this);
     }
 }

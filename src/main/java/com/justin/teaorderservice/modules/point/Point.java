@@ -12,7 +12,7 @@ import lombok.*;
 import static jakarta.persistence.FetchType.LAZY;
 
 @Table(name = "points") @Entity
-@Getter
+@Getter @Setter(AccessLevel.PROTECTED)
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -33,14 +33,20 @@ public class Point extends BaseEntity {
     private Integer addPoint;
 
     public static Point creatPoint(Member member, Integer currentPoint, Integer addPoint){
-        Point point = Point.builder()
-                .member(member)
-                .status(PointStatus.PENDING)
-                .currentPoint(currentPoint)
-                .addPoint(addPoint)
-                .build();
+        Point point = new Point();
+        point.setStatus(PointStatus.PENDING);
+        point.setCurrentPoint(currentPoint);
+        point.setAddPoint(addPoint);
+
+        point.setMember(member);
         point.inducePoint();
+
         return point;
+    }
+
+    public void setMember(Member member){
+        this.member = member;
+        member.getPoints().add(this);
     }
 
     public void inducePoint(){

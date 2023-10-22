@@ -18,7 +18,6 @@ import java.util.UUID;
 public class TestDataInit {
 
     private final TeaRepository teaRepository;
-    private final AuthorityRepository authorityRepository;
     private final MemberRepository memberRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
@@ -56,42 +55,23 @@ public class TestDataInit {
         teaRepository.save(teaPack1);
 
 
-        Authority authority1 = createAuthority("ADMIN");
-        authorityRepository.save(authority1);
-
-        Authority authority2 = createAuthority("MANAGER");
-        authorityRepository.save(authority2);
-
-        Authority authority3 = createAuthority("USER");
-        authorityRepository.save(authority3);
-
-
         Member member = createMember("seojeonghyeon0630@gmail.com", passwordEncoder.encode("SEOjh1234!"), passwordEncoder.encode("1234"));
         memberRepository.save(member);
     }
 
     private Member createMember(String email, String encryptedPwd, String simpleEncryptedPwd){
-        Member member = Member.createUserMember(email, encryptedPwd, simpleEncryptedPwd);
-        return member;
-    }
-
-    private Authority createAuthority(String role){
-        Authority authority = Authority.creatAuthority(role);
-        return authority;
+        return Member.createUserMember(email, encryptedPwd, simpleEncryptedPwd);
     }
 
     private Coffee createCoffee(String teaName, Integer price, Integer stockQuantity, String teaImage, String description, boolean disabled){
-        Coffee coffee = Coffee.createCoffee(teaName, price, stockQuantity, teaImage,description,disabled, 1);
-        return coffee;
+        return Coffee.createCoffee(teaName, price, stockQuantity, teaImage,description,disabled, 1);
     }
 
     private TeaPack createTeaPack(String teaName, Integer price, Integer stockQuantity, String teaImage, String description, boolean disabled){
-        TeaPack teaPack = TeaPack.createTeaPack(teaName, price, stockQuantity, teaImage,description,disabled);
-        return teaPack;
+        return TeaPack.createTeaPack(teaName, price, stockQuantity, teaImage,description,disabled);
     }
 
     private Ade createAde(String teaName, Integer price, Integer stockQuantity, String teaImage, String description, boolean disabled){
-        Ade ade = Ade.createAde(teaName, price, stockQuantity, teaImage,description,disabled);
-        return ade;
+        return Ade.createAde(teaName, price, stockQuantity, teaImage,description,disabled);
     }
 }

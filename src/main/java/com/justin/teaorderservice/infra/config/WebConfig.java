@@ -22,8 +22,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludePathPatterns(
                         "/css/**",
                         "/*.ico",
-                        "/error",
-                        "/h2-console"
+                        "/error"
                 );
     }
 }
