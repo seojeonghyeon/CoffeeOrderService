@@ -33,7 +33,7 @@ public class TeaOrderService{
     }
 
     public TeaOrder teaOrder(Long teaId, Integer orderPrice, Integer orderQuantity){
-        Tea tea = teaRepository.findOne(teaId);
+        Tea tea = teaRepository.findById(teaId).orElse(null);
         TeaOrder teaOrder = TeaOrder.createTeaOrder(tea,orderPrice, orderQuantity);
         return teaOrder;
     }

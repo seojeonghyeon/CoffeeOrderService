@@ -3,17 +3,21 @@ package com.justin.teaorderservice.modules.tea;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.justin.teaorderservice.infra.exception.ErrorCode;
 import com.justin.teaorderservice.infra.exception.NotEnoughStockException;
+import com.justin.teaorderservice.modules.category.Category;
 import com.justin.teaorderservice.modules.teaorder.TeaOrder;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "teas")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "dtype")
 @Getter @Setter @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder @AllArgsConstructor
-public class Tea {
+public abstract class Tea {
 
     @Id @GeneratedValue
     @Column(name = "tea_id")
@@ -25,18 +29,12 @@ public class Tea {
     private String description;
     private Boolean disabled;
 
+    @ManyToMany(mappedBy = "teas")
+    private List<Category> categories = new ArrayList<>();
+
     @JsonIgnore
     @OneToMany(mappedBy = "tea", cascade = CascadeType.ALL)
     private List<TeaOrder> teaOrders;
-
-    public Tea(String teaName, Integer price, Integer stockQuantity, String teaImage, String description, boolean disabled) {
-        this.teaName = teaName;
-        this.price = price;
-        this.stockQuantity = stockQuantity;
-        this.teaImage = teaImage;
-        this.description = description;
-        this.disabled = disabled;
-    }
 
     public void addStock(Integer quantity){
         this.stockQuantity += quantity;

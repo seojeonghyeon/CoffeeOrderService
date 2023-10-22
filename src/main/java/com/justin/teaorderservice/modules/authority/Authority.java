@@ -34,4 +34,11 @@ public class Authority {
                 .build();
         return authority;
     }
+
+    public static Authority creatAuthority(String role){
+        Authority authority = Authority.builder()
+                .authorityName(role)
+                .build();
+        return authority;
+    }
 }
