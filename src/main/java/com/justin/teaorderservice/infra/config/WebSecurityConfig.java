@@ -51,6 +51,7 @@ public class WebSecurityConfig {
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers("/h2/**").permitAll()
+                .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/favicon.ico").permitAll()
                 .requestMatchers("/error").permitAll()
                 .requestMatchers("/image/**").permitAll()

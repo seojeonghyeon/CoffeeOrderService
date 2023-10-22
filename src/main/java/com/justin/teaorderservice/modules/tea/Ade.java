@@ -7,21 +7,19 @@ import lombok.*;
 @Entity
 @DiscriminatorValue("A")
 @Getter
-@Setter
-@Builder
+@Setter(AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class Ade extends Tea{
 
+    public Ade(String teaName, Integer price, Integer stockQuantity, String teaImage, String description, boolean disabled) {
+        setTeaName(teaName);
+        setPrice(price);
+        setStockQuantity(stockQuantity);
+        setTeaImage(teaImage);
+        setDisabled(disabled);
+    }
+
     public static Ade createAde(String teaName, Integer price, Integer stockQuantity, String teaImage, String description, boolean disabled){
-        Ade ade = (Ade) Tea.builder()
-                .teaName(teaName)
-                .price(price)
-                .stockQuantity(stockQuantity)
-                .teaImage(teaImage)
-                .description(description)
-                .disabled(disabled)
-                .build();
-        return ade;
+        return new Ade(teaName, price, stockQuantity, teaImage, description, disabled);
     }
 }

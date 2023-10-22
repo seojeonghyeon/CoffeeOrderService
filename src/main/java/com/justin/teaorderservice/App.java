@@ -1,6 +1,7 @@
 package com.justin.teaorderservice;
 
 import com.justin.teaorderservice.modules.authority.AuthorityRepository;
+import com.justin.teaorderservice.modules.member.MemberRepository;
 import com.justin.teaorderservice.modules.tea.TeaRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
@@ -23,7 +24,7 @@ public class App {
 
     @Bean
     @Profile("local")
-    public TestDataInit testDataInit(TeaRepository teaRepository, AuthorityRepository authorityRepository, BCryptPasswordEncoder passwordEncoder){
-        return new TestDataInit(teaRepository, authorityRepository, passwordEncoder);
+    public TestDataInit testDataInit(TeaRepository teaRepository, AuthorityRepository authorityRepository, MemberRepository memberRepository, BCryptPasswordEncoder passwordEncoder){
+        return new TestDataInit(teaRepository, authorityRepository, memberRepository, passwordEncoder);
     }
 }

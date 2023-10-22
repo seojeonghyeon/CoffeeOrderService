@@ -15,9 +15,10 @@ import java.util.List;
 @Table(name = "teas")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "dtype")
-@Getter @Setter @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Setter(AccessLevel.PROTECTED)
 @Builder @AllArgsConstructor
-public abstract class Tea {
+public class Tea {
 
     @Id @GeneratedValue
     @Column(name = "tea_id")
@@ -35,6 +36,12 @@ public abstract class Tea {
     @JsonIgnore
     @OneToMany(mappedBy = "tea", cascade = CascadeType.ALL)
     private List<TeaOrder> teaOrders;
+
+    public static Tea createTea(String teaName, Integer price, Integer stockQuantity, String teaImage, String description, boolean disabled, Integer shot){
+        Tea tea = Tea.builder()
+                .build();
+        return tea;
+    }
 
     public void addStock(Integer quantity){
         this.stockQuantity += quantity;

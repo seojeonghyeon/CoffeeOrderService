@@ -7,20 +7,19 @@ import lombok.*;
 @Entity
 @DiscriminatorValue("T")
 @Getter
-@Setter
-@Builder
+@Setter(AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class TeaPack extends Tea{
     public static TeaPack createTeaPack(String teaName, Integer price, Integer stockQuantity, String teaImage, String description, boolean disabled){
-        TeaPack teaPack = (TeaPack) Tea.builder()
-                .teaName(teaName)
-                .price(price)
-                .stockQuantity(stockQuantity)
-                .teaImage(teaImage)
-                .description(description)
-                .disabled(disabled)
-                .build();
-        return teaPack;
+        return new TeaPack(teaName, price, stockQuantity, teaImage, description, disabled);
+
+    }
+
+    private TeaPack(String teaName, Integer price, Integer stockQuantity, String teaImage, String description, boolean disabled) {
+        setTeaName(teaName);
+        setPrice(price);
+        setStockQuantity(stockQuantity);
+        setTeaImage(teaImage);
+        setDisabled(disabled);
     }
 }

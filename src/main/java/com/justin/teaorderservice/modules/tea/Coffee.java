@@ -7,24 +7,22 @@ import lombok.*;
 @Entity
 @DiscriminatorValue("C")
 @Getter
-@Setter
-@Builder
+@Setter(AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class Coffee extends Tea{
     private Integer shot;
 
+    private Coffee(String teaName, Integer price, Integer stockQuantity, String teaImage, String description, boolean disabled, Integer shot) {
+        setTeaName(teaName);
+        setPrice(price);
+        setStockQuantity(stockQuantity);
+        setTeaImage(teaImage);
+        setDisabled(disabled);
+        setShot(shot);
+    }
+
     public static Coffee createCoffee(String teaName, Integer price, Integer stockQuantity, String teaImage, String description, boolean disabled, Integer shot){
-        Coffee coffee = (Coffee) Tea.builder()
-                .teaName(teaName)
-                .price(price)
-                .stockQuantity(stockQuantity)
-                .teaImage(teaImage)
-                .description(description)
-                .disabled(disabled)
-                .build();
-        coffee.setShot(1);
-        return coffee;
+        return new Coffee(teaName, price, stockQuantity, teaImage, description, disabled, shot);
     }
 
     private void setShot(Integer shot){
