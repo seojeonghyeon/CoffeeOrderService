@@ -26,8 +26,8 @@ import java.util.*;
 import static com.justin.teaorderservice.modules.tea.TeaApiController.ROOT;
 
 @Tag(
-        name = "Tea API Controller V1",
-        description = "Tea API Controller : V1"
+        name = "Tea API Controller",
+        description = "Tea API Controller"
 )
 @Slf4j
 @Controller

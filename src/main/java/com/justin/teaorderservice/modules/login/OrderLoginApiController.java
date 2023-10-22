@@ -12,8 +12,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(
-        name = "Order Login API Controller V1",
-        description = "Order Login API Controller : V1"
+        name = "Order Login API Controller",
+        description = "Order Login API Controller"
 )
 @Slf4j
 @RestController

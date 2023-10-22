@@ -20,8 +20,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(
-        name = "Member API Controller V1",
-        description = "Member API Controller : V1"
+        name = "Member API Controller",
+        description = "Member API Controller"
 )
 @Slf4j
 @Controller
