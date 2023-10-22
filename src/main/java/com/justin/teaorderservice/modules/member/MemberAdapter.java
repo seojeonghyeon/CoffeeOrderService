@@ -1,5 +1,6 @@
 package com.justin.teaorderservice.modules.member;
 
+import com.justin.teaorderservice.modules.authority.Authority;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

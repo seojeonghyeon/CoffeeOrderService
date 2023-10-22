@@ -2,7 +2,7 @@ package com.justin.teaorderservice.modules.login;
 
 import com.justin.teaorderservice.infra.MockMvcTest;
 import com.justin.teaorderservice.infra.session.SessionConst;
-import com.justin.teaorderservice.modules.member.Authority;
+import com.justin.teaorderservice.modules.authority.Authority;
 import com.justin.teaorderservice.modules.member.Member;
 import com.justin.teaorderservice.modules.member.MemberService;
 import org.junit.jupiter.api.DisplayName;

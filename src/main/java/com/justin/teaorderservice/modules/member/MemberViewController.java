@@ -46,31 +46,27 @@ public class MemberViewController {
             return "members/v1/addMember";
         }
 
-        memberSaveForm.encodePassword(passwordEncoder.encode(memberSaveForm.getPassword()), passwordEncoder.encode(memberSaveForm.getSimplePassword()));
-        Member member = modelMapper.map(memberSaveForm, Member.class);
-
-        if(memberService.hasEmail(member.getEmail())){
-            bindingResult.reject("hasPhoneNumber",
-                    new Object[]{member.getEmail()}, null);
+        if(memberService.hasEmail(memberSaveForm.getEmail())){
+            bindingResult.reject("existEmail",
+                    new Object[]{memberSaveForm.getEmail()}, null);
             log.info("error={}",bindingResult);
             return "members/v1/addMember";
         }
 
-        Member saveMember = memberService.save(member);
-        redirectAttributes.addAttribute("userId", saveMember.getId());
-        return "redirect:/view/order/v1/members/{userId}/detail";
+        String memberId = memberService.register(memberSaveForm.getEmail(), passwordEncoder.encode(memberSaveForm.getPassword()), passwordEncoder.encode(memberSaveForm.getSimplePassword()));
+        redirectAttributes.addAttribute("memberId", memberId);
+        return "redirect:/view/order/v1/members/{memberId}/detail";
     }
 
     /**
      *
-     * @param userId 사용자 ID
+     * @param memberId 사용자 ID
      * @param model model
      * @return 회원 가입 내역 확인 페이지
      */
-    @GetMapping("/{userId}/detail")
-    public String memberDetail(@PathVariable Long userId, Model model){
-        Member member = memberService.findByMemberId(userId);
-        log.info("get: member={}", member);
+    @GetMapping("/{memberId}/detail")
+    public String memberDetail(@PathVariable("memberId") String memberId, Model model){
+        Member member = memberService.findByMemberId(memberId);
         String email;
         if(member == null) email = "가입 정보가 존재 하지 않습니다";
         else email = member.getEmail();

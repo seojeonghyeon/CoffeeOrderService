@@ -25,10 +25,4 @@ public class MemberSaveForm {
     @Pattern(regexp = "[0-9]{4,5}", message = "간편 비밀번호는 4~5자 숫자만 입력 가능합니다")
     @NotEmpty
     private String simplePassword;
-
-    public void encodePassword(String encryptedPwd, String simpleEncryptedPwd){
-        this.password = encryptedPwd;
-        this.simplePassword = simpleEncryptedPwd;
-    }
-
 }

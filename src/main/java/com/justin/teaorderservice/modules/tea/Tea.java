@@ -40,7 +40,7 @@ public class Tea {
 
     public void addStock(Integer quantity){
         this.stockQuantity += quantity;
-        if(disabled == true){
+        if(disabled){
             setDisabled(false);
         }
     }

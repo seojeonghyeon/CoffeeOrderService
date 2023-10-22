@@ -1,6 +1,5 @@
 package com.justin.teaorderservice.modules.order;
 
-import com.justin.teaorderservice.infra.exception.ComplexException;
 import com.justin.teaorderservice.modules.member.Member;
 import com.justin.teaorderservice.modules.member.MemberAdapter;
 import com.justin.teaorderservice.modules.tea.Tea;
@@ -26,11 +25,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+
+import static com.justin.teaorderservice.modules.order.OrderApiController.ROOT;
+
 @Slf4j
 @Controller
-@RequestMapping("/api/order/v1/orders")
+@RequestMapping(ROOT)
 @RequiredArgsConstructor
 public class OrderApiController {
+    public static final String ROOT = "/api/order/v1/orders";
+    static final String ORDER_DETAIL = "/{orderId}/detail";
+
     private final OrderService orderService;
     private final TeaOrderService teaOrderService;
     private final TeaService teaService;
@@ -57,9 +62,9 @@ public class OrderApiController {
             @ApiResponse(responseCode = "400", description = "Request Fail", content = @Content(schema = @Schema(implementation = ResponseOrder.class))),
             @ApiResponse(responseCode = "500", description = "Server Error", content = @Content(schema = @Schema(implementation = ResponseOrder.class)))
     })
-    @GetMapping("/{orderId}/detail")
+    @GetMapping(ORDER_DETAIL)
     @PreAuthorize("hasAnyAuthority('USER','MANAGER','ADMIN')")
-    public ResponseEntity<ResponseOrder> orderDetail(@PathVariable long orderId, @AuthenticationPrincipal MemberAdapter memberAdapter) throws ComplexException {
+    public ResponseEntity<ResponseOrder> orderDetail(@PathVariable long orderId, @AuthenticationPrincipal MemberAdapter memberAdapter) {
         Member member = memberAdapter.getMember();
         Order order = orderService.findByUserIdAndId(member.getId(), orderId);
         ResponseOrder responseOrder = null;

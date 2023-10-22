@@ -1,7 +1,7 @@
 package com.justin.teaorderservice.modules.login;
 
-import com.justin.teaorderservice.modules.login.form.SimpleLoginForm;
-import com.justin.teaorderservice.modules.member.Member;
+import com.justin.teaorderservice.modules.login.form.LoginForm;
+import com.justin.teaorderservice.modules.login.session.LoginMember;
 import com.justin.teaorderservice.infra.session.SessionConst;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -25,43 +25,37 @@ public class OrderLoginViewController {
     private final LoginService loginService;
 
     /**
-     * @param simpleLoginForm 간편 로그인 양식
+     * @param loginForm 간편 로그인 양식
      * @return 간편 로그인 페이지
      */
     @GetMapping
-    public String loginForm(@ModelAttribute("simpleLoginForm") SimpleLoginForm simpleLoginForm) {
+    public String loginForm(@ModelAttribute("simpleLoginForm") LoginForm loginForm) {
         return "login/v1/simpleLoginForm";
     }
 
     /**
-     * @param simpleLoginForm 간편 로그인 양식
+     * @param loginForm 간편 로그인 양식
      * @param bindingResult Validation
      * @param request Session 할당
      * @param redirectURL Redirect URL
      * @return Redirect URL로 이동
      */
     @PostMapping
-    public String simpleLoginV1(@Validated @ModelAttribute("simpleLoginForm") SimpleLoginForm simpleLoginForm, BindingResult bindingResult,
+    public String login(@Validated @ModelAttribute("simpleLoginForm") LoginForm loginForm, BindingResult bindingResult,
                                 HttpServletRequest request, @RequestParam(defaultValue = "/view/order/v1/orders") String redirectURL){
         if(bindingResult.hasErrors()){
             return "login/v1/simpleLoginForm";
         }
 
-        Member member = loginService.simpleLogin(
-                simpleLoginForm.getPhoneNumber(),
-                simpleLoginForm.getSimplePassword()
-        );
+        String memberId = loginService.login(loginForm.getEmail(), loginForm.getSimplePassword());
 
-        if(member == null){
+        if(memberId == null){
             bindingResult.reject("loginFail", new Object[]{}, null);
-            return "login/v1/simpleLoginForm";
-        }else if(member.getDisabled()){
-            bindingResult.reject("isDisabled", new Object[]{}, null);
             return "login/v1/simpleLoginForm";
         }
 
         HttpSession session = request.getSession();
-        session.setAttribute(SessionConst.LOGIN_MEMBER, member);
+        session.setAttribute(SessionConst.LOGIN_MEMBER, LoginMember.createLoginMember(memberId));
         return "redirect:"+redirectURL;
     }
 
@@ -70,7 +64,7 @@ public class OrderLoginViewController {
      * @return order home 화면
      */
     @PostMapping("/logout")
-    public String logoutV1(HttpServletRequest request){
+    public String logout(HttpServletRequest request){
         HttpSession session = request.getSession(false);
         if(session != null){
             session.invalidate();

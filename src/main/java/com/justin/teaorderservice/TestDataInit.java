@@ -1,7 +1,7 @@
 package com.justin.teaorderservice;
 
-import com.justin.teaorderservice.modules.member.Authority;
-import com.justin.teaorderservice.modules.member.AuthorityRepository;
+import com.justin.teaorderservice.modules.authority.Authority;
+import com.justin.teaorderservice.modules.authority.AuthorityRepository;
 import com.justin.teaorderservice.modules.member.Member;
 import com.justin.teaorderservice.modules.tea.Tea;
 import com.justin.teaorderservice.modules.tea.TeaRepository;

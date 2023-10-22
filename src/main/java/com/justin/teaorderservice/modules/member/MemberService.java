@@ -17,16 +17,24 @@ public class MemberService{
 
     private final MemberRepository memberRepository;
 
-    public Member findByMemberId(Long memberId) {
+    public Member findByMemberId(String memberId) {
         return memberRepository.findById(memberId).filter(member -> !member.getDisabled()).orElse(null);
     }
 
-    public Member save(Member member) {
-        return memberRepository.save(member);
+    public String findMemberNameByMemberId(String memberId){
+        return memberRepository.findById(memberId).filter(member -> !member.getDisabled()).orElse(null).getMemberName();
     }
 
-    public Member findByEmail(String email) {
-        return memberRepository.findByEmail(email).orElse(null);
+    @Transactional
+    public String register(String email, String encryptedPwd, String simpleEncryptedPwd){
+        Member member = Member.createUserMember(email, encryptedPwd, simpleEncryptedPwd);
+        memberRepository.save(member);
+        return member.getId();
+    }
+
+    @Transactional
+    public Member save(Member member) {
+        return memberRepository.save(member);
     }
 
     public boolean hasEmail(String email) {

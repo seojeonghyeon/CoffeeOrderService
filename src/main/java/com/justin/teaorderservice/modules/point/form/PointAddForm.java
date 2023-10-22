@@ -19,12 +19,20 @@ public class PointAddForm {
     @NumberFormat(pattern = "###,###")
     @NotNull
     @PositiveOrZero
-    @Range(min = 0, max = 1000000)
+    @Range(min = 0, max = 1_000_000)
     private Integer point;
 
     @NumberFormat(pattern = "###,###")
     @NotNull
     @PositiveOrZero
-    @Range(min = 0, max = 1000000)
+    @Range(min = 0, max = 200_000)
     private Integer addPoint;
+
+    public static PointAddForm createPointAddForm(Integer point, Integer addPoint){
+        PointAddForm pointAddForm = PointAddForm.builder()
+                .point(point)
+                .addPoint(addPoint)
+                .build();
+        return pointAddForm;
+    }
 }

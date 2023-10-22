@@ -6,10 +6,10 @@ import lombok.Data;
 
 @Data
 @Builder
-public class SimpleLoginForm {
+public class LoginForm {
 
     @NotEmpty
-    private String phoneNumber;
+    private String email;
 
     @NotEmpty
     private String simplePassword;

@@ -1,6 +1,7 @@
-package com.justin.teaorderservice.modules.member;
+package com.justin.teaorderservice.modules.authority;
 
 
+import com.justin.teaorderservice.modules.member.Member;
 import jakarta.persistence.*;
 import lombok.*;
 

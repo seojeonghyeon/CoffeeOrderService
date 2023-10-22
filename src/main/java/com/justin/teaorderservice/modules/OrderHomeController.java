@@ -9,13 +9,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Slf4j
 @Controller
-@RequestMapping("/view/order/v1/home")
+@RequestMapping(OrderHomeController.ROOT)
 @RequiredArgsConstructor
 public class OrderHomeController {
 
+    static final String ROOT = "/view/order/v1/home";
+    static final String HOME_PAGE = "order/v1/home";
+
     @GetMapping
     public String orderHomePage(Model model){
-        return "order/v1/home";
+        return HOME_PAGE;
     }
 
 }

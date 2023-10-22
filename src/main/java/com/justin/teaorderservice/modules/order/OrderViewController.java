@@ -1,7 +1,9 @@
 package com.justin.teaorderservice.modules.order;
 
 import com.justin.teaorderservice.infra.argumentresolver.Login;
+import com.justin.teaorderservice.modules.login.session.LoginMember;
 import com.justin.teaorderservice.modules.member.Member;
+import com.justin.teaorderservice.modules.member.MemberService;
 import com.justin.teaorderservice.modules.tea.TeaService;
 import com.justin.teaorderservice.modules.teaorder.TeaOrderService;
 import com.justin.teaorderservice.modules.teaorder.form.ItemOrderForm;
@@ -16,9 +18,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.justin.teaorderservice.modules.order.OrderViewController.ROOT;
 
 /**
  * NAME : Order View Controller V1
@@ -26,12 +29,20 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Controller
-@RequestMapping("/view/order/v1/orders")
+@RequestMapping(ROOT)
 @RequiredArgsConstructor
 public class OrderViewController {
 
+    static final String ROOT = "/view/order/v1/orders";
+    static final String LOGIN_PAGE = "/order/v1/login";
+    static final String ADD_ITEMS_PAGE = "order/v1/addItems";
+    static final String ORDER_DETAIL = "/{orderId}/detail";
+    static final String ORDER_DETAIL_PAGE = "order/v1/order";
+
+
     private final OrderService orderService;
     private final TeaOrderService teaOrderService;
+    private final MemberService memberService;
     private final TeaService teaService;
 
     /**
@@ -40,16 +51,17 @@ public class OrderViewController {
      * @return 주문 페이지
      */
     @GetMapping
-    public String items(@Login Member loginMember, Model model){
+    public String items(@Login LoginMember loginMember, Model model){
         if(loginMember == null){
-            return "redirect:/order/v1/login";
+            return "redirect:"+LOGIN_PAGE;
         }
+        String memberName = memberService.findMemberNameByMemberId(loginMember.getMemberId());
         List<Tea> teas = teaService.findAll();
         List<ItemOrderForm> itemOrderForms = teas.stream().map(ItemOrderForm::createItemOrderForm).toList();
-        ItemPurchaseForm itemPurchaseForm = ItemPurchaseForm.createItemPurchaseForm(loginMember.getMemberName(), itemOrderForms);
+        ItemPurchaseForm itemPurchaseForm = ItemPurchaseForm.createItemPurchaseForm(memberName, itemOrderForms);
         model.addAttribute("member", loginMember);
         model.addAttribute("itemPurchaseForm",itemPurchaseForm);
-        return "order/v1/addItems";
+        return ADD_ITEMS_PAGE;
     }
 
     /**
@@ -57,18 +69,18 @@ public class OrderViewController {
      * @param model model
      * @return 주문 내역 확인 페이지
      */
-    @GetMapping("/{orderId}/detail")
-    public String orderDetail(@Login Member loginMember, @PathVariable long orderId, Model model) {
-        Order order = orderService.findByUserIdAndId(loginMember.getId(), orderId);
+    @GetMapping(ORDER_DETAIL)
+    public String orderDetail(@Login LoginMember loginMember, @PathVariable long orderId, Model model) {
+        Order order = orderService.findByUserIdAndId(loginMember.getMemberId(), orderId);
         if (order != null) {
             List<TeaOrder> teaOrders = teaOrderService.findByOrderId(orderId);
             List<ItemOrderForm> itemOrderFormList = teaOrders.stream()
                     .map(ItemOrderForm::createItemOrderForm)
                     .collect(Collectors.toList());
-            ItemPurchaseForm itemPurchaseForm = ItemPurchaseForm.createItemPurchaseForm(orderId, loginMember.getMemberName(), itemOrderFormList);
+            ItemPurchaseForm itemPurchaseForm = ItemPurchaseForm.createItemPurchaseForm(orderId, loginMember.getMemberId(), itemOrderFormList);
             model.addAttribute("itemPurchaseForm", itemPurchaseForm);
         }
-        return "order/v1/order";
+        return ORDER_DETAIL_PAGE;
     }
 
     /**
@@ -78,14 +90,14 @@ public class OrderViewController {
      * @return 주문 내역 확인
      */
     @PostMapping
-    public String addOrder(@Login Member loginMember, @Validated @ModelAttribute("itemPurchaseForm") ItemPurchaseForm itemPurchaseForm, BindingResult bindingResult,
+    public String addOrder(@Login LoginMember loginMember, @Validated @ModelAttribute("itemPurchaseForm") ItemPurchaseForm itemPurchaseForm, BindingResult bindingResult,
                            RedirectAttributes redirectAttributes){
         if(bindingResult.hasErrors()){
             log.info("error={}",bindingResult);
-            return "order/v1/addItems";
+            return ADD_ITEMS_PAGE;
         }
 
-        Long memberId = loginMember.getId();
+        String memberId = loginMember.getMemberId();
         List<ItemOrderForm> itemOrderFormList = itemPurchaseForm.getItemOrderFormList();
         List<TeaOrder> teaOrders = itemOrderFormList.stream()
                 .filter(itemOrderForm -> itemOrderForm.getOrderQuantity() != null && itemOrderForm.getOrderQuantity() != 0)
@@ -95,7 +107,7 @@ public class OrderViewController {
 
         redirectAttributes.addAttribute("orderId", orderId);
         redirectAttributes.addAttribute("status", true);
-        return "redirect:/view/order/v1/orders/{orderId}/detail";
+        return "redirect:"+ROOT+ORDER_DETAIL;
     }
 
 

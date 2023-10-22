@@ -16,7 +16,13 @@ public enum ErrorCode {
     ALREADY_COMPLETED_ORDER(4012, false, "Already completed order"),
     ALREADY_NOT_PENDING_ORDER(4013, false, "Already not pending order"),
     EXIST_EMAIL(4014,false, "Already the email is exist : %s"),
-    NO_EXIST_EMAIL(4015, false, "No exist email");
+    NO_EXIST_EMAIL(4015, false, "No exist email"),
+    NO_SUCH_ORDER(4016, false, "No such order"),
+    ALREADY_NOT_PENDING_POINT(4017, false, "Already not pending point"),
+    TOO_MUCH_ADD_POINT(4018, false, "Too much add point"),
+    ALREADY_COMPLETED_POINT(4019, false, "Already completed point"),
+    NO_SUCH_POINT(4020, false,"No such Point"),
+    NO_MATCH_INPUT_POINT(4021, false, "No match input point");
 
     private final int code;
     private final Boolean disabled;

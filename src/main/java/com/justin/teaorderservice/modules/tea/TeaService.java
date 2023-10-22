@@ -20,7 +20,7 @@ public class TeaService{
     }
 
     public Tea findById(Long id) {
-        return teaRepository.findOne(id);
+        return teaRepository.findById(id).orElse(null);
     }
 
 }

@@ -42,9 +42,9 @@ public class JwtTokenProvider {
         this.tokenExpirationTime = Long.parseLong(env.getProperty("spring.security.jwt.token_expiration_time"));
     }
 
-    public String createToken(String userId){
+    public String createToken(String memberId){
         return Jwts.builder()
-                .setSubject(userId)
+                .setSubject(memberId)
                 .setExpiration(new Date(System.currentTimeMillis()+tokenExpirationTime))
                 .signWith(SignatureAlgorithm.HS512, secretKey)
                 .compact();

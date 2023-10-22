@@ -23,15 +23,20 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+import static com.justin.teaorderservice.modules.tea.TeaApiController.ROOT;
+
 @Tag(
         name = "Tea API Controller V1",
         description = "Tea API Controller : V1"
 )
 @Slf4j
 @Controller
-@RequestMapping("/api/order/v1/teas")
+@RequestMapping(ROOT)
 @RequiredArgsConstructor
 public class TeaApiController {
+
+    static final String ROOT = "/api/order/v1/teas";
+    static final String TEA_DETAIL = "/{teaId}";
 
     private final TeaService teaService;
     private final ModelMapper modelMapper;
@@ -51,7 +56,7 @@ public class TeaApiController {
         teas.forEach(tea -> responseItemOrderList.add(modelMapper.map(tea, ResponseItemOrder.class)));
 
         ResponseItemPurchase responseItemPurchase = ResponseItemPurchase.builder()
-                .userId(member.getMemberId())
+                .userId(member.getMemberName())
                 .itemOrderFormList(responseItemOrderList)
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(responseItemPurchase);
@@ -63,13 +68,11 @@ public class TeaApiController {
             @ApiResponse(responseCode = "400", description = "Request Fail", content = @Content(schema = @Schema(implementation = ResponseTea.class))),
             @ApiResponse(responseCode = "500", description = "Server Error", content = @Content(schema = @Schema(implementation = ResponseTea.class)))
     })
-    @GetMapping("/{teaId}")
+    @GetMapping(TEA_DETAIL)
     public ResponseEntity<ResponseTea> tea(@PathVariable long teaId){
         Tea tea = teaService.findById(teaId);
         ResponseTea responseTea = modelMapper.map(tea, ResponseTea.class);
         return ResponseEntity.status(HttpStatus.OK).body(responseTea);
     }
-
-
 
 }

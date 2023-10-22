@@ -6,9 +6,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class LoginService{
 
@@ -18,24 +20,13 @@ public class LoginService{
     /**
      *
      * @param email email
-     * @param simplePassword 간편 비밀번호
-     * @return null 로그인 실패
-     */
-    public Member simpleLogin(String email, String simplePassword) {
-        return memberRepository.findByEmail(email)
-                .filter(member -> passwordEncoder.matches(simplePassword, member.getSimplePassword()))
-                .orElse(null);
-    }
-
-    /**
-     *
-     * @param email email
      * @param password 비밀번호
      * @return null 로그인 실패
      */
-    public Member login(String email, String password) {
-        return memberRepository.findByEmail(email)
+    public String login(String email, String password) {
+        Member findMember = memberRepository.findByEmail(email)
                 .filter(member -> passwordEncoder.matches(password, member.getPassword()))
                 .orElse(null);
+        return findMember != null ? findMember.getId() : null;
     }
 }

@@ -1,8 +1,6 @@
 package com.justin.teaorderservice.modules.member;
 
-import com.justin.teaorderservice.infra.exception.ComplexException;
-import com.justin.teaorderservice.infra.exception.ErrorCode;
-import com.justin.teaorderservice.infra.exception.ResponseError;
+import com.justin.teaorderservice.infra.exception.*;
 import com.justin.teaorderservice.modules.member.request.RequestMemberSave;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -12,7 +10,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,11 +18,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
-
 
 @Tag(
         name = "Member API Controller V1",
@@ -39,7 +31,16 @@ public class MemberApiController {
 
     private final MemberService memberService;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final ModelMapper modelMapper;
+
+    @Operation(summary = "회원 가입 양식", description = "Member 추가 양식")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "회원 가입 양식 전달", content = @Content(schema = @Schema(implementation = RequestMemberSave.class))),
+            @ApiResponse(responseCode = "500", description = "서버 오류 발생", content = @Content(schema = @Schema(implementation = String.class)))
+    })
+    @GetMapping("/add")
+    public ResponseEntity<RequestMemberSave> addMember(){
+        return ResponseEntity.status(HttpStatus.OK).body(new RequestMemberSave());
+    }
 
     @Operation(summary = "회원 가입", description = "Member 추가")
     @ApiResponses({
@@ -48,21 +49,13 @@ public class MemberApiController {
             @ApiResponse(responseCode = "500", description = "서버 오류 발생", content = @Content(schema = @Schema(implementation = String.class)))
     })
     @PostMapping("/add")
-    public ResponseEntity<Long> addMember(final @RequestBody @Validated RequestMemberSave requestMemberSave) throws ComplexException {
-        requestMemberSave.encodePassword(passwordEncoder.encode(requestMemberSave.getPassword()), passwordEncoder.encode(requestMemberSave.getSimplePassword()));
-        Member member = Member.createUserMember(requestMemberSave.getEmail(), requestMemberSave.getPassword(), requestMemberSave.getSimplePassword());
-        
-
-        if(memberService.hasEmail(member.getEmail())){
-            ResponseError responseError = ResponseError.builder()
-                    .errorCode(ErrorCode.EXIST_EMAIL)
-                    .target(requestMemberSave.getEmail())
-                    .build();
-            throw new ComplexException(responseError);
+    public ResponseEntity<String> addMember(final @RequestBody @Validated RequestMemberSave requestMemberSave) {
+        if(memberService.hasEmail(requestMemberSave.getEmail())){
+            throw new ExistEmailException(ErrorCode.EXIST_EMAIL);
         }
 
-        Member saveMember = memberService.save(member);
-        return ResponseEntity.status(HttpStatus.OK).body(saveMember.getId());
+        String memberId = memberService.register(requestMemberSave.getEmail(), passwordEncoder.encode(requestMemberSave.getPassword()), passwordEncoder.encode(requestMemberSave.getSimplePassword()));
+        return ResponseEntity.status(HttpStatus.OK).body(memberId);
     }
 
     @Operation(summary = "회원 가입 여부 확인", description = "사용자의 ID에 대해 등록된 핸드폰 번호가 있는 지 확인 한다.")
@@ -73,22 +66,16 @@ public class MemberApiController {
     })
     @GetMapping("/detail")
     @PreAuthorize("hasAnyAuthority('USER','MANAGER','ADMIN')")
-    public ResponseEntity<String> memberDetail(@AuthenticationPrincipal MemberAdapter memberAdapter) throws ComplexException{
-        Member member = memberAdapter.getMember();
-        log.info("get: member={}", member); //memberId 정도만 아니면 키값정도만
-        String email = null;
+    public ResponseEntity<String> memberDetail(@AuthenticationPrincipal MemberAdapter memberAdapter){
+        Member member = memberService.findByMemberId(memberAdapter.getMember().getId());
 
         if(member == null){
-            ResponseError responseError = ResponseError.builder()
-                    .errorCode(ErrorCode.NO_EXIST_EMAIL)
-                    .target(member.getEmail())
-                    .build();
-            throw new ComplexException(responseError);
-        }else{
-            email = member.getEmail();
+            throw new NoExistEmailException(ErrorCode.NO_EXIST_EMAIL);
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(email);
+        return ResponseEntity.status(HttpStatus.OK).body(member.getEmail());
     }
+
+
 
 }

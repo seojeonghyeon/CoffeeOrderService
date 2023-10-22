@@ -1,6 +1,7 @@
 package com.justin.teaorderservice.modules.member;
 
 import com.justin.teaorderservice.infra.MockMvcTest;
+import com.justin.teaorderservice.modules.authority.Authority;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -5,22 +5,22 @@ import com.justin.teaorderservice.infra.exception.AlreadyCompletedOrderException
 import com.justin.teaorderservice.infra.exception.AlreadyNotPendingOrderException;
 import com.justin.teaorderservice.infra.exception.ErrorCode;
 import com.justin.teaorderservice.infra.exception.NotEnoughPointException;
+import com.justin.teaorderservice.modules.common.BaseEntity;
 import com.justin.teaorderservice.modules.member.Member;
 import com.justin.teaorderservice.modules.teaorder.TeaOrder;
 import jakarta.persistence.*;
 import lombok.*;
-import java.time.ZonedDateTime;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import static jakarta.persistence.FetchType.*;
 
-@Table(name = "orders")
-@Entity
-@Getter @Setter
-@Builder @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "orders") @Entity
+@Getter @Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Order {
+public class Order extends BaseEntity {
     @Id @GeneratedValue
     @Column(name = "order_id")
     private Long id;
@@ -35,13 +35,11 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<TeaOrder> teaOrders = new ArrayList<>();
 
-    private ZonedDateTime orderDate;
 
     public static Order createOrder(Member member, TeaOrder... teaOrders){
         Order order = Order.builder()
                 .member(member)
                 .status(OrderStatus.PENDING)
-                .orderDate(ZonedDateTime.now())
                 .build();
         for (TeaOrder teaOrder : teaOrders) {
             order.addTeaOrder(teaOrder);
@@ -54,9 +52,9 @@ public class Order {
         if(status != OrderStatus.PENDING){
             throw new AlreadyNotPendingOrderException(ErrorCode.ALREADY_NOT_PENDING_ORDER);
         }
-        this.setStatus(member.getPoint() - getTotalPrice() >= 0 ? OrderStatus.CONFIRMED : OrderStatus.REJECTED);
+        status = (member.getPoint() - getTotalPrice() >= 0 ? OrderStatus.CONFIRMED : OrderStatus.REJECTED);
         if(status == OrderStatus.CONFIRMED){
-            member.setPoint(member.getPoint() - getTotalPrice());
+            member.deductPoint(getTotalPrice());
         } else if (status == OrderStatus.REJECTED) {
             throw new NotEnoughPointException(ErrorCode.NOT_ENOUGH_POINT);
         }
@@ -80,8 +78,9 @@ public class Order {
         if(status == OrderStatus.COMPLETED){
             throw new AlreadyCompletedOrderException(ErrorCode.ALREADY_COMPLETED_ORDER);
         }
-        this.setStatus(OrderStatus.CANCELED);
+        status = OrderStatus.CANCELED;
         teaOrders.forEach(TeaOrder::cancel);
+        member.inducePoint(getTotalPrice());
     }
 
 }

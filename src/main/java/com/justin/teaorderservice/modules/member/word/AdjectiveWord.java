@@ -1,4 +1,4 @@
-package com.justin.teaorderservice.modules.member;
+package com.justin.teaorderservice.modules.member.word;
 
 public class AdjectiveWord {
 

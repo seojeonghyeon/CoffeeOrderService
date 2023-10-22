@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 public class RequestMemberSave {
 
     @Schema(description = "사용자 Email", nullable = false, example = "justin@gmail.com")
-    @Pattern(regexp = "^[A-Za-z0-9_\\.\\-]+@[A-Za-z0-9\\-]+\\.[A-Za-z0-9\\-]+$", message = "10~11자리의 숫자만 입력 가능 합니다")
+    @Pattern(regexp = "^[A-Za-z0-9_\\.\\-]+@[A-Za-z0-9\\-]+\\.[A-Za-z0-9\\-]+$", message = "Email만 입력 가능 합니다")
     @NotEmpty
     private String email;
 
@@ -29,10 +29,4 @@ public class RequestMemberSave {
     @Pattern(regexp = "[0-9]{4,5}", message = "간편 비밀번호는 4~5자 숫자만 입력 가능합니다")
     @NotEmpty
     private String simplePassword;
-
-    public void encodePassword(String encryptedPwd, String simpleEncryptedPwd){
-        this.password = encryptedPwd;
-        this.simplePassword = simpleEncryptedPwd;
-    }
-
 }
