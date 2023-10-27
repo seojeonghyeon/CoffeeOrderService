@@ -1,6 +1,7 @@
 package com.justin.teaorderservice.modules.category;
 
 import com.justin.teaorderservice.modules.tea.Tea;
+import com.justin.teaorderservice.modules.teacategory.TeaCategory;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,20 +20,15 @@ public class Category {
 
     private String name;
 
-    @ManyToMany(fetch = LAZY)
-    @JoinTable(
-            name = "category_tea",
-            joinColumns = @JoinColumn(name = "category_id"),
-            inverseJoinColumns = @JoinColumn(name = "tea_id")
-    )
-    private List<Tea> teas = new ArrayList<>();
-
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "parent_id")
     Category parent;
 
     @OneToMany(mappedBy = "parent")
     private List<Category> child = new ArrayList<>();
+
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    private List<TeaCategory> teaCategories;
 
     public void addChildCategory(Category child){
         this.child.add(child);
