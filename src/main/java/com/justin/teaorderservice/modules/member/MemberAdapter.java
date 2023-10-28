@@ -1,5 +1,6 @@
 package com.justin.teaorderservice.modules.member;
 
+import com.justin.teaorderservice.modules.authority.Authority;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,7 +15,7 @@ public class MemberAdapter extends User {
     private final Member member;
 
     public MemberAdapter(Member member) {
-        super(member.getPhoneNumber(), member.getPassword(), authorities(member.getAuthorities()));
+        super(member.getEmail(), member.getPassword(), authorities(member.getAuthorities()));
         this.member = member;
     }
 

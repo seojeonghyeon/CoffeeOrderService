@@ -13,10 +13,7 @@ import java.util.List;
 @Builder
 public class ResponseItemPurchase {
 
-    @Schema(description = "사용자 고유 식별 번호", nullable = true, example = "1")
-    private Long id;
-
-    @Schema(description = "사용자 고유 식별자", nullable = false, example = "17036164-7977-462e-acde-eee4cf822f64")
+    @Schema(description = "사용자 이름", nullable = false, example = "유쾌한 고등어")
     private String userId;
 
     @Schema(description = "사용자 주문 정보", nullable = false)

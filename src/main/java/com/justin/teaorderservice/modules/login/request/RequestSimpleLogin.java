@@ -13,10 +13,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RequestSimpleLogin {
-    @Schema(description = "사용자 핸드폰 번호", nullable = false, example = "01012341234")
-    @Pattern(regexp = "[0-9]{10,11}", message = "10~11자리의 숫자만 입력 가능 합니다")
+    @Schema(description = "사용자 Email", nullable = false, example = "justin@gmail.com")
+    @Pattern(regexp = "^[A-Za-z0-9_\\.\\-]+@[A-Za-z0-9\\-]+\\.[A-Za-z0-9\\-]+$", message = "Email만 입력 가능 합니다")
     @NotEmpty
-    private String phoneNumber;
+    private String email;
 
     @Schema(description = "사용자 간편 비밀번호", nullable = false, example = "1234")
     @Pattern(regexp = "[0-9]{4,5}", message = "간편 비밀번호는 4~5자 숫자만 입력 가능합니다")

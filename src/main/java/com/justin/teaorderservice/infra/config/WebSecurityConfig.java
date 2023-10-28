@@ -1,11 +1,12 @@
 package com.justin.teaorderservice.infra.config;
 
 import com.justin.teaorderservice.infra.auth.JwtAuthenticationFilter;
-import com.justin.teaorderservice.infra.exception.JwtAccessDeniedHandler;
-import com.justin.teaorderservice.infra.exception.JwtAuthenticationEntryPoint;
+import com.justin.teaorderservice.infra.auth.JwtAccessDeniedHandler;
+import com.justin.teaorderservice.infra.auth.JwtAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -14,6 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
 
+@Profile(value = {"local","dev","stg","prd"})
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -48,7 +50,9 @@ public class WebSecurityConfig {
 
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/h2/**").permitAll()
+                .requestMatchers("/**").permitAll()
+                .requestMatchers("/h2-console/**").permitAll()
+                .requestMatchers("/h2-console/login.jsp").permitAll()
                 .requestMatchers("/favicon.ico").permitAll()
                 .requestMatchers("/error").permitAll()
                 .requestMatchers("/image/**").permitAll()

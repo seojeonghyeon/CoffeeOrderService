@@ -1,34 +1,17 @@
 package com.justin.teaorderservice.modules.order;
 
+import com.justin.teaorderservice.modules.member.Member;
+import jakarta.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
-public class OrderRepository {
-    private static final Map<Long, Order> store = new HashMap<>();
-    private static long sequence =0L;
-
-    public Order save(Order order){
-        order.setId(++sequence);
-        store.put(order.getId(), order);
-        return order;
-    }
-
-    public Order findById(Long id){
-        return store.get(id);
-    }
-    public Optional<Order> findUserIdAndId(String userId, Long id){
-        return findAll().stream()
-                .filter(order -> order.getId().equals(id))
-                .filter(order -> order.getUserId().equals(userId))
-                .findFirst();
-    }
-    public List<Order> findAll(){
-        return new ArrayList<>(store.values());
-    }
-
-    public void clearStore(){
-        store.clear();
-    }
+public interface OrderRepository extends JpaRepository<Order, Long> {
+    Optional<Order> findOrderByMemberAndId(Member member, Long id);
 }

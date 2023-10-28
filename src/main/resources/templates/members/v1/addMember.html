@@ -31,10 +31,10 @@
         </div>
 
         <div>
-            <label for="phoneNumber" th:text="#{label.members.phoneNumber}">핸드폰 번호</label>
-            <input type="text" id="phoneNumber" th:field="*{phoneNumber}" class="form-control"
+            <label for="email" th:text="#{label.members.email}">email</label>
+            <input type="text" id="email" th:field="*{email}" class="form-control"
                    th:errorclass="field-error">
-            <div class="field-error" th:errors="*{phoneNumber}" />
+            <div class="field-error" th:errors="*{email}" />
         </div>
         <div>
             <label for="password" th:text="#{label.members.password}">비밀번호</label>

@@ -3,14 +3,14 @@ package com.justin.teaorderservice.modules.order.response;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.justin.teaorderservice.modules.teaorder.response.ResponseTeaOrder;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.util.List;
 
-@Data
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@Builder
+@Getter
+@Setter
+@JsonInclude(JsonInclude.Include.NON_NULL) @AllArgsConstructor
+@Builder @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ResponseOrder {
 
     @Schema(description = "사용자 고유 식별 번호", nullable = true, example = "1")
@@ -21,4 +21,20 @@ public class ResponseOrder {
 
     @Schema(description = "사용자 주문 정보", nullable = false)
     private List<ResponseTeaOrder> teaOrderList;
+
+    public static ResponseOrder createResponseOrder(Long orderId, String userName, List<ResponseTeaOrder> responseTeaOrderList){
+        ResponseOrder responseOrder = ResponseOrder.builder()
+                .id(orderId)
+                .userId(userName)
+                .teaOrderList(responseTeaOrderList)
+                .build();
+        return responseOrder;
+    }
+    public static ResponseOrder createResponseOrder(String userName, List<ResponseTeaOrder> responseTeaOrderList){
+        ResponseOrder responseOrder = ResponseOrder.builder()
+                .userId(userName)
+                .teaOrderList(responseTeaOrderList)
+                .build();
+        return responseOrder;
+    }
 }

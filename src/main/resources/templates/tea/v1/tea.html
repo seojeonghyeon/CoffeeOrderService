@@ -32,7 +32,7 @@
     </div>
     <div>
         <label for="quantity" th:text="#{label.item.quantity}">수량</label>
-        <input type="text" id="quantity" name="quantity" class="form-control" value="10" th:value="${tea.quantity}" readonly>
+        <input type="text" id="quantity" name="quantity" class="form-control" value="10" th:value="${tea.getStockQuantity}" readonly>
     </div>
     <div>
         <label for="quantity" th:text="#{label.item.image}">Tea 사진</label>
