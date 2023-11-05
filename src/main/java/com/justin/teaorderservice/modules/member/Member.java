@@ -57,41 +57,20 @@ public class Member implements Persistable<String> {
 
     public static Member createUserMember(String email, String encryptedPwd, String simpleEncryptedPwd){
         Authority authority = Authority.creatAuthority("USER");
-
-        Member member = new Member();
-        member.setId(UUID.randomUUID().toString());
-        member.setEmail(email);
-        member.setMemberName(AdjectiveWord.getWordOne()+" "+ AnimalWord.getWordOne());
-        member.setPassword(encryptedPwd);
-        member.setSimplePassword(simpleEncryptedPwd);
-        member.setPoint(0);
-        member.setAuthorities(authority);
-        member.setDisabled(false);
-
-        authority.setMember(member);
-        return member;
+        return createMember(authority, email, encryptedPwd, simpleEncryptedPwd);
     }
 
     public static Member createManagerMember(String email, String encryptedPwd, String simpleEncryptedPwd){
         Authority authority = Authority.creatAuthority("MANAGER");
-
-        Member member = new Member();
-        member.setId(UUID.randomUUID().toString());
-        member.setEmail(email);
-        member.setMemberName(AdjectiveWord.getWordOne()+" "+ AnimalWord.getWordOne());
-        member.setPassword(encryptedPwd);
-        member.setSimplePassword(simpleEncryptedPwd);
-        member.setPoint(0);
-        member.setAuthorities(authority);
-        member.setDisabled(false);
-
-        authority.setMember(member);
-        return member;
+        return createMember(authority, email, encryptedPwd, simpleEncryptedPwd);
     }
 
     public static Member createAdminMember(String email, String encryptedPwd, String simpleEncryptedPwd){
         Authority authority = Authority.creatAuthority("ADMIN");
+        return createMember(authority, email, encryptedPwd, simpleEncryptedPwd);
+    }
 
+    private static Member createMember(Authority authority, String email, String encryptedPwd, String simpleEncryptedPwd){
         Member member = new Member();
         member.setId(UUID.randomUUID().toString());
         member.setEmail(email);
