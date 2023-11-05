@@ -7,6 +7,8 @@ import com.justin.teaorderservice.modules.teacategory.TeaCategory;
 import com.justin.teaorderservice.modules.teaorder.TeaOrder;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,12 +30,17 @@ public class Tea {
     private String description;
     private Boolean disabled;
 
-    @OneToMany(mappedBy = "tea", cascade = CascadeType.ALL)
-    private List<TeaCategory> teaCategories;
+    @OneToMany(mappedBy = "tea")
+    private List<TeaCategory> teaCategories = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "tea", cascade = CascadeType.ALL)
     private List<TeaOrder> teaOrders;
+
+    public void addTeaCategory(TeaCategory teaCategory){
+        teaCategories.add(teaCategory);
+        teaCategory.setTea(this);
+    }
 
     public void addStock(Integer quantity){
         this.stockQuantity += quantity;

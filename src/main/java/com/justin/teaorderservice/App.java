@@ -1,8 +1,10 @@
 package com.justin.teaorderservice;
 
 import com.justin.teaorderservice.modules.authority.AuthorityRepository;
+import com.justin.teaorderservice.modules.category.CategoryRepository;
 import com.justin.teaorderservice.modules.member.MemberRepository;
 import com.justin.teaorderservice.modules.tea.TeaRepository;
+import com.justin.teaorderservice.modules.teacategory.TeaCategoryRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -24,7 +26,7 @@ public class App {
 
     @Bean
     @Profile({"local"})
-    public TestDataInit testDataInit(TeaRepository teaRepository, MemberRepository memberRepository, BCryptPasswordEncoder passwordEncoder){
-        return new TestDataInit(teaRepository, memberRepository, passwordEncoder);
+    public TestDataInit testDataInit(TeaRepository teaRepository, MemberRepository memberRepository, CategoryRepository categoryRepository, TeaCategoryRepository teaCategoryRepository, BCryptPasswordEncoder passwordEncoder){
+        return new TestDataInit(teaRepository, memberRepository, categoryRepository, teaCategoryRepository, passwordEncoder);
     }
 }
