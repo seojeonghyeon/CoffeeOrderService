@@ -16,7 +16,7 @@ import java.util.List;
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Setter(AccessLevel.PROTECTED)
 @Builder @AllArgsConstructor
-public abstract class Tea {
+public class Tea {
 
     @Id @GeneratedValue
     @Column(name = "tea_id")

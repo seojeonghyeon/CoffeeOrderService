@@ -23,6 +23,7 @@ spring:
       hibernate:
         default_batch_fetch_size: 100
         format_sql: true
+        show_sql: true
     open-in-view: false
 
 server:
@@ -36,3 +37,4 @@ server:
 logging:
   level:
     org.hibernate.sql: debug
+    org.hibernate.type: trace

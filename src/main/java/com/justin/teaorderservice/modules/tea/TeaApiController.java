@@ -35,7 +35,7 @@ import static com.justin.teaorderservice.modules.tea.TeaApiController.ROOT;
 @RequiredArgsConstructor
 public class TeaApiController {
 
-    static final String ROOT = "/api/order/v1/teas";
+    static final String ROOT = "/api/order/teas";
     static final String TEA_DETAIL = "/{teaId}";
 
     private final TeaService teaService;

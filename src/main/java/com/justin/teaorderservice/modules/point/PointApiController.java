@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 
-import static com.justin.teaorderservice.modules.order.OrderApiController.ROOT;
+import static com.justin.teaorderservice.modules.point.PointApiController.ROOT;
 
 @Tag(
         name = "Point API Controller",
@@ -36,7 +36,7 @@ import static com.justin.teaorderservice.modules.order.OrderApiController.ROOT;
 @RequestMapping(ROOT)
 @RequiredArgsConstructor
 public class PointApiController {
-    static final String ROOT = "/api/order/v1/points";
+    static final String ROOT = "/api/order/points";
     static final String ADD = "/add";
     static final String RESULT_DETAIL = "/{pointId}/detail";
 

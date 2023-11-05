@@ -53,10 +53,6 @@ public class TestDataInit {
                 "https://cdn.paris.spl.li/wp-content/uploads/201008-%E1%84%84%E1%85%A1%E1%84%8C%E1%85%A1%E1%84%86%E1%85%A9%E1%86%BC-1280x1280.jpg",
                 "자몽의 과즙에 따끈한 물 따위를 넣어 만든 음료", false);
         teaRepository.save(teaPack1);
-
-
-        Member member = createMember("seojeonghyeon0630@gmail.com", passwordEncoder.encode("SEOjh1234!"), passwordEncoder.encode("1234"));
-        memberRepository.save(member);
     }
 
     private Member createMember(String email, String encryptedPwd, String simpleEncryptedPwd){
