@@ -24,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -37,7 +36,6 @@ class MemberApiControllerTest {
     @Autowired private MemberRepository memberRepository;
     @Autowired private LoginService loginService;
     @Autowired private ObjectMapper objectMapper;
-    @Autowired private JwtTokenProvider jwtTokenProvider;
 
     private static final String ROOT = "/api/order/members";
     private static final String ADD_MEMBER = "/add";

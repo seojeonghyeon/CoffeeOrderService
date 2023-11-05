@@ -52,6 +52,11 @@ public class ApiControllerAdvice {
         return ResponseEntity.badRequest().body(ResponseError.builder().errorCode(exception.getErrorCode()).build());
     }
 
+    @ExceptionHandler({LoginException.class})
+    public ResponseEntity<ResponseError> handleLoginException(LoginException exception){
+        return ResponseEntity.badRequest().body(ResponseError.builder().errorCode(exception.getErrorCode()).build());
+    }
+
     @ExceptionHandler({NoSuchOrderException.class})
     public ResponseEntity<ResponseError> handleNoSuchOrderException(NoSuchOrderException exception){
         return ResponseEntity.badRequest().body(ResponseError.builder().errorCode(exception.getErrorCode()).build());

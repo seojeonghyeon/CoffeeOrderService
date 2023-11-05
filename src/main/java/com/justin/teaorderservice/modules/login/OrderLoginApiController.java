@@ -2,6 +2,7 @@ package com.justin.teaorderservice.modules.login;
 
 import com.justin.teaorderservice.infra.auth.JwtTokenProvider;
 import com.justin.teaorderservice.infra.exception.ErrorCode;
+import com.justin.teaorderservice.infra.exception.LoginException;
 import com.justin.teaorderservice.modules.login.request.RequestLogin;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ public class OrderLoginApiController {
         String memberId = loginService.login(requestLogin.getEmail(), requestLogin.getPassword());
 
         if(memberId == null){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorCode.LOGIN_FAIL.getDescription());
+            throw new LoginException(ErrorCode.LOGIN_FAIL);
         }
 
         String token = jwtTokenProvider.createToken(memberId);
