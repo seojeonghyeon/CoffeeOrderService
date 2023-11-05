@@ -35,7 +35,6 @@ public class TeaApiController {
     static final String TEA_DETAIL = "/{teaId}";
 
     private final TeaService teaService;
-    private final ModelMapper modelMapper;
 
     @Operation(summary = "Tea 리스트 확인", description = "Tea 리스트 확인")
     @ApiResponses({
