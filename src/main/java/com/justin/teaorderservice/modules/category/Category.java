@@ -41,8 +41,8 @@ public class Category {
         if(parent != null){
             category.setParent(parent);
             parent.addChildCategory(category);
+            category.addTeaCategory();
         }
-        category.addTeaCategory();
         return category;
     }
 
