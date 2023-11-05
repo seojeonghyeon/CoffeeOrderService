@@ -5,6 +5,8 @@ import com.justin.teaorderservice.modules.member.MemberAdapter;
 import com.justin.teaorderservice.modules.order.response.ResponseItemOrder;
 import com.justin.teaorderservice.modules.order.response.ResponseItemPurchase;
 import com.justin.teaorderservice.modules.tea.response.ResponseTea;
+import com.justin.teaorderservice.modules.tea.response.ResponseTeaList;
+import com.justin.teaorderservice.modules.tea.response.ResponseTeaListItem;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -48,18 +50,10 @@ public class TeaApiController {
             @ApiResponse(responseCode = "500", description = "Server Error", content = @Content(schema = @Schema(implementation = ResponseItemPurchase.class)))
     })
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('USER','MANAGER','ADMIN')")
-    ResponseEntity<ResponseItemPurchase> items(@AuthenticationPrincipal MemberAdapter memberAdapter){
-        Member member = memberAdapter.getMember();
+    ResponseEntity<ResponseTeaList> items(){
         List<Tea> teas = teaService.findAll();
-        List<ResponseItemOrder> responseItemOrderList = new ArrayList<>();
-        teas.forEach(tea -> responseItemOrderList.add(modelMapper.map(tea, ResponseItemOrder.class)));
-
-        ResponseItemPurchase responseItemPurchase = ResponseItemPurchase.builder()
-                .userId(member.getMemberName())
-                .itemOrderFormList(responseItemOrderList)
-                .build();
-        return ResponseEntity.status(HttpStatus.OK).body(responseItemPurchase);
+        List<ResponseTeaListItem> responseTeaListItems = teas.stream().map(ResponseTeaListItem::createResponseTeaListItem).toList();
+        return ResponseEntity.status(HttpStatus.OK).body(ResponseTeaList.createResponseTeaList(responseTeaListItems));
     }
 
     @Operation(summary = "Tea 상세 정보", description = "Tea 상세 정보 확인")
