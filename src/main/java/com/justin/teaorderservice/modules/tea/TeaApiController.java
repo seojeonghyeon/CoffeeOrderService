@@ -1,9 +1,5 @@
 package com.justin.teaorderservice.modules.tea;
 
-import com.justin.teaorderservice.modules.member.Member;
-import com.justin.teaorderservice.modules.member.MemberAdapter;
-import com.justin.teaorderservice.modules.order.response.ResponseItemOrder;
-import com.justin.teaorderservice.modules.order.response.ResponseItemPurchase;
 import com.justin.teaorderservice.modules.tea.response.ResponseTea;
 import com.justin.teaorderservice.modules.tea.response.ResponseTeaList;
 import com.justin.teaorderservice.modules.tea.response.ResponseTeaListItem;
@@ -18,8 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -45,9 +39,9 @@ public class TeaApiController {
 
     @Operation(summary = "Tea 리스트 확인", description = "Tea 리스트 확인")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Success", content = @Content(schema = @Schema(implementation = ResponseItemPurchase.class))),
-            @ApiResponse(responseCode = "400", description = "Request Fail", content = @Content(schema = @Schema(implementation = ResponseItemPurchase.class))),
-            @ApiResponse(responseCode = "500", description = "Server Error", content = @Content(schema = @Schema(implementation = ResponseItemPurchase.class)))
+            @ApiResponse(responseCode = "200", description = "Success", content = @Content(schema = @Schema(implementation = ResponseTeaList.class))),
+            @ApiResponse(responseCode = "400", description = "Request Fail", content = @Content(schema = @Schema(implementation = ResponseTeaList.class))),
+            @ApiResponse(responseCode = "500", description = "Server Error", content = @Content(schema = @Schema(implementation = ResponseTeaList.class)))
     })
     @GetMapping
     ResponseEntity<ResponseTeaList> items(){
@@ -65,7 +59,7 @@ public class TeaApiController {
     @GetMapping(TEA_DETAIL)
     public ResponseEntity<ResponseTea> tea(@PathVariable long teaId){
         Tea tea = teaService.findById(teaId);
-        ResponseTea responseTea = modelMapper.map(tea, ResponseTea.class);
+        ResponseTea responseTea = ResponseTea.createResponseTea(tea);
         return ResponseEntity.status(HttpStatus.OK).body(responseTea);
     }
 
