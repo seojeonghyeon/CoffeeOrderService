@@ -3,6 +3,7 @@ package com.justin.teaorderservice.modules.member;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +14,7 @@ import static java.lang.String.format;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class MemberService{
+public class MemberService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
 
@@ -41,11 +42,16 @@ public class MemberService{
         return memberRepository.findByEmail(email).isPresent();
     }
 
-    @Transactional
-    public UserDetails loadUserByUsername(String email) {
-        Member findMember = memberRepository.findByEmail(email)
-                .filter(member -> !member.getDisabled())
-                .orElseThrow(() -> new UsernameNotFoundException(format("Not found in Database : {}", email)));
-        return new MemberAdapter(findMember);
+    @Override
+    public UserDetails loadUserByUsername(String emailOrMemberId) {
+        Member member = memberRepository.findByEmail(emailOrMemberId).orElse(null);
+        if(member == null){
+            member = memberRepository.findById(emailOrMemberId).orElse(null);
+        }
+
+        if(member == null){
+            throw new UsernameNotFoundException(emailOrMemberId);
+        }
+        return new MemberAdapter(member);
     }
 }

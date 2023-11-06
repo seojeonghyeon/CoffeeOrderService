@@ -28,11 +28,27 @@ public class Category {
     private List<Category> child = new ArrayList<>();
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private List<TeaCategory> teaCategories;
+    private List<TeaCategory> teaCategories = new ArrayList<>();
 
     public void addChildCategory(Category child){
         this.child.add(child);
         child.setParent(this);
+    }
+
+    public static Category createCategory(Category parent, String name){
+        Category category = new Category();
+        category.setName(name);
+        if(parent != null){
+            category.setParent(parent);
+            parent.addChildCategory(category);
+            category.addTeaCategory();
+        }
+        return category;
+    }
+
+    public void addTeaCategory(){
+        TeaCategory teaCategory = TeaCategory.createTeaCategory(this);
+        teaCategories.add(teaCategory);
     }
 
 

@@ -7,6 +7,8 @@ import com.justin.teaorderservice.modules.teacategory.TeaCategory;
 import com.justin.teaorderservice.modules.teaorder.TeaOrder;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -16,7 +18,7 @@ import java.util.List;
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Setter(AccessLevel.PROTECTED)
 @Builder @AllArgsConstructor
-public abstract class Tea {
+public class Tea {
 
     @Id @GeneratedValue
     @Column(name = "tea_id")
@@ -28,12 +30,17 @@ public abstract class Tea {
     private String description;
     private Boolean disabled;
 
-    @OneToMany(mappedBy = "tea", cascade = CascadeType.ALL)
-    private List<TeaCategory> teaCategories;
+    @OneToMany(mappedBy = "tea")
+    private List<TeaCategory> teaCategories = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "tea", cascade = CascadeType.ALL)
     private List<TeaOrder> teaOrders;
+
+    public void addTeaCategory(TeaCategory teaCategory){
+        teaCategories.add(teaCategory);
+        teaCategory.setTea(this);
+    }
 
     public void addStock(Integer quantity){
         this.stockQuantity += quantity;

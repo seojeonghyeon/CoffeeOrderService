@@ -18,8 +18,8 @@ import java.util.Optional;
 @Service
 public class PointService {
 
-    PointRepository pointRepository;
-    MemberRepository memberRepository;
+    private final PointRepository pointRepository;
+    private final MemberRepository memberRepository;
 
     public Integer findPointById(String memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(NoSuchMemberException::new);

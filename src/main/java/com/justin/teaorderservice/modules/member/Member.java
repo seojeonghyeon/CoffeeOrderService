@@ -10,15 +10,10 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.domain.Persistable;
 
 import java.time.ZonedDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity @Table(name = "members")
 @Getter @Builder @Setter(AccessLevel.PROTECTED)
@@ -54,7 +49,7 @@ public class Member implements Persistable<String> {
 
     @JsonIgnore
     @OneToMany(mappedBy = "member")
-    private List<Point> points;
+    private List<Point> points = new ArrayList<>();
 
     public void setAuthorities(Authority authority){
         this.authorities.add(authority);
@@ -63,41 +58,20 @@ public class Member implements Persistable<String> {
 
     public static Member createUserMember(String email, String encryptedPwd, String simpleEncryptedPwd){
         Authority authority = Authority.creatAuthority("USER");
-
-        Member member = new Member();
-        member.setId(UUID.randomUUID().toString());
-        member.setEmail(email);
-        member.setMemberName(AdjectiveWord.getWordOne()+" "+ AnimalWord.getWordOne());
-        member.setPassword(encryptedPwd);
-        member.setSimplePassword(simpleEncryptedPwd);
-        member.setPoint(0);
-        member.setAuthorities(authority);
-        member.setDisabled(false);
-
-        authority.setMember(member);
-        return member;
+        return createMember(authority, email, encryptedPwd, simpleEncryptedPwd);
     }
 
     public static Member createManagerMember(String email, String encryptedPwd, String simpleEncryptedPwd){
         Authority authority = Authority.creatAuthority("MANAGER");
-
-        Member member = new Member();
-        member.setId(UUID.randomUUID().toString());
-        member.setEmail(email);
-        member.setMemberName(AdjectiveWord.getWordOne()+" "+ AnimalWord.getWordOne());
-        member.setPassword(encryptedPwd);
-        member.setSimplePassword(simpleEncryptedPwd);
-        member.setPoint(0);
-        member.setAuthorities(authority);
-        member.setDisabled(false);
-
-        authority.setMember(member);
-        return member;
+        return createMember(authority, email, encryptedPwd, simpleEncryptedPwd);
     }
 
     public static Member createAdminMember(String email, String encryptedPwd, String simpleEncryptedPwd){
         Authority authority = Authority.creatAuthority("ADMIN");
+        return createMember(authority, email, encryptedPwd, simpleEncryptedPwd);
+    }
 
+    private static Member createMember(Authority authority, String email, String encryptedPwd, String simpleEncryptedPwd){
         Member member = new Member();
         member.setId(UUID.randomUUID().toString());
         member.setEmail(email);

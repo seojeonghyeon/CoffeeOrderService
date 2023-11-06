@@ -38,7 +38,7 @@ import static com.justin.teaorderservice.modules.order.OrderApiController.ROOT;
 @RequestMapping(ROOT)
 @RequiredArgsConstructor
 public class OrderApiController {
-    public static final String ROOT = "/api/order/v1/orders";
+    public static final String ROOT = "/api/order/orders";
     static final String ORDER_DETAIL = "/{orderId}/detail";
 
     private final OrderService orderService;

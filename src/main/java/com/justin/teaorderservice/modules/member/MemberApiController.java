@@ -1,5 +1,6 @@
 package com.justin.teaorderservice.modules.member;
 
+import com.justin.teaorderservice.infra.auth.JwtTokenProvider;
 import com.justin.teaorderservice.infra.exception.*;
 import com.justin.teaorderservice.modules.member.request.RequestMemberSave;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,12 +13,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import static com.justin.teaorderservice.modules.member.MemberApiController.ROOT;
 
 @Tag(
         name = "Member API Controller",
@@ -25,19 +26,24 @@ import org.springframework.web.bind.annotation.*;
 )
 @Slf4j
 @Controller
-@RequestMapping("/api/order/v1/members")
+@RequestMapping(ROOT)
 @RequiredArgsConstructor
 public class MemberApiController {
 
+    static final String ROOT = "/api/order/members";
+    static final String ADD_MEMBER = "/add";
+    static final String ADD_MEMBER_RESULT = "/{email}/detail";
+
     private final MemberService memberService;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Operation(summary = "회원 가입 양식", description = "Member 추가 양식")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "회원 가입 양식 전달", content = @Content(schema = @Schema(implementation = RequestMemberSave.class))),
             @ApiResponse(responseCode = "500", description = "서버 오류 발생", content = @Content(schema = @Schema(implementation = String.class)))
     })
-    @GetMapping("/add")
+    @GetMapping(ADD_MEMBER)
     public ResponseEntity<RequestMemberSave> addMember(){
         return ResponseEntity.status(HttpStatus.OK).body(new RequestMemberSave());
     }
@@ -48,14 +54,14 @@ public class MemberApiController {
             @ApiResponse(responseCode = "400", description = "회원 가입 실패", content = @Content(schema = @Schema(implementation = String.class))),
             @ApiResponse(responseCode = "500", description = "서버 오류 발생", content = @Content(schema = @Schema(implementation = String.class)))
     })
-    @PostMapping("/add")
+    @PostMapping(ADD_MEMBER)
     public ResponseEntity<String> addMember(final @RequestBody @Validated RequestMemberSave requestMemberSave) {
         if(memberService.hasEmail(requestMemberSave.getEmail())){
             throw new ExistEmailException(ErrorCode.EXIST_EMAIL);
         }
 
         String memberId = memberService.register(requestMemberSave.getEmail(), passwordEncoder.encode(requestMemberSave.getPassword()), passwordEncoder.encode(requestMemberSave.getSimplePassword()));
-        return ResponseEntity.status(HttpStatus.OK).body(memberId);
+        return ResponseEntity.status(HttpStatus.OK).body(jwtTokenProvider.createToken(memberId));
     }
 
     @Operation(summary = "회원 가입 여부 확인", description = "사용자의 ID에 대해 등록된 핸드폰 번호가 있는 지 확인 한다.")
@@ -64,16 +70,13 @@ public class MemberApiController {
             @ApiResponse(responseCode = "400", description = "Request Fail", content = @Content(schema = @Schema(implementation = MemberAdapter.class))),
             @ApiResponse(responseCode = "500", description = "Server Error", content = @Content(schema = @Schema(implementation = MemberAdapter.class)))
     })
-    @GetMapping("/detail")
-    @PreAuthorize("hasAnyAuthority('USER','MANAGER','ADMIN')")
-    public ResponseEntity<String> memberDetail(@AuthenticationPrincipal MemberAdapter memberAdapter){
-        Member member = memberService.findByMemberId(memberAdapter.getMember().getId());
-
-        if(member == null){
+    @GetMapping(ADD_MEMBER_RESULT)
+    public ResponseEntity<String> memberDetail(@PathVariable("email") final String email){
+        boolean hasAccount = memberService.hasEmail(email);
+        if(!hasAccount){
             throw new NoExistEmailException(ErrorCode.NO_EXIST_EMAIL);
         }
-
-        return ResponseEntity.status(HttpStatus.OK).body(member.getEmail());
+        return ResponseEntity.status(HttpStatus.OK).body(email);
     }
 
 
