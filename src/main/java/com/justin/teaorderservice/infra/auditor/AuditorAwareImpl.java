@@ -14,13 +14,12 @@ public class AuditorAwareImpl implements AuditorAware<String> {
         if(null != authentication && authentication.isAuthenticated()){
             return getAuthentication(authentication);
         }
-
-        return null;
+        return Optional.empty();
     }
 
     private Optional<String> getAuthentication(Authentication authentication){
         MemberAdapter memberAdapter = (MemberAdapter) authentication.getPrincipal();
         Member member = memberAdapter.getMember();
-        return Optional.of(member.getId());
+        return Optional.ofNullable(member.getId());
     }
 }

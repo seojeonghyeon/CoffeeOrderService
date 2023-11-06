@@ -9,7 +9,7 @@ import static jakarta.persistence.FetchType.LAZY;
 
 @Table(name = "tea_category") @Entity
 @Getter
-@Setter(AccessLevel.PROTECTED)
+@Setter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -27,4 +27,9 @@ public class TeaCategory {
     @JoinColumn(name = "category_id")
     private Category category;
 
+    public static TeaCategory createTeaCategory(Category category){
+        TeaCategory teaCategory = new TeaCategory();
+        teaCategory.setCategory(category);
+        return teaCategory;
+    }
 }

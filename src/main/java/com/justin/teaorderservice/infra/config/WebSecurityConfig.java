@@ -15,7 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.CorsFilter;
 
-@Profile(value = {"local","dev","stg","prd"})
+@Profile(value = {"test","local","dev","stg","prd"})
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -52,7 +52,6 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers("/**").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
-                .requestMatchers("/h2-console/login.jsp").permitAll()
                 .requestMatchers("/favicon.ico").permitAll()
                 .requestMatchers("/error").permitAll()
                 .requestMatchers("/image/**").permitAll()
@@ -101,8 +100,8 @@ public class WebSecurityConfig {
                  */
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/order/v1/login").permitAll()
-                .requestMatchers("/api/order/v1/members/add").permitAll()
+                .requestMatchers("/api/order/login").permitAll()
+                .requestMatchers("/api/order/members/add").permitAll()
                 .anyRequest().authenticated()
 
                 .and()

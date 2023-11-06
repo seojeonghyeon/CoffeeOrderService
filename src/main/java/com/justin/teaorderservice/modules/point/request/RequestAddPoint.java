@@ -15,4 +15,12 @@ public class RequestAddPoint {
     @Schema(description = "추가 할 Point", nullable = false)
     @NotNull
     private Integer addPoint;
+
+    public static RequestAddPoint createRequestAddPoint(Integer point, Integer addPoint){
+        RequestAddPoint requestAddPoint = RequestAddPoint.builder()
+                .point(point)
+                .addPoint(addPoint)
+                .build();
+        return requestAddPoint;
+    }
 }
