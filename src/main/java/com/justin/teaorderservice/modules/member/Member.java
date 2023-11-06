@@ -10,15 +10,10 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.domain.Persistable;
 
 import java.time.ZonedDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity @Table(name = "members")
 @Getter @Builder @Setter(AccessLevel.PROTECTED)
@@ -48,7 +43,7 @@ public class Member implements Persistable<String> {
 
     @JsonIgnore
     @OneToMany(mappedBy = "member")
-    private List<Point> points;
+    private List<Point> points = new ArrayList<>();
 
     public void setAuthorities(Authority authority){
         this.authorities.add(authority);

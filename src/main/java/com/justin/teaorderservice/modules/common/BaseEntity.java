@@ -14,11 +14,9 @@ import java.time.ZonedDateTime;
 @Getter
 @MappedSuperclass
 public class BaseEntity {
-    @CreatedDate
     @Column(updatable = false)
     private ZonedDateTime createdDate;
 
-    @LastModifiedDate
     private ZonedDateTime updatedDate;
 
     @CreatedBy
@@ -27,4 +25,15 @@ public class BaseEntity {
 
     @LastModifiedBy
     private String updatedBy;
+
+    @PrePersist
+    public void prePersist(){
+        createdDate = ZonedDateTime.now();
+        updatedDate = ZonedDateTime.now();
+    }
+
+    @PreUpdate
+    public void preUpdate(){
+        updatedDate = ZonedDateTime.now();
+    }
 }
