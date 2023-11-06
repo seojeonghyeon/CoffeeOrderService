@@ -37,8 +37,8 @@ class PointApiControllerTest {
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired private MockMvc mockMvc;
     @Autowired private PointRepository pointRepository;
-    @Autowired private JwtTokenProvider jwtTokenProvider;
     @Autowired private MemberRepository memberRepository;
+    @Autowired private JwtTokenProvider jwtTokenProvider;
     @Autowired private ObjectMapper objectMapper;
 
     private static final String ROOT = "/api/order/points";
@@ -53,6 +53,7 @@ class PointApiControllerTest {
     @AfterEach
     void afterEach(){
         pointRepository.deleteAll();
+        memberRepository.deleteAll();
     }
 
     @WithAccount(
