@@ -37,35 +37,38 @@ class PointApiControllerTest {
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired private MockMvc mockMvc;
     @Autowired private PointRepository pointRepository;
-    @Autowired private JwtTokenProvider jwtTokenProvider;
     @Autowired private MemberRepository memberRepository;
+    @Autowired private JwtTokenProvider jwtTokenProvider;
     @Autowired private ObjectMapper objectMapper;
 
     private static final String ROOT = "/api/order/points";
     private static final String ADD = "/add";
     private static final String RESULT_DETAIL = "/{pointId}/detail";
 
+    private static final String EMAIL = "seojeonghyeon0630@gmail.com";
+    private static final String PASSWORD = "SEOjh1234!";
+    private static final String SIMPLE_PASSWORD = "1234";
+
     @BeforeEach
     void beforeEach(){
-
+        log.info("Account: " + SecurityContextHolder.getContext().getAuthentication());
     }
 
     @AfterEach
     void afterEach(){
         pointRepository.deleteAll();
+        memberRepository.deleteAll();
     }
 
     @WithAccount(
-            email = "seojeonghyeon0630@gmail.com",
-            password = "SEOjh1234!",
-            simplePassword = "1234"
+            email = EMAIL,
+            password = PASSWORD,
+            simplePassword = SIMPLE_PASSWORD
     )
     @DisplayName("Point 충전 양식")
     @Test
     void points() throws Exception{
-        log.info("Account: " + SecurityContextHolder.getContext().getAuthentication());
-        String email = "seojeonghyeon0630@gmail.com";
-        String token = jwtTokenProvider.createToken(email);
+        String token = jwtTokenProvider.createToken(EMAIL);
         mockMvc
                 .perform(
                         get(ROOT + ADD)
@@ -78,16 +81,14 @@ class PointApiControllerTest {
     }
 
     @WithAccount(
-            email = "seojeonghyeon0630@gmail.com",
-            password = "SEOjh1234!",
-            simplePassword = "1234"
+            email = EMAIL,
+            password = PASSWORD,
+            simplePassword = SIMPLE_PASSWORD
     )
     @DisplayName("Point 충전 - 정상 입력")
     @Test
     void addPoint_with_correct_input() throws Exception{
-        log.info("Account: " + SecurityContextHolder.getContext().getAuthentication());
-        String email = "seojeonghyeon0630@gmail.com";
-        String token = jwtTokenProvider.createToken(email);
+        String token = jwtTokenProvider.createToken(EMAIL);
         Integer currentPoint = 0;
         Integer addPoint = 10000;
 
@@ -111,20 +112,17 @@ class PointApiControllerTest {
     }
 
     @WithAccount(
-            email = "seojeonghyeon0630@gmail.com",
-            password = "SEOjh1234!",
-            simplePassword = "1234"
+            email = EMAIL,
+            password = PASSWORD,
+            simplePassword = SIMPLE_PASSWORD
     )
     @DisplayName("Point 충전 - 오류 입력(중복 요청 시)")
     @Test
     void addPoint_with_wrong_input() throws Exception{
-        log.info("Account: " + SecurityContextHolder.getContext().getAuthentication());
-
         /*
          * 첫번째 요청
          */
-        String email = "seojeonghyeon0630@gmail.com";
-        String token = jwtTokenProvider.createToken(email);
+        String token = jwtTokenProvider.createToken(EMAIL);
         Integer currentPoint = 0;
         Integer addPoint = 10000;
         String resultBody = "No match input point";
@@ -150,7 +148,6 @@ class PointApiControllerTest {
         /*
          * 두번째 요청
          */
-        log.info("Account: " + SecurityContextHolder.getContext().getAuthentication());
         mvcResult = mockMvc
                 .perform(
                         post(ROOT + ADD)
@@ -167,16 +164,14 @@ class PointApiControllerTest {
     }
 
     @WithAccount(
-            email = "seojeonghyeon0630@gmail.com",
-            password = "SEOjh1234!",
-            simplePassword = "1234"
+            email = EMAIL,
+            password = PASSWORD,
+            simplePassword = SIMPLE_PASSWORD
     )
     @DisplayName("Point 충전 결과")
     @Test
     void pointResultDetail() throws Exception{
-        log.info("Account: " + SecurityContextHolder.getContext().getAuthentication());
-        String email = "seojeonghyeon0630@gmail.com";
-        String token = jwtTokenProvider.createToken(email);
+        String token = jwtTokenProvider.createToken(EMAIL);
 
         /*
          * Point 내 Id 획득

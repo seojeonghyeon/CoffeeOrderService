@@ -2,6 +2,7 @@ package com.justin.teaorderservice.modules.point;
 
 
 import com.justin.teaorderservice.infra.exception.ErrorCode;
+import com.justin.teaorderservice.modules.member.CurrentMember;
 import com.justin.teaorderservice.modules.member.Member;
 import com.justin.teaorderservice.modules.member.MemberAdapter;
 import com.justin.teaorderservice.modules.point.request.RequestAddPoint;
@@ -50,8 +51,7 @@ public class PointApiController {
     })
     @GetMapping(ADD)
     @PreAuthorize("hasAnyAuthority('USER','MANAGER','ADMIN')")
-    public ResponseEntity<ResponseAddPoint> points(@AuthenticationPrincipal MemberAdapter memberAdapter){
-        Member member = memberAdapter.getMember();
+    public ResponseEntity<ResponseAddPoint> points(@CurrentMember Member member){
         Integer point = pointService.findPointById(member.getId());
         return ResponseEntity.status(HttpStatus.OK).body(ResponseAddPoint.createResponseAddPoint(point, 0));
     }
@@ -64,8 +64,7 @@ public class PointApiController {
     })
     @PostMapping(ADD)
     @PreAuthorize("hasAnyAuthority('USER','MANAGER','ADMIN')")
-    public ResponseEntity<String> addPoint(@AuthenticationPrincipal MemberAdapter memberAdapter, final @RequestBody @Validated RequestAddPoint requestAddPoint){
-        Member member = memberAdapter.getMember();
+    public ResponseEntity<String> addPoint(@CurrentMember Member member, final @RequestBody @Validated RequestAddPoint requestAddPoint){
         Integer point = pointService.findPointById(member.getId());
         if(validation(requestAddPoint.getPoint(), point)){
             Point savePoint = pointService.addPoint(member.getId(), requestAddPoint.getPoint(), requestAddPoint.getAddPoint());
@@ -86,8 +85,7 @@ public class PointApiController {
     })
     @GetMapping(RESULT_DETAIL)
     @PreAuthorize("hasAnyAuthority('USER','MANAGER','ADMIN')")
-    public ResponseEntity<ResponsePointResult> pointResultDetail(@AuthenticationPrincipal MemberAdapter memberAdapter, @PathVariable long pointId){
-        Member member = memberAdapter.getMember();
+    public ResponseEntity<ResponsePointResult> pointResultDetail(@CurrentMember Member member, @PathVariable long pointId){
         Point point = pointService.findPointByMemberAndPointId(member.getId(), pointId);
         return ResponseEntity.status(HttpStatus.OK).body(ResponsePointResult.createResponsePointResult(point));
     }

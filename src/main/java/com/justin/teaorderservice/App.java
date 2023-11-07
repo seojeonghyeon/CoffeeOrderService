@@ -25,7 +25,7 @@ public class App {
     }
 
     @Bean
-    @Profile({"local"})
+    @Profile({"local", "test"})
     public TestDataInit testDataInit(TeaRepository teaRepository, MemberRepository memberRepository, CategoryRepository categoryRepository, TeaCategoryRepository teaCategoryRepository, BCryptPasswordEncoder passwordEncoder){
         return new TestDataInit(teaRepository, memberRepository, categoryRepository, teaCategoryRepository, passwordEncoder);
     }

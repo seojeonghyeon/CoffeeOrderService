@@ -54,8 +54,6 @@ public class Order extends BaseEntity {
         status = (member.getPoint() - getTotalPrice() >= 0 ? OrderStatus.CONFIRMED : OrderStatus.REJECTED);
         if(status == OrderStatus.CONFIRMED){
             member.deductPoint(getTotalPrice());
-        } else if (status == OrderStatus.REJECTED) {
-            throw new NotEnoughPointException(ErrorCode.NOT_ENOUGH_POINT);
         }
     }
 
@@ -76,8 +74,9 @@ public class Order extends BaseEntity {
     public void cancel(){
         if(status == OrderStatus.COMPLETED){
             throw new AlreadyCompletedOrderException(ErrorCode.ALREADY_COMPLETED_ORDER);
+        }else if(status != OrderStatus.REJECTED){
+            status = OrderStatus.CANCELED;
         }
-        status = OrderStatus.CANCELED;
         teaOrders.forEach(TeaOrder::cancel);
         member.inducePoint(getTotalPrice());
     }

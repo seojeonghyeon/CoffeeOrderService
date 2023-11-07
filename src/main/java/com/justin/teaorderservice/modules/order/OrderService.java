@@ -2,6 +2,7 @@ package com.justin.teaorderservice.modules.order;
 
 import com.justin.teaorderservice.infra.exception.ErrorCode;
 import com.justin.teaorderservice.infra.exception.NoSuchOrderException;
+import com.justin.teaorderservice.infra.exception.NotEnoughPointException;
 import com.justin.teaorderservice.modules.member.Member;
 import com.justin.teaorderservice.modules.member.MemberRepository;
 import com.justin.teaorderservice.modules.tea.TeaRepository;
@@ -38,11 +39,14 @@ public class OrderService{
     }
 
     @Transactional
-    public Long order(String memberId, TeaOrder... teaOrders) {
+    public Order order(String memberId, TeaOrder... teaOrders) {
         Member findMember = memberRepository.findById(memberId).orElse(null);
         Order order = Order.createOrder(findMember, teaOrders);
-        orderRepository.save(order);
-        return order.getId();
+        Order saveOrder = orderRepository.save(order);
+        if(saveOrder.getStatus() == OrderStatus.REJECTED){
+            saveOrder.cancel();
+        }
+        return saveOrder;
     }
 
     @Transactional
