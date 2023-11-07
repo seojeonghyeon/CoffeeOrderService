@@ -39,7 +39,7 @@ public class Member implements Persistable<String> {
 
     @JsonIgnore
     @OneToMany(mappedBy = "member")
-    private List<Order> orders;
+    private List<Order> orders = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "member")

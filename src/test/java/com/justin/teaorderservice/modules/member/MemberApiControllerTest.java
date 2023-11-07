@@ -41,6 +41,10 @@ class MemberApiControllerTest {
     private static final String ADD_MEMBER = "/add";
     private static final String ADD_MEMBER_RESULT = "/detail";
 
+    private static final String EMAIL = "seojeonghyeon0630@gmail.com";
+    private static final String PASSWORD = "SEOjh1234!";
+    private static final String SIMPLE_PASSWORD = "1234";
+
     @BeforeEach
     void beforeEach(){
 
@@ -70,14 +74,10 @@ class MemberApiControllerTest {
     void addMember_with_correct_input() throws Exception{
         log.info("Account: " + SecurityContextHolder.getContext().getAuthentication());
 
-        String email = "seojeonghyeon0630@gmail.com";
-        String password = "SEOjh4321!";
-        String simplePassword = "4321";
-
         RequestMemberSave requestMemberSave = RequestMemberSave.builder()
-                .email(email)
-                .password(password)
-                .simplePassword(simplePassword)
+                .email(EMAIL)
+                .password(PASSWORD)
+                .simplePassword(SIMPLE_PASSWORD)
                 .build();
 
         mockMvc
@@ -90,27 +90,25 @@ class MemberApiControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk());
 
-        Member member = memberRepository.findByEmail(email).orElse(null);
+        Member member = memberRepository.findByEmail(EMAIL).orElse(null);
         assertFalse(Objects.requireNonNull(member).getDisabled());
-        assertNotNull(loginService.login(email, password));
+        assertNotNull(loginService.login(EMAIL, PASSWORD));
     }
 
     @WithAccount(
-            email = "seojeonghyeon0630@gmail.com",
-            password = "SEOjh1234!",
-            simplePassword = "1234"
+            email = EMAIL,
+            password = PASSWORD,
+            simplePassword = SIMPLE_PASSWORD
     )
     @DisplayName("회원 가입 - 입력값 오류 : 존재 하는 Email")
     @Test
     void addMember_with_wrong_input1() throws Exception{
         log.info("Account: " + SecurityContextHolder.getContext().getAuthentication());
-
-        String email = "seojeonghyeon0630@gmail.com";
         String password = "SEOjh4321!";
         String simplePassword = "4321";
 
         RequestMemberSave requestMemberSave = RequestMemberSave.builder()
-                .email(email)
+                .email(EMAIL)
                 .password(password)
                 .simplePassword(simplePassword)
                 .build();
@@ -126,21 +124,19 @@ class MemberApiControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("errorCode").value("EXIST_EMAIL"));
 
-        Member member = memberRepository.findByEmail(email).orElse(null);
+        Member member = memberRepository.findByEmail(EMAIL).orElse(null);
         assertFalse(Objects.requireNonNull(member).getDisabled());
-        assertNull(loginService.login(email, password));
+        assertNull(loginService.login(EMAIL, password));
     }
 
     @DisplayName("회원 가입 - 입력값 오류 : simplePassword 미 입력")
     @Test
     void addMember_with_wrong_input2() throws Exception{
-        String email = "seojeonghyeon0630@gmail.com";
-        String password = "SEOjh4321!";
         String simplePassword = "";
 
         RequestMemberSave requestMemberSave = RequestMemberSave.builder()
-                .email(email)
-                .password(password)
+                .email(EMAIL)
+                .password(PASSWORD)
                 .simplePassword(simplePassword)
                 .build();
 
@@ -155,24 +151,23 @@ class MemberApiControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("simplePassword").exists());
 
-        Member member = memberRepository.findByEmail(email).orElse(null);
+        Member member = memberRepository.findByEmail(EMAIL).orElse(null);
         assertNull(member);
     }
 
     @WithAccount(
-            email = "seojeonghyeon0630@gmail.com",
-            password = "SEOjh1234!",
-            simplePassword = "1234"
+            email = EMAIL,
+            password = PASSWORD,
+            simplePassword = SIMPLE_PASSWORD
     )
     @DisplayName("회원 가입 여부 확인 - 정상")
     @Test
     void memberDetail() throws Exception{
         log.info("Account: " + SecurityContextHolder.getContext().getAuthentication());
-        String email = "seojeonghyeon0630@gmail.com";
 
         MvcResult mvcResult = mockMvc
                 .perform(
-                        get(ROOT + "/" +email + ADD_MEMBER_RESULT)
+                        get(ROOT + "/" + EMAIL + ADD_MEMBER_RESULT)
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -180,7 +175,7 @@ class MemberApiControllerTest {
 
         MockHttpServletResponse response = mvcResult.getResponse();
         String content = response.getContentAsString();
-        Assertions.assertThat(content.contains("seojeonghyeon0630@gmail.com")).isTrue();
+        Assertions.assertThat(content.contains(EMAIL)).isTrue();
     }
 
     @DisplayName("회원 가입 여부 확인 - 오류")
@@ -188,11 +183,9 @@ class MemberApiControllerTest {
     void memberDetail_unauthorized() throws Exception{
         log.info("Account: " + SecurityContextHolder.getContext().getAuthentication());
 
-        String email = "seojeonghyeon0630@gmail.com";
-
         mockMvc
                 .perform(
-                        get(ROOT + "/" +email + ADD_MEMBER_RESULT)
+                        get(ROOT + "/" + EMAIL + ADD_MEMBER_RESULT)
                 )
                 .andDo(print())
                 .andExpect(status().isBadRequest())

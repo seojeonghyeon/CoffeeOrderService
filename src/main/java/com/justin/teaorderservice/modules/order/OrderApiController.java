@@ -1,7 +1,9 @@
 package com.justin.teaorderservice.modules.order;
 
+import com.justin.teaorderservice.infra.exception.ErrorCode;
+import com.justin.teaorderservice.infra.exception.NotEnoughPointException;
+import com.justin.teaorderservice.modules.member.CurrentMember;
 import com.justin.teaorderservice.modules.member.Member;
-import com.justin.teaorderservice.modules.member.MemberAdapter;
 import com.justin.teaorderservice.modules.tea.Tea;
 import com.justin.teaorderservice.modules.tea.TeaService;
 import com.justin.teaorderservice.modules.teaorder.TeaOrderService;
@@ -21,7 +23,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -53,8 +54,7 @@ public class OrderApiController {
     })
     @GetMapping
     @PreAuthorize("hasAnyAuthority('USER','MANAGER','ADMIN')")
-    public ResponseEntity<ResponseOrder> items(@AuthenticationPrincipal MemberAdapter memberAdapter){
-        Member member = memberAdapter.getMember();
+    public ResponseEntity<ResponseOrder> items(@CurrentMember Member member){
         List<Tea> teas = teaService.findAll();
         List<ResponseTeaOrder> responseTeaOrders = teas.stream().map(ResponseTeaOrder::createResponseTeaOrder).toList();
         ResponseOrder responseOrder = ResponseOrder.createResponseOrder(member.getMemberName(), responseTeaOrders);
@@ -69,8 +69,7 @@ public class OrderApiController {
     })
     @GetMapping(ORDER_DETAIL)
     @PreAuthorize("hasAnyAuthority('USER','MANAGER','ADMIN')")
-    public ResponseEntity<ResponseOrder> orderDetail(@PathVariable long orderId, @AuthenticationPrincipal MemberAdapter memberAdapter) {
-        Member member = memberAdapter.getMember();
+    public ResponseEntity<ResponseOrder> orderDetail(@PathVariable long orderId, @CurrentMember Member member) {
         Order order = orderService.findByUserIdAndId(member.getId(), orderId);
         ResponseOrder responseOrder = null;
 
@@ -92,14 +91,16 @@ public class OrderApiController {
     })
     @PostMapping
     @PreAuthorize("hasAnyAuthority('USER','MANAGER','ADMIN')")
-    public ResponseEntity<String> addOrder(@AuthenticationPrincipal MemberAdapter memberAdapter, final @RequestBody @Validated RequestItemPurchase requestItemPurchase){
-        Member member = memberAdapter.getMember();
+    public ResponseEntity<String> addOrder(@CurrentMember Member member, final @RequestBody @Validated RequestItemPurchase requestItemPurchase){
         List<RequestItemOrder> requestItemOrders = requestItemPurchase.getRequestItemOrderList();
         List<TeaOrder> teaOrders = requestItemOrders.stream()
                 .filter(requestItemOrder -> requestItemOrder.getOrderQuantity() != null && requestItemOrder.getOrderQuantity() != 0)
                 .map(requestItemOrder -> teaOrderService.teaOrder(requestItemOrder.getId(), requestItemOrder.getPrice(), requestItemOrder.getOrderQuantity()))
                 .toList();
-        Long orderId = orderService.order(member.getId(), teaOrders.toArray(TeaOrder[]::new));
-        return ResponseEntity.status(HttpStatus.OK).body(orderId.toString());
+        Order saveOrder = orderService.order(member.getId(), teaOrders.toArray(TeaOrder[]::new));
+        if(saveOrder.getStatus() == OrderStatus.REJECTED){
+            throw new NotEnoughPointException(ErrorCode.NOT_ENOUGH_POINT);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(saveOrder.getId().toString());
     }
 }
