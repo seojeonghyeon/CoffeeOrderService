@@ -34,7 +34,7 @@ public class Tea {
     private List<TeaCategory> teaCategories = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "tea", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "tea")
     private List<TeaOrder> teaOrders;
 
     public void addTeaCategory(TeaCategory teaCategory){

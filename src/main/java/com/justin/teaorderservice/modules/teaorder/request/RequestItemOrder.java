@@ -36,4 +36,15 @@ public class RequestItemOrder {
     @NotNull
     @Range(min = 0, max = 1000)
     private Integer orderQuantity;
+
+    public static RequestItemOrder createRequestItemOrder(Long id, String teaName, Integer price, Integer quantity, Integer orderQuantity){
+        RequestItemOrder requestItemOrder = RequestItemOrder.builder()
+                .id(id)
+                .teaName(teaName)
+                .price(price)
+                .quantity(quantity)
+                .orderQuantity(orderQuantity)
+                .build();
+        return requestItemOrder;
+    }
 }

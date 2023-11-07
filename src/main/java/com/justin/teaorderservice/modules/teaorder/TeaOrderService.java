@@ -32,6 +32,7 @@ public class TeaOrderService{
         return teaOrderRepository.save(teaOrder);
     }
 
+    @Transactional
     public TeaOrder teaOrder(Long teaId, Integer orderPrice, Integer orderQuantity){
         Tea tea = teaRepository.findById(teaId).orElse(null);
         TeaOrder teaOrder = TeaOrder.createTeaOrder(tea,orderPrice, orderQuantity);
