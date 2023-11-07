@@ -9,6 +9,8 @@ import com.justin.teaorderservice.modules.member.WithAccount;
 import com.justin.teaorderservice.modules.order.request.RequestItemPurchase;
 import com.justin.teaorderservice.modules.point.PointRepository;
 import com.justin.teaorderservice.modules.point.request.RequestAddPoint;
+import com.justin.teaorderservice.modules.tea.TeaRepository;
+import com.justin.teaorderservice.modules.teaorder.TeaOrderRepository;
 import com.justin.teaorderservice.modules.teaorder.request.RequestItemOrder;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
@@ -42,6 +44,8 @@ class OrderApiControllerTest {
     @Autowired private PointRepository pointRepository;
     @Autowired private MemberRepository memberRepository;
     @Autowired private OrderRepository orderRepository;
+    @Autowired private TeaRepository teaRepository;
+    @Autowired private TeaOrderRepository teaOrderRepository;
     @Autowired private JwtTokenProvider jwtTokenProvider;
     @Autowired private ObjectMapper objectMapper;
 
@@ -176,6 +180,74 @@ class OrderApiControllerTest {
         Member member = memberRepository.findByEmail(EMAIL).orElse(null);
         Order order = orderRepository.findByMemberAndStatus(member, OrderStatus.REJECTED).get(0);
         assertThat(order.getTotalPrice().equals(2_000)).isTrue();
+    }
+
+    @WithAccount(
+            email = EMAIL,
+            password = PASSWORD,
+            simplePassword = SIMPLE_PASSWORD
+    )
+    @DisplayName("Tea 주문 정보")
+    @Test
+    void orderDetail() throws Exception{
+        String token = jwtTokenProvider.createToken(EMAIL);
+
+        RequestItemPurchase requestItemPurchase = RequestItemPurchase.createRequestItemPurchase(
+                RequestItemOrder.createRequestItemOrder(1L, "Americano(Hot)", 2000, 10000, 0),
+                RequestItemOrder.createRequestItemOrder(2L, "Americano(Ice)", 2000, 10, 1),
+                RequestItemOrder.createRequestItemOrder(3L, "Caffe Latte(Hot)", 2500, 20, 0),
+                RequestItemOrder.createRequestItemOrder(4L, "Caffe Latte(Ice)", 2500, 20, 0),
+                RequestItemOrder.createRequestItemOrder(5L, "자몽 에이드(Ice)", 3000, 50, 0),
+                RequestItemOrder.createRequestItemOrder(6L, "자몽 티(Hot)", 3000, 80, 0)
+        );
+
+        /*
+         * Point 충전
+         */
+        Integer currentPoint = 0;
+        Integer addPoint = 10000;
+
+        RequestAddPoint requestAddPoint = RequestAddPoint.createRequestAddPoint(currentPoint, addPoint);
+        mockMvc
+                .perform(
+                        post("/api/order/points/add")
+                                .header("Authorization","Bearer " + token)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(requestAddPoint))
+                                .with(csrf())
+                )
+                .andDo(print())
+                .andExpect(status().isOk());
+
+        /*
+         * 주문
+         */
+        MvcResult mvcResult = mockMvc
+                .perform(
+                        post(ROOT)
+                                .header("Authorization","Bearer " + token)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(requestItemPurchase))
+                                .with(csrf())
+                )
+                .andDo(print())
+                .andExpect(status().isOk()).andReturn();
+        MockHttpServletResponse response = mvcResult.getResponse();
+        Long orderId = Long.valueOf(response.getContentAsString());
+
+        mockMvc
+                .perform(
+                        get(ROOT + "/" + orderId + "/detail")
+                                .header("Authorization","Bearer " + token)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(requestItemPurchase))
+                                .with(csrf())
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("id").value(orderId))
+                .andExpect(jsonPath("userName").exists())
+                .andExpect(jsonPath("teaOrderList").exists());
     }
 
 

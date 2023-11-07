@@ -30,7 +30,7 @@ public class Tea {
     private String description;
     private Boolean disabled;
 
-    @OneToMany(mappedBy = "tea", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "tea")
     private List<TeaCategory> teaCategories = new ArrayList<>();
 
     @JsonIgnore
