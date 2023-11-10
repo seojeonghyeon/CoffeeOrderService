@@ -10,7 +10,7 @@ import java.util.Set;
 
 @Entity
 @Getter @Setter
-@Builder @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Authority {
 

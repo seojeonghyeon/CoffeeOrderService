@@ -14,10 +14,6 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.UUID;
-
 @RequiredArgsConstructor
 public class TestDataInit {
 

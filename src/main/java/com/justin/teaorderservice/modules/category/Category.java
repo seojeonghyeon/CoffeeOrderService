@@ -12,7 +12,7 @@ import static jakarta.persistence.FetchType.*;
 
 @Entity
 @Getter @Setter @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder @AllArgsConstructor
+@AllArgsConstructor
 public class Category {
     @Id @GeneratedValue
     @Column(name = "category_id")

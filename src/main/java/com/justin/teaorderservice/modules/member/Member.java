@@ -16,7 +16,7 @@ import java.time.ZonedDateTime;
 import java.util.*;
 
 @Entity @Table(name = "members")
-@Getter @Builder @Setter(AccessLevel.PROTECTED)
+@Getter @Setter(AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Member implements Persistable<String> {
