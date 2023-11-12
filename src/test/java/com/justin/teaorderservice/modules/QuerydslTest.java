@@ -12,6 +12,7 @@ import com.justin.teaorderservice.modules.tea.QTea;
 import com.justin.teaorderservice.modules.teacategory.QTeaCategory;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -188,6 +189,32 @@ public class QuerydslTest {
 
     private Predicate priceEq(Integer priceCond) {
         return priceCond == null ? null : tea.price.eq(priceCond);
+    }
+
+    @DisplayName("Bulk Update Query Test1")
+    @Test
+    public void bulkUpdateQuery(){
+        String categoryName = "Coffee";
+        double discountPercentage = 10;
+        long count = queryFactory
+                .update(tea)
+                .set(tea.price, tea.price.multiply(100 - discountPercentage).divide(100))
+                .where(tea.id.in(
+                        JPAExpressions.select(teaCategory.tea.id)
+                                .from(teaCategory)
+                                .join(teaCategory.category, category)
+                                .where(categoryNameEq(categoryName))
+                ))
+                .execute();
+        /**
+         * 영속성 Context가 남아 있어, DB에서 가져 오더라도 무시한 채로 영속성 Context를 그대로 사용
+         * -> Bulk 연산 이후엔 영속성 Context를 날려야 한다.
+         */
+        entityManager.flush();
+        entityManager.clear();
+
+        List<Tea> result = dynamicSearchTeaWithCategoryNameAndPrice2(categoryName, 1800);
+        assertThat(result.size()).isEqualTo(2);
     }
 
 }
