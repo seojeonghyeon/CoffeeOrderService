@@ -24,24 +24,10 @@ class TeaApiControllerTest {
     @Autowired private TeaRepository teaRepository;
 
     private static final String ROOT = "/api/order/teas";
+    private static final String TEA_SEARCH = "/search";
 
     @BeforeEach
     void beforeEach(){
-        Coffee coffee = createCoffee("Americano(Hot)", 2000, 10000,
-                "https://cdn.paris.spl.li/wp-content/uploads/200406_HOT%E1%84%8B%E1%85%A1%E1%84%86%E1%85%A6%E1%84%85%E1%85%B5%E1%84%8F%E1%85%A1%E1%84%82%E1%85%A9-1280x1280.jpg",
-                "에스프레소에 뜨거운 물을 희석시켜 만든 음료", false);
-        teaRepository.save(coffee);
-
-        Ade ade = createAde("자몽 에이드(Ice)", 3000, 50,
-                "https://cdn.paris.spl.li/wp-content/uploads/2023/06/%EC%9E%90%EB%AA%BD-1276x1280.png",
-                "자몽의 과즙에 탄산 따위를 넣어 만든 음료", false);
-        teaRepository.save(ade);
-
-        TeaPack teaPack = createTeaPack("자몽 티(Hot)", 3000, 80,
-                "https://cdn.paris.spl.li/wp-content/uploads/201008-%E1%84%84%E1%85%A1%E1%84%8C%E1%85%A1%E1%84%86%E1%85%A9%E1%86%BC-1280x1280.jpg",
-                "자몽의 과즙에 따끈한 물 따위를 넣어 만든 음료", false);
-        teaRepository.save(teaPack);
-
     }
 
     @AfterEach
@@ -77,16 +63,16 @@ class TeaApiControllerTest {
                 .andExpect(jsonPath("teaImage").value("https://cdn.paris.spl.li/wp-content/uploads/200406_HOT%E1%84%8B%E1%85%A1%E1%84%86%E1%85%A6%E1%84%85%E1%85%B5%E1%84%8F%E1%85%A1%E1%84%82%E1%85%A9-1280x1280.jpg"));
     }
 
-
-    private Coffee createCoffee(String teaName, Integer price, Integer stockQuantity, String teaImage, String description, boolean disabled){
-        return Coffee.createCoffee(teaName, price, stockQuantity, teaImage,description,disabled, 1);
-    }
-
-    private TeaPack createTeaPack(String teaName, Integer price, Integer stockQuantity, String teaImage, String description, boolean disabled){
-        return TeaPack.createTeaPack(teaName, price, stockQuantity, teaImage,description,disabled);
-    }
-
-    private Ade createAde(String teaName, Integer price, Integer stockQuantity, String teaImage, String description, boolean disabled){
-        return Ade.createAde(teaName, price, stockQuantity, teaImage,description,disabled);
+    @DisplayName("Tea 동적 검색")
+    @Test
+    void search() throws Exception{
+        mockMvc
+                .perform(
+                        get(ROOT + TEA_SEARCH+"?minPrice=2300&maxPrice=2900&page=1&size=1")
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("responseTeaSearchList").exists())
+                .andExpect(jsonPath("$.responseTeaSearchList[0].teaName").value("Caffe Latte(Ice)"));
     }
 }
