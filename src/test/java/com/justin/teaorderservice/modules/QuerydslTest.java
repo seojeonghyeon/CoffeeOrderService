@@ -12,6 +12,7 @@ import com.justin.teaorderservice.modules.tea.QTea;
 import com.justin.teaorderservice.modules.teacategory.QTeaCategory;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -25,6 +26,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -35,6 +37,7 @@ import static com.justin.teaorderservice.modules.tea.QTea.*;
 import static com.justin.teaorderservice.modules.teacategory.QTeaCategory.*;
 import static com.querydsl.jpa.JPAExpressions.*;
 import static org.assertj.core.api.Assertions.*;
+import static org.springframework.util.StringUtils.*;
 
 @MockMvcTest
 @Slf4j
@@ -179,28 +182,35 @@ public class QuerydslTest {
                 .selectFrom(tea)
                 .join(tea.teaCategories, teaCategory)
                 .fetchJoin()
-                .where(categoryNameEq(categoryNameCond), priceEq(priceCond))
+                .where(allEq(categoryNameCond, priceCond))
                 .fetch();
     }
 
-    private Predicate categoryNameEq(String categoryNameCond) {
-        return categoryNameCond == null ? null : teaCategory.category.id.eq(select(category.id).from(category).where(category.name.eq(categoryNameCond)));
+    private BooleanExpression allEq(String categoryNameCond, Integer priceCond){
+        return categoryNameEq(categoryNameCond).and(priceEq(priceCond));
     }
 
-    private Predicate priceEq(Integer priceCond) {
-        return priceCond == null ? null : tea.price.eq(priceCond);
+    private BooleanExpression categoryNameEq(String categoryNameCond) {
+        return hasText(categoryNameCond) ? teaCategory.category.id.eq(select(category.id).from(category).where(category.name.eq(categoryNameCond))) : null;
+    }
+
+    private BooleanExpression priceEq(Integer priceCond) {
+        return priceCond != null ? tea.price.eq(priceCond) : null;
     }
 
     @DisplayName("Bulk Update Query Test1")
     @Test
     public void bulkUpdateQuery(){
+        /**
+         * 커피 항목에 대해 10% 할인
+         */
         String categoryName = "Coffee";
         double discountPercentage = 10;
         long count = queryFactory
                 .update(tea)
                 .set(tea.price, tea.price.multiply(100 - discountPercentage).divide(100))
                 .where(tea.id.in(
-                        JPAExpressions.select(teaCategory.tea.id)
+                        select(teaCategory.tea.id)
                                 .from(teaCategory)
                                 .join(teaCategory.category, category)
                                 .where(categoryNameEq(categoryName))
@@ -217,4 +227,23 @@ public class QuerydslTest {
         assertThat(result.size()).isEqualTo(2);
     }
 
+    /*
+     * QueryDSL 내 exist는 count로 존재 여부를 조회한다.
+     * public boolean exists(Predicate predicate) {
+     * return this.createQuery(predicate).fetchCount() > 0L;
+     * }
+     * 전체 데이터에 대해 조회 후 결과가 나오기 때문에 성능이 떨어진다.
+     *
+     * 아래와 같이 fetchFirst를 이용하여 사용하면 fetchFirst 내부 구현 내 limit(1)이 존재해
+     * 결과를 1개만 가져와 SQL exist와 성능 차이가 없다.
+     * 
+     */
+    private Boolean exist(Long teaId){
+        Integer fetchOne = queryFactory
+                .selectOne()
+                .from(tea)
+                .where(tea.id.eq(teaId))
+                .fetchFirst();
+        return fetchOne != null;
+    }
 }
