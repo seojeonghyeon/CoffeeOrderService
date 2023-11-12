@@ -26,55 +26,59 @@ public class TestDataInit {
     @EventListener(ApplicationReadyEvent.class)
     public void init(){
         Category drink = Category.createCategory(null,"Drink");
-        categoryRepository.save(drink);
+        TeaCategory drinkCategory1 = drink.addTeaCategory();
+        TeaCategory drinkCategory2 = drink.addTeaCategory();
+        TeaCategory drinkCategory3 = drink.addTeaCategory();
+        TeaCategory drinkCategory4 = drink.addTeaCategory();
+        TeaCategory drinkCategory5 = drink.addTeaCategory();
+        TeaCategory drinkCategory6 = drink.addTeaCategory();
 
         Category coffee = Category.createCategory(drink, "Coffee");
-        categoryRepository.save(coffee);
+        TeaCategory coffeeCategory1 = coffee.addTeaCategory();
+        TeaCategory coffeeCategory2 = coffee.addTeaCategory();
+        TeaCategory coffeeCategory3 = coffee.addTeaCategory();
+        TeaCategory coffeeCategory4 = coffee.addTeaCategory();
 
         Category ade = Category.createCategory(drink, "Ade");
-        categoryRepository.save(ade);
+        TeaCategory adeCategory1 = ade.addTeaCategory();
 
         Category teaPack = Category.createCategory(drink, "TeaPack");
-        categoryRepository.save(teaPack);
-
-        TeaCategory coffeeTeaCategory = coffee.getTeaCategories().get(0);
-        TeaCategory adeTeaCategory = ade.getTeaCategories().get(0);
-        TeaCategory teaPackTeaCategory = teaPack.getTeaCategories().get(0);
+        TeaCategory teaPackCategory1 = teaPack.addTeaCategory();
 
         Coffee coffee1 = createCoffee("Americano(Hot)", 2000, 10000,
                 "https://cdn.paris.spl.li/wp-content/uploads/200406_HOT%E1%84%8B%E1%85%A1%E1%84%86%E1%85%A6%E1%84%85%E1%85%B5%E1%84%8F%E1%85%A1%E1%84%82%E1%85%A9-1280x1280.jpg",
-                "에스프레소에 뜨거운 물을 희석시켜 만든 음료", false, coffeeTeaCategory);
+                "에스프레소에 뜨거운 물을 희석시켜 만든 음료", false, drinkCategory1, coffeeCategory1);
         teaRepository.save(coffee1);
 
         Coffee coffee2 = createCoffee("Americano(Ice)", 2000, 10,
                 "https://cdn.paris.spl.li/wp-content/uploads/%E1%84%8B%E1%85%A1%E1%84%86%E1%85%A6%E1%84%85%E1%85%B5%E1%84%8F%E1%85%A1%E1%84%82%E1%85%A9-1280x1280.jpg",
-                "에스프레소에 찬 물을 희석시켜 만든 음료", false, coffeeTeaCategory);
+                "에스프레소에 찬 물을 희석시켜 만든 음료", false, drinkCategory2, coffeeCategory2);
         teaRepository.save(coffee2);
 
         Coffee coffee3 = createCoffee("Caffe Latte(Hot)", 2500, 20,
                 "https://cdn.paris.spl.li/wp-content/uploads/200406_HOT%E1%84%85%E1%85%A1%E1%84%84%E1%85%A6-1280x1280.jpg",
-                "리스트레또 더블샷과 스팀우유를 넣어 만든 베이직 커피 음료", false, coffeeTeaCategory);
+                "리스트레또 더블샷과 스팀우유를 넣어 만든 베이직 커피 음료", false, drinkCategory3, coffeeCategory3);
         teaRepository.save(coffee3);
 
         Coffee coffee4 = createCoffee("Caffe Latte(Ice)", 2500, 20,
                 "https://cdn.paris.spl.li/wp-content/uploads/%E1%84%8B%E1%85%A1%E1%84%8B%E1%85%B5%E1%84%89%E1%85%B3%E1%84%85%E1%85%A1%E1%84%84%E1%85%A6-1280x1280.jpg",
-                "리스트레또 더블샷과 스팀우유를 넣어 만든 베이직 커피 음료", false, coffeeTeaCategory);
+                "리스트레또 더블샷과 스팀우유를 넣어 만든 베이직 커피 음료", false, drinkCategory4, coffeeCategory4);
         teaRepository.save(coffee4);
-
 
         Ade ade1 = createAde("자몽 에이드(Ice)", 3000, 50,
                 "https://cdn.paris.spl.li/wp-content/uploads/2023/06/%EC%9E%90%EB%AA%BD-1276x1280.png",
-                "자몽의 과즙에 탄산 따위를 넣어 만든 음료", false, adeTeaCategory);
+                "자몽의 과즙에 탄산 따위를 넣어 만든 음료", false, drinkCategory5, adeCategory1);
         teaRepository.save(ade1);
 
         TeaPack teaPack1 = createTeaPack("자몽 티(Hot)", 3000, 80,
                 "https://cdn.paris.spl.li/wp-content/uploads/201008-%E1%84%84%E1%85%A1%E1%84%8C%E1%85%A1%E1%84%86%E1%85%A9%E1%86%BC-1280x1280.jpg",
-                "자몽의 과즙에 따끈한 물 따위를 넣어 만든 음료", false, teaPackTeaCategory);
+                "자몽의 과즙에 따끈한 물 따위를 넣어 만든 음료", false, drinkCategory6, teaPackCategory1);
         teaRepository.save(teaPack1);
 
-        teaCategoryRepository.save(coffeeTeaCategory);
-        teaCategoryRepository.save(adeTeaCategory);
-        teaCategoryRepository.save(teaPackTeaCategory);
+        categoryRepository.save(drink);
+        categoryRepository.save(coffee);
+        categoryRepository.save(ade);
+        categoryRepository.save(teaPack);
     }
 
     private Member createMember(String email, String encryptedPwd, String simpleEncryptedPwd){

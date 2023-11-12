@@ -41,14 +41,14 @@ public class Category {
         if(parent != null){
             category.setParent(parent);
             parent.addChildCategory(category);
-            category.addTeaCategory();
         }
         return category;
     }
 
-    public void addTeaCategory(){
+    public TeaCategory addTeaCategory(){
         TeaCategory teaCategory = TeaCategory.createTeaCategory(this);
         teaCategories.add(teaCategory);
+        return teaCategory;
     }
 
 
