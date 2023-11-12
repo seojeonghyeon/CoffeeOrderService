@@ -17,7 +17,7 @@ import java.util.List;
 @DiscriminatorColumn(name = "dtype")
 @Getter @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Setter(AccessLevel.PROTECTED)
-@Builder @AllArgsConstructor
+@AllArgsConstructor
 public class Tea {
 
     @Id @GeneratedValue

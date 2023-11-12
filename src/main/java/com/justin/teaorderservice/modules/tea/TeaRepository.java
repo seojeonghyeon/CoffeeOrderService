@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 import java.util.*;
 
 @Repository
-public interface TeaRepository extends JpaRepository<Tea, Long> {
+public interface TeaRepository extends JpaRepository<Tea, Long>, TeaRepositoryCustom {
 }

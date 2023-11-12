@@ -12,7 +12,7 @@ import static jakarta.persistence.FetchType.*;
 
 @Entity
 @Getter @Setter @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder @AllArgsConstructor
+@AllArgsConstructor
 public class Category {
     @Id @GeneratedValue
     @Column(name = "category_id")
@@ -41,14 +41,14 @@ public class Category {
         if(parent != null){
             category.setParent(parent);
             parent.addChildCategory(category);
-            category.addTeaCategory();
         }
         return category;
     }
 
-    public void addTeaCategory(){
+    public TeaCategory addTeaCategory(){
         TeaCategory teaCategory = TeaCategory.createTeaCategory(this);
         teaCategories.add(teaCategory);
+        return teaCategory;
     }
 
 
