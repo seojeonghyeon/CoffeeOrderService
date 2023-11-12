@@ -10,9 +10,12 @@ import com.justin.teaorderservice.modules.member.WithAccount;
 import com.justin.teaorderservice.modules.tea.*;
 import com.justin.teaorderservice.modules.tea.QTea;
 import com.justin.teaorderservice.modules.teacategory.QTeaCategory;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
@@ -37,12 +40,19 @@ import static org.assertj.core.api.Assertions.*;
 @Transactional
 public class QuerydslTest {
 
-    @Autowired private EntityManager entityManager;
+    @PersistenceContext
+    private EntityManager entityManager;
     JPAQueryFactory queryFactory;
 
     private static final String EMAIL = "seojeonghyeon0630@gmail.com";
     private static final String PASSWORD = "SEOjh1234!";
     private static final String SIMPLE_PASSWORD = "1234";
+
+    @BeforeEach
+    public void before(){
+        queryFactory = new JPAQueryFactory(entityManager);
+    }
+
 
     @WithAccount(
             email = EMAIL,
@@ -51,7 +61,6 @@ public class QuerydslTest {
     )
     @Test
     public void querydsl(){
-        queryFactory = new JPAQueryFactory(entityManager);
         Member findMember = queryFactory
                 .select(member)
                 .from(member)
@@ -77,13 +86,13 @@ public class QuerydslTest {
     @DisplayName("Fetch Join Test")
     @Test
     public void fetchJoin(){
-        queryFactory = new JPAQueryFactory(entityManager);
         Category findCategory = queryFactory.selectFrom(category)
                 .where(category.name.eq("Coffee"))
                 .fetchOne();
 
         List<Tea> teas = queryFactory.selectFrom(tea)
-                .join(tea.teaCategories, teaCategory).fetchJoin()
+                .join(tea.teaCategories, teaCategory)
+                .fetchJoin()
                 .where(teaCategory.category.eq(findCategory))
                 .fetch();
         assertThat(teas)
@@ -98,7 +107,6 @@ public class QuerydslTest {
     @DisplayName("Sub Query Test")
     @Test
     public void subQuery(){
-        queryFactory = new JPAQueryFactory(entityManager);
         List<String> teas = queryFactory.select(tea.teaName)
                 .from(tea)
                 .join(tea.teaCategories, teaCategory)
@@ -117,4 +125,69 @@ public class QuerydslTest {
         assertThat(teas)
                 .containsExactly("Americano(Hot)", "Americano(Ice)", "Caffe Latte(Hot)", "Caffe Latte(Ice)");
     }
+
+    @DisplayName("Dynamic Query Test1")
+    @Test
+    public void dynamicQuery_BooleanBuilder1(){
+        String categoryName = null;
+        Integer price = 3_000;
+
+        List<Tea> result = dynamicSearchTeaWithCategoryNameAndPrice1(categoryName, price);
+        assertThat(result.size()).isEqualTo(2);
+    }
+
+    private List<Tea> dynamicSearchTeaWithCategoryNameAndPrice1(String categoryName, Integer price) {
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        if(categoryName != null){
+            booleanBuilder.and(
+                    teaCategory.category.id.eq(
+                            select(category.id)
+                                    .from(category)
+                                    .where(
+                                            category.name.eq(categoryName)
+                                    )
+                    )
+            );
+        }
+        if(price != null){
+            booleanBuilder.and(
+                    tea.price.eq(price)
+            );
+        }
+
+        return queryFactory
+                .selectFrom(tea)
+                .join(tea.teaCategories, teaCategory)
+                .fetchJoin()
+                .where(booleanBuilder)
+                .fetch();
+    }
+
+    @DisplayName("Dynamic Query Test2")
+    @Test
+    public void dynamicQuery_BooleanBuilder2(){
+        String categoryName = "Coffee";
+        Integer price = 3_000;
+
+        List<Tea> result = dynamicSearchTeaWithCategoryNameAndPrice2(categoryName, price);
+        assertThat(result.size()).isEqualTo(0);
+    }
+
+    private List<Tea> dynamicSearchTeaWithCategoryNameAndPrice2(String categoryNameCond, Integer priceCond) {
+        return queryFactory
+                .selectFrom(tea)
+                .join(tea.teaCategories, teaCategory)
+                .fetchJoin()
+                .where(categoryNameEq(categoryNameCond), priceEq(priceCond))
+                .fetch();
+    }
+
+    private Predicate categoryNameEq(String categoryNameCond) {
+        return categoryNameCond == null ? null : teaCategory.category.id.eq(select(category.id).from(category).where(category.name.eq(categoryNameCond)));
+    }
+
+    private Predicate priceEq(Integer priceCond) {
+        return priceCond == null ? null : tea.price.eq(priceCond);
+    }
+
 }
