@@ -236,7 +236,7 @@ public class QuerydslTest {
      *
      * 아래와 같이 fetchFirst를 이용하여 사용하면 fetchFirst 내부 구현 내 limit(1)이 존재해
      * 결과를 1개만 가져와 SQL exist와 성능 차이가 없다.
-     * 
+     *
      */
     private Boolean exist(Long teaId){
         Integer fetchOne = queryFactory
