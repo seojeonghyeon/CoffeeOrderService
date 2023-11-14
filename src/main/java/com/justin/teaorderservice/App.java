@@ -3,6 +3,7 @@ package com.justin.teaorderservice;
 import com.justin.teaorderservice.modules.authority.AuthorityRepository;
 import com.justin.teaorderservice.modules.category.CategoryRepository;
 import com.justin.teaorderservice.modules.member.MemberRepository;
+import com.justin.teaorderservice.modules.tea.TeaOrderCountRepository;
 import com.justin.teaorderservice.modules.tea.TeaRepository;
 import com.justin.teaorderservice.modules.teacategory.TeaCategoryRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,7 @@ public class App {
 
     @Bean
     @Profile({"local", "test"})
-    public TestDataInit testDataInit(TeaRepository teaRepository, MemberRepository memberRepository, CategoryRepository categoryRepository, TeaCategoryRepository teaCategoryRepository, BCryptPasswordEncoder passwordEncoder){
-        return new TestDataInit(teaRepository, memberRepository, categoryRepository, teaCategoryRepository, passwordEncoder);
+    public TestDataInit testDataInit(TeaRepository teaRepository, MemberRepository memberRepository, CategoryRepository categoryRepository, TeaCategoryRepository teaCategoryRepository, BCryptPasswordEncoder passwordEncoder, TeaOrderCountRepository teaOrderCountRepository){
+        return new TestDataInit(teaRepository, memberRepository, categoryRepository, teaCategoryRepository, passwordEncoder, teaOrderCountRepository);
     }
 }

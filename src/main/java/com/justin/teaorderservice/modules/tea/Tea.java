@@ -37,6 +37,9 @@ public class Tea {
     @OneToMany(mappedBy = "tea")
     private List<TeaOrder> teaOrders;
 
+    @Transient
+    private TeaOrderCount teaOrderCount;
+
     public void addTeaCategory(TeaCategory teaCategory){
         teaCategories.add(teaCategory);
         teaCategory.setTea(this);

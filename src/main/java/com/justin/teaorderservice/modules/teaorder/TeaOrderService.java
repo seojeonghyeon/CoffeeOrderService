@@ -1,8 +1,6 @@
 package com.justin.teaorderservice.modules.teaorder;
 
-import com.justin.teaorderservice.modules.tea.Tea;
-import com.justin.teaorderservice.modules.tea.TeaRepository;
-import com.justin.teaorderservice.modules.tea.TeaService;
+import com.justin.teaorderservice.modules.tea.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,6 +16,7 @@ public class TeaOrderService{
 
     private final TeaOrderRepository teaOrderRepository;
     private final TeaRepository teaRepository;
+    private final TeaOrderCountRepository teaOrderCountRepository;
 
     public List<TeaOrder> findByOrderId(Long orderId) {
         return teaOrderRepository.findByOrderId(orderId);
@@ -35,7 +34,9 @@ public class TeaOrderService{
     @Transactional
     public TeaOrder teaOrder(Long teaId, Integer orderPrice, Integer orderQuantity){
         Tea tea = teaRepository.findById(teaId).orElse(null);
-        TeaOrder teaOrder = TeaOrder.createTeaOrder(tea,orderPrice, orderQuantity);
-        return teaOrder;
+        TeaOrderCount teaOrderCount = teaOrderCountRepository
+                .findByTeaId(teaId)
+                .orElse(TeaOrderCount.createTeaOrderCount(tea));
+        return TeaOrder.createTeaOrder(tea, teaOrderCount, orderPrice, orderQuantity);
     }
 }
