@@ -31,7 +31,8 @@ public class TeaOrder {
 
     private Boolean disabled;
 
-    @Transient
+    @ManyToOne(fetch = EAGER)
+    @JoinColumn(name = "order_count_id")
     private TeaOrderCount teaOrderCount;
 
     public static TeaOrder createTeaOrder(Tea tea, TeaOrderCount teaOrderCount, Integer orderPrice, Integer quantity){
