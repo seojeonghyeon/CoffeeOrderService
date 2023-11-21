@@ -1,17 +1,22 @@
 package com.justin.teaorderservice.modules.teaorder;
 
+import com.justin.teaorderservice.modules.common.BaseEntity;
 import com.justin.teaorderservice.modules.order.Order;
+import com.justin.teaorderservice.modules.ordercount.OrderCount;
 import com.justin.teaorderservice.modules.tea.Tea;
-import com.justin.teaorderservice.modules.tea.TeaOrderCount;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static jakarta.persistence.FetchType.*;
 
 @Entity
 @Getter @Setter
 @Builder @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class TeaOrder {
+public class TeaOrder extends BaseEntity {
 
     @Id @GeneratedValue
     @Column(name = "tea_order_id")
@@ -31,28 +36,27 @@ public class TeaOrder {
 
     private Boolean disabled;
 
-    @ManyToOne(fetch = EAGER)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "order_count_id")
-    private TeaOrderCount teaOrderCount;
+    private OrderCount orderCount;
 
-    public static TeaOrder createTeaOrder(Tea tea, TeaOrderCount teaOrderCount, Integer orderPrice, Integer quantity){
+    public static TeaOrder createTeaOrder(Tea tea, OrderCount orderCount, Integer orderPrice, Integer quantity){
         TeaOrder teaOrder = TeaOrder.builder()
-                .tea(tea)
                 .orderPrice(orderPrice)
                 .quantity(quantity)
                 .disabled(false)
-                .teaOrderCount(teaOrderCount)
                 .build();
+        tea.addTeaOrder(teaOrder);
+        orderCount.addTeaOrder(teaOrder);
         tea.removeStock(quantity);
-        teaOrderCount.order(quantity);
-
+        orderCount.order(quantity);
         return teaOrder;
     }
 
     public void cancel(){
         setDisabled(true);
         getTea().addStock(quantity);
-        teaOrderCount.cancel(quantity);
+        orderCount.cancel(quantity);
     }
 
     public Integer getTotalPrice(){

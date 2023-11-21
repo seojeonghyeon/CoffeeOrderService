@@ -1,11 +1,11 @@
 package com.justin.teaorderservice;
 
-import com.justin.teaorderservice.modules.authority.Authority;
-import com.justin.teaorderservice.modules.authority.AuthorityRepository;
 import com.justin.teaorderservice.modules.category.Category;
 import com.justin.teaorderservice.modules.category.CategoryRepository;
 import com.justin.teaorderservice.modules.member.Member;
 import com.justin.teaorderservice.modules.member.MemberRepository;
+import com.justin.teaorderservice.modules.ordercount.OrderCount;
+import com.justin.teaorderservice.modules.ordercount.OrderCountRepository;
 import com.justin.teaorderservice.modules.tea.*;
 import com.justin.teaorderservice.modules.teacategory.TeaCategory;
 import com.justin.teaorderservice.modules.teacategory.TeaCategoryRepository;
@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.time.ZonedDateTime;
 
 @RequiredArgsConstructor
 public class TestDataInit {
@@ -22,7 +24,7 @@ public class TestDataInit {
     private final CategoryRepository categoryRepository;
     private final TeaCategoryRepository teaCategoryRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final TeaOrderCountRepository teaOrderCountRepository;
+    private final OrderCountRepository orderCountRepository;
 
     @EventListener(ApplicationReadyEvent.class)
     public void init(){
@@ -42,6 +44,7 @@ public class TestDataInit {
 
         Category ade = Category.createCategory(drink, "Ade");
         TeaCategory adeCategory1 = ade.addTeaCategory();
+
 
         Category teaPack = Category.createCategory(drink, "TeaPack");
         TeaCategory teaPackCategory1 = teaPack.addTeaCategory();
@@ -86,19 +89,33 @@ public class TestDataInit {
         categoryRepository.save(ade);
         categoryRepository.save(teaPack);
 
-        TeaOrderCount coffee1TeaOrderCount = TeaOrderCount.createTeaOrderCount(tea1);
-        TeaOrderCount coffee2TeaOrderCount = TeaOrderCount.createTeaOrderCount(tea2);
-        TeaOrderCount coffee3TeaOrderCount = TeaOrderCount.createTeaOrderCount(tea3);
-        TeaOrderCount coffee4TeaOrderCount = TeaOrderCount.createTeaOrderCount(tea4);
-        TeaOrderCount ade1TeaOrderCount = TeaOrderCount.createTeaOrderCount(tea5);
-        TeaOrderCount teaPack1TeaOrderCount = TeaOrderCount.createTeaOrderCount(tea6);
+        ZonedDateTime orderDateToday = ZonedDateTime.now().withHour(0).withMinute(0).withSecond(0);
+        ZonedDateTime orderDateTomorrow = ZonedDateTime.now().withHour(0).withMinute(0).withSecond(0);
+        OrderCount coffee1OrderCount = OrderCount.createTeaOrderCount(tea1, orderDateToday);
+        OrderCount coffee2OrderCount = OrderCount.createTeaOrderCount(tea2, orderDateToday);
+        OrderCount coffee3OrderCount = OrderCount.createTeaOrderCount(tea3, orderDateToday);
+        OrderCount coffee4OrderCount = OrderCount.createTeaOrderCount(tea4, orderDateToday);
+        OrderCount ade1OrderCount = OrderCount.createTeaOrderCount(tea5, orderDateToday);
+        OrderCount teaPack1OrderCount = OrderCount.createTeaOrderCount(tea6, orderDateToday);
+        OrderCount coffee1OrderCountTomorrow = OrderCount.createTeaOrderCount(tea1, orderDateTomorrow);
+        OrderCount coffee2OrderCountTomorrow = OrderCount.createTeaOrderCount(tea2, orderDateTomorrow);
+        OrderCount coffee3OrderCountTomorrow = OrderCount.createTeaOrderCount(tea3, orderDateTomorrow);
+        OrderCount coffee4OrderCountTomorrow = OrderCount.createTeaOrderCount(tea4, orderDateTomorrow);
+        OrderCount ade1OrderCountTomorrow = OrderCount.createTeaOrderCount(tea5, orderDateTomorrow);
+        OrderCount teaPack1OrderCountTomorrow = OrderCount.createTeaOrderCount(tea6, orderDateTomorrow);
 
-        teaOrderCountRepository.save(coffee1TeaOrderCount);
-        teaOrderCountRepository.save(coffee2TeaOrderCount);
-        teaOrderCountRepository.save(coffee3TeaOrderCount);
-        teaOrderCountRepository.save(coffee4TeaOrderCount);
-        teaOrderCountRepository.save(ade1TeaOrderCount);
-        teaOrderCountRepository.save(teaPack1TeaOrderCount);
+        orderCountRepository.save(coffee1OrderCount);
+        orderCountRepository.save(coffee2OrderCount);
+        orderCountRepository.save(coffee3OrderCount);
+        orderCountRepository.save(coffee4OrderCount);
+        orderCountRepository.save(ade1OrderCount);
+        orderCountRepository.save(teaPack1OrderCount);
+        orderCountRepository.save(coffee1OrderCountTomorrow);
+        orderCountRepository.save(coffee2OrderCountTomorrow);
+        orderCountRepository.save(coffee3OrderCountTomorrow);
+        orderCountRepository.save(coffee4OrderCountTomorrow);
+        orderCountRepository.save(ade1OrderCountTomorrow);
+        orderCountRepository.save(teaPack1OrderCountTomorrow);
     }
 
     private Member createMember(String email, String encryptedPwd, String simpleEncryptedPwd){

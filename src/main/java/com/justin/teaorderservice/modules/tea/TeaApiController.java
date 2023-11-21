@@ -1,5 +1,6 @@
 package com.justin.teaorderservice.modules.tea;
 
+import com.justin.teaorderservice.modules.tea.dto.PopularTea;
 import com.justin.teaorderservice.modules.tea.dto.TeaSearchCondition;
 import com.justin.teaorderservice.modules.tea.dto.TeaSearchDto;
 import com.justin.teaorderservice.modules.tea.response.*;
@@ -35,6 +36,8 @@ public class TeaApiController {
 
     static final String ROOT = "/api/order/teas";
     static final String TEA_SEARCH = "/search";
+
+    static final String TEA_POPULAR_TOP_THREE_BY_LAST_SEVEN_DAYS = "/popular/teas";
     static final String TEA_DETAIL = "/{teaId}";
 
     private final TeaService teaService;
@@ -63,6 +66,18 @@ public class TeaApiController {
         Page<TeaSearchDto> teas = teaService.search(teaSearchCondition, pageable);
         List<ResponseTeaSearch> responseTeaSearches = teas.stream().map(ResponseTeaSearch::createResponseTeaSearch).toList();
         return ResponseEntity.status(HttpStatus.OK).body(ResponseTeaSearchList.createResponseTeaSearchList(responseTeaSearches));
+    }
+
+    @Operation(summary = "인기메뉴 목록 조회", description = "최근 7일 간 인기 있는 메뉴 3개를 조회")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Success", content = @Content(schema = @Schema(implementation = ResponseTeaList.class))),
+            @ApiResponse(responseCode = "400", description = "Request Fail", content = @Content(schema = @Schema(implementation = ResponseTeaList.class))),
+            @ApiResponse(responseCode = "500", description = "Server Error", content = @Content(schema = @Schema(implementation = ResponseTeaList.class)))
+    })
+    @GetMapping(TEA_POPULAR_TOP_THREE_BY_LAST_SEVEN_DAYS)
+    ResponseEntity<ResponsePopularTeas> popularTeas(){
+        List<PopularTea> popularTeas = teaService.findPopularTeas();
+        return ResponseEntity.status(HttpStatus.OK).body(ResponsePopularTeas.createResponsePopularTeas(popularTeas));
     }
 
     @Operation(summary = "Tea 상세 정보", description = "Tea 상세 정보 확인")

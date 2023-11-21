@@ -7,7 +7,6 @@ import lombok.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Setter(AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class PopularTea {
 
     private Long id;
@@ -18,12 +17,16 @@ public class PopularTea {
     private Integer orderCount;
 
     @QueryProjection
-    public PopularTea(Long id, String teaName, Integer price, Integer stockQuantity, String teaImage, String description, Boolean disabled, Integer orderCount) {
+    public PopularTea(Long id, String teaName, Integer price, Integer stockQuantity, String teaImage) {
         this.id = id;
         this.teaName = teaName;
         this.price = price;
         this.stockQuantity = stockQuantity;
         this.teaImage = teaImage;
+    }
+
+    public void setCount(Integer orderCount){
         this.orderCount = orderCount;
     }
+
 }
