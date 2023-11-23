@@ -1,14 +1,20 @@
 package com.justin.teaorderservice.modules.tea;
 
+import com.justin.teaorderservice.modules.ordercount.QOrderCount;
 import com.justin.teaorderservice.modules.support.Querydsl4RepositorySupport;
-import com.justin.teaorderservice.modules.tea.dto.QTeaSearchDto;
-import com.justin.teaorderservice.modules.tea.dto.TeaSearchCondition;
-import com.justin.teaorderservice.modules.tea.dto.TeaSearchDto;
+import com.justin.teaorderservice.modules.tea.dto.*;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.justin.teaorderservice.modules.ordercount.QOrderCount.*;
 import static com.justin.teaorderservice.modules.tea.QTea.*;
 import static org.springframework.util.StringUtils.*;
 
@@ -49,6 +55,25 @@ public class TeaRepositoryImpl extends Querydsl4RepositorySupport implements Tea
         }else{
             return null;
         }
+    }
+
+    @Override
+    public PopularTea popularTea(Long teaId) {
+        return select(new QPopularTea(
+                tea.id,
+                tea.teaName,
+                tea.price,
+                tea.stockQuantity,
+                tea.teaImage
+                )
+        )
+                .from(tea)
+                .where(teaIdEq(teaId))
+                .fetchOne();
+    }
+
+    private BooleanExpression teaIdEq(Long teaId) {
+        return teaId != null ? tea.id.eq(teaId) : null;
     }
 
 }

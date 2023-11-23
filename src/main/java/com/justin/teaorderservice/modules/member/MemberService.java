@@ -22,6 +22,10 @@ public class MemberService implements UserDetailsService {
         return memberRepository.findById(memberId).filter(member -> !member.getDisabled()).orElse(null);
     }
 
+    public Member findByEmail(String email) {
+        return memberRepository.findByEmail(email).orElse(null);
+    }
+
     public String findMemberNameByMemberId(String memberId){
         return memberRepository.findById(memberId).filter(member -> !member.getDisabled()).orElse(null).getMemberName();
     }

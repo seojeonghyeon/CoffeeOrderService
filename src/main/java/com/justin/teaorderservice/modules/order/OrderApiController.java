@@ -92,12 +92,7 @@ public class OrderApiController {
     @PostMapping
     @PreAuthorize("hasAnyAuthority('USER','MANAGER','ADMIN')")
     public ResponseEntity<String> addOrder(@CurrentMember Member member, final @RequestBody @Validated RequestItemPurchase requestItemPurchase){
-        List<RequestItemOrder> requestItemOrders = requestItemPurchase.getRequestItemOrderList();
-        List<TeaOrder> teaOrders = requestItemOrders.stream()
-                .filter(requestItemOrder -> requestItemOrder.getOrderQuantity() != null && requestItemOrder.getOrderQuantity() != 0)
-                .map(requestItemOrder -> teaOrderService.teaOrder(requestItemOrder.getId(), requestItemOrder.getPrice(), requestItemOrder.getOrderQuantity()))
-                .toList();
-        Order saveOrder = orderService.order(member.getId(), teaOrders.toArray(TeaOrder[]::new));
+        Order saveOrder = orderService.addOrder(member, requestItemPurchase);
         if(saveOrder.getStatus() == OrderStatus.REJECTED){
             throw new NotEnoughPointException(ErrorCode.NOT_ENOUGH_POINT);
         }

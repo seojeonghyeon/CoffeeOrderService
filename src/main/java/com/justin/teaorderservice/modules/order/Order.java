@@ -76,9 +76,9 @@ public class Order extends BaseEntity {
             throw new AlreadyCompletedOrderException(ErrorCode.ALREADY_COMPLETED_ORDER);
         }else if(status != OrderStatus.REJECTED){
             status = OrderStatus.CANCELED;
+            member.inducePoint(getTotalPrice());
         }
         teaOrders.forEach(TeaOrder::cancel);
-        member.inducePoint(getTotalPrice());
     }
 
 }

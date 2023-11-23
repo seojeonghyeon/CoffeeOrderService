@@ -37,6 +37,11 @@ public class Tea {
     @OneToMany(mappedBy = "tea")
     private List<TeaOrder> teaOrders;
 
+    public void addTeaOrder(TeaOrder teaOrder){
+        teaOrders.add(teaOrder);
+        teaOrder.setTea(this);
+    }
+
     public void addTeaCategory(TeaCategory teaCategory){
         teaCategories.add(teaCategory);
         teaCategory.setTea(this);
