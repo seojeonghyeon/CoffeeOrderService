@@ -68,7 +68,7 @@ public class TeaApiController {
         return ResponseEntity.status(HttpStatus.OK).body(ResponseTeaSearchList.createResponseTeaSearchList(responseTeaSearches));
     }
 
-    @Operation(summary = "인기메뉴 목록 조회", description = "최근 7일 간 인기 있는 메뉴 3개를 조회")
+    @Operation(summary = "인기 메뉴 목록 조회", description = "최근 7일 간 인기 있는 메뉴 3개를 조회")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Success", content = @Content(schema = @Schema(implementation = ResponseTeaList.class))),
             @ApiResponse(responseCode = "400", description = "Request Fail", content = @Content(schema = @Schema(implementation = ResponseTeaList.class))),
