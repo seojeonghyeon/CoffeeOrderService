@@ -5,10 +5,12 @@ import com.justin.teaorderservice.infra.exception.NoSuchOrderException;
 import com.justin.teaorderservice.infra.exception.NotEnoughPointException;
 import com.justin.teaorderservice.modules.member.Member;
 import com.justin.teaorderservice.modules.member.MemberRepository;
+import com.justin.teaorderservice.modules.order.request.RequestItemPurchase;
 import com.justin.teaorderservice.modules.tea.TeaRepository;
 import com.justin.teaorderservice.modules.teaorder.TeaOrder;
 import com.justin.teaorderservice.modules.teaorder.TeaOrderRepository;
 import com.justin.teaorderservice.modules.teaorder.TeaOrderService;
+import com.justin.teaorderservice.modules.teaorder.request.RequestItemOrder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,7 @@ public class OrderService{
 
     private final OrderRepository orderRepository;
     private final MemberRepository memberRepository;
+    private final TeaOrderService teaOrderService;
 
     public Order findById(Long orderId) {
         return orderRepository.findById(orderId).orElse(null);
@@ -39,14 +42,23 @@ public class OrderService{
     }
 
     @Transactional
+    public Order addOrder(Member member, RequestItemPurchase requestItemPurchase){
+        List<RequestItemOrder> requestItemOrders = requestItemPurchase.getRequestItemOrderList();
+        List<TeaOrder> teaOrders = requestItemOrders.stream()
+                .filter(requestItemOrder -> requestItemOrder.getOrderQuantity() != null && requestItemOrder.getOrderQuantity() != 0)
+                .map(requestItemOrder -> teaOrderService.teaOrder(requestItemOrder.getId(), requestItemOrder.getPrice(), requestItemOrder.getOrderQuantity()))
+                .toList();
+        return order(member.getId(), teaOrders.toArray(TeaOrder[]::new));
+    }
+
+    @Transactional
     public Order order(String memberId, TeaOrder... teaOrders) {
         Member findMember = memberRepository.findById(memberId).orElse(null);
         Order order = Order.createOrder(findMember, teaOrders);
-        Order saveOrder = orderRepository.save(order);
-        if(saveOrder.getStatus() == OrderStatus.REJECTED){
-            saveOrder.cancel();
+        if(order.getStatus() == OrderStatus.REJECTED){
+            order.cancel();
         }
-        return saveOrder;
+        return orderRepository.save(order);
     }
 
     @Transactional

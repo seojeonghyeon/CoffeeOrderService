@@ -56,7 +56,8 @@ public class MemberApiController {
     })
     @PostMapping(ADD_MEMBER)
     public ResponseEntity<String> addMember(final @RequestBody @Validated RequestMemberSave requestMemberSave) {
-        if(memberService.hasEmail(requestMemberSave.getEmail())){
+        boolean hasAccount = memberService.hasEmail(requestMemberSave.getEmail());
+        if(hasAccount){
             throw new ExistEmailException(ErrorCode.EXIST_EMAIL);
         }
 
