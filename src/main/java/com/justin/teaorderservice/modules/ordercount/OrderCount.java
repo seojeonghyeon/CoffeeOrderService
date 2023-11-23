@@ -6,6 +6,7 @@ import com.justin.teaorderservice.modules.teaorder.TeaOrder;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,13 +27,13 @@ public class OrderCount {
 
     private Integer count;
 
-    private ZonedDateTime orderDate;
+    private LocalDate orderDate;
 
     @JsonIgnore
     @OneToMany(mappedBy = "orderCount", cascade = CascadeType.ALL)
     private List<TeaOrder> teaOrders = new ArrayList<>();
 
-    public static OrderCount createTeaOrderCount(Tea tea, ZonedDateTime orderDate){
+    public static OrderCount createTeaOrderCount(Tea tea, LocalDate orderDate){
         OrderCount orderCount = new OrderCount();
         orderCount.setCount(0);
         orderCount.setTeaId(tea.getId());

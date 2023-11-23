@@ -14,6 +14,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 
 @RequiredArgsConstructor
@@ -89,8 +90,8 @@ public class TestDataInit {
         categoryRepository.save(ade);
         categoryRepository.save(teaPack);
 
-        ZonedDateTime orderDateToday = ZonedDateTime.now().withHour(0).withMinute(0).withSecond(0);
-        ZonedDateTime orderDateTomorrow = ZonedDateTime.now().withHour(0).withMinute(0).withSecond(0);
+        LocalDate orderDateToday = LocalDate.now();
+        LocalDate orderDateTomorrow = LocalDate.now().minusDays(1);
         OrderCount coffee1OrderCount = OrderCount.createTeaOrderCount(tea1, orderDateToday);
         OrderCount coffee2OrderCount = OrderCount.createTeaOrderCount(tea2, orderDateToday);
         OrderCount coffee3OrderCount = OrderCount.createTeaOrderCount(tea3, orderDateToday);

@@ -4,6 +4,7 @@ import com.justin.teaorderservice.modules.support.Querydsl4RepositorySupport;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -16,17 +17,17 @@ public class OrderCountRepositoryImpl extends Querydsl4RepositorySupport impleme
     }
 
     @Override
-    public OrderCount findByTeaIdAndOrderDate(Long teaId, ZonedDateTime orderDate) {
+    public OrderCount findByTeaIdAndOrderDate(Long teaId, LocalDate orderDate) {
         return selectFrom(orderCount)
                 .where(teaIdEq(teaId).and(orderDateEq(orderDate)))
                 .fetchOne();
     }
 
     @Override
-    public List<OrderCountDto> countOfOrdersPerPeriod(Integer number, ZonedDateTime startTime, ZonedDateTime endTime) {
+    public List<OrderCountDto> countOfOrdersPerPeriod(Integer number, LocalDate startDate, LocalDate endDate) {
         return select(new QOrderCountDto(orderCount.teaId, orderCount.count.sum()))
                 .from(orderCount)
-                .where(timeBetween(startTime, endTime))
+                .where(timeBetween(startDate, endDate))
                 .groupBy(orderCount.teaId)
                 .orderBy(orderCount.count.sum().desc())
                 .limit(number)
@@ -37,17 +38,17 @@ public class OrderCountRepositoryImpl extends Querydsl4RepositorySupport impleme
         return teaId != null ? orderCount.teaId.eq(teaId) : null;
     }
 
-    private BooleanExpression orderDateEq(ZonedDateTime orderDate){
-        return orderDate != null ? orderCount.orderDate.eq(orderDate.withHour(0).withMinute(0).withSecond(0)) : orderCount.orderDate.eq(ZonedDateTime.now().withHour(0).withMinute(0).withSecond(0));
+    private BooleanExpression orderDateEq(LocalDate orderDate){
+        return orderDate != null ? orderCount.orderDate.eq(orderDate) : orderCount.orderDate.eq(LocalDate.now());
     }
 
-    private BooleanExpression timeBetween(ZonedDateTime startTime, ZonedDateTime endTime) {
-        if(startTime != null && endTime != null){
-            return orderCount.orderDate.between(startTime, endTime);
-        }else if(startTime == null && endTime != null){
-            return orderCount.orderDate.between(endTime.minusDays(7), endTime);
+    private BooleanExpression timeBetween(LocalDate startDate, LocalDate endDate) {
+        if(startDate != null && endDate != null){
+            return orderCount.orderDate.between(startDate, endDate);
+        }else if(startDate == null && endDate != null){
+            return orderCount.orderDate.between(endDate.minusDays(7), endDate);
         }else{
-            return orderCount.orderDate.between(ZonedDateTime.now().minusDays(7), ZonedDateTime.now());
+            return orderCount.orderDate.between(LocalDate.now().minusDays(7), LocalDate.now());
         }
     }
 }

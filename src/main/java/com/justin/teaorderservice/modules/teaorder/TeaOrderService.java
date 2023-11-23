@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -37,7 +38,7 @@ public class TeaOrderService{
     @Transactional
     public TeaOrder teaOrder(Long teaId, Integer orderPrice, Integer orderQuantity){
         Tea tea = teaRepository.findById(teaId).orElse(null);
-        OrderCount orderCount = orderCountRepository.findByTeaIdAndOrderDate(teaId, ZonedDateTime.now());
+        OrderCount orderCount = orderCountRepository.findByTeaIdAndOrderDate(teaId, LocalDate.now());
         return TeaOrder.createTeaOrder(tea, orderCount, orderPrice, orderQuantity);
     }
 }

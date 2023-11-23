@@ -92,6 +92,10 @@ public class OrderApiController {
     @PostMapping
     @PreAuthorize("hasAnyAuthority('USER','MANAGER','ADMIN')")
     public ResponseEntity<String> addOrder(@CurrentMember Member member, final @RequestBody @Validated RequestItemPurchase requestItemPurchase){
-        return ResponseEntity.status(HttpStatus.OK).body(orderService.addOrder(member, requestItemPurchase));
+        Order saveOrder = orderService.addOrder(member, requestItemPurchase);
+        if(saveOrder.getStatus() == OrderStatus.REJECTED){
+            throw new NotEnoughPointException(ErrorCode.NOT_ENOUGH_POINT);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(saveOrder.getId().toString());
     }
 }

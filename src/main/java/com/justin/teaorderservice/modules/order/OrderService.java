@@ -41,17 +41,14 @@ public class OrderService{
         orderRepository.save(order);
     }
 
-    public String addOrder(Member member, RequestItemPurchase requestItemPurchase){
+    @Transactional
+    public Order addOrder(Member member, RequestItemPurchase requestItemPurchase){
         List<RequestItemOrder> requestItemOrders = requestItemPurchase.getRequestItemOrderList();
         List<TeaOrder> teaOrders = requestItemOrders.stream()
                 .filter(requestItemOrder -> requestItemOrder.getOrderQuantity() != null && requestItemOrder.getOrderQuantity() != 0)
                 .map(requestItemOrder -> teaOrderService.teaOrder(requestItemOrder.getId(), requestItemOrder.getPrice(), requestItemOrder.getOrderQuantity()))
                 .toList();
-        Order saveOrder = this.order(member.getId(), teaOrders.toArray(TeaOrder[]::new));
-        if(saveOrder.getStatus() == OrderStatus.REJECTED){
-            throw new NotEnoughPointException(ErrorCode.NOT_ENOUGH_POINT);
-        }
-        return saveOrder.getId().toString();
+        return order(member.getId(), teaOrders.toArray(TeaOrder[]::new));
     }
 
     @Transactional

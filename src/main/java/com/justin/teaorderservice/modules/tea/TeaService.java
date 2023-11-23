@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,7 @@ public class TeaService{
     }
 
     public List<PopularTea> findPopularTeas(){
-        List<OrderCountDto> orderCountDtos = orderCountRepository.countOfOrdersPerPeriod(POPULAR_TEA_NUMBER, ZonedDateTime.now().minusDays(POPULAR_TEA_DURING_DAYS), ZonedDateTime.now());
+        List<OrderCountDto> orderCountDtos = orderCountRepository.countOfOrdersPerPeriod(POPULAR_TEA_NUMBER, LocalDate.now().minusDays(POPULAR_TEA_DURING_DAYS), LocalDate.now());
         List<PopularTea> popularTeas = new ArrayList<>();
         orderCountDtos.forEach(orderCountDto -> {
             PopularTea popularTea = teaRepository.popularTea(orderCountDto.getTeaId());

@@ -12,10 +12,12 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Builder
 public class ResponsePopularTeas {
-    List<ResponsePopularTea> responsePopularTeaList = new ArrayList<>();
+    List<ResponsePopularTea> responsePopularTeaList;
 
     public static ResponsePopularTeas createResponsePopularTeas(List<PopularTea> popularTeas) {
-        ResponsePopularTeas responsePopularTeas = ResponsePopularTeas.builder().build();
+        ResponsePopularTeas responsePopularTeas = ResponsePopularTeas.builder()
+                .responsePopularTeaList(new ArrayList<>())
+                .build();
         popularTeas.forEach(popularTea -> {
             ResponsePopularTea responsePopularTea = ResponsePopularTea.builder()
                             .id(popularTea.getId())
