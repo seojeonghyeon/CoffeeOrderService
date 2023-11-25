@@ -7,7 +7,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +24,7 @@ public class OrderCount {
 
     private Long teaId;
 
-    private Integer count;
+    private Integer countUp;
 
     private LocalDate orderDate;
 
@@ -35,7 +34,7 @@ public class OrderCount {
 
     public static OrderCount createTeaOrderCount(Tea tea, LocalDate orderDate){
         OrderCount orderCount = new OrderCount();
-        orderCount.setCount(0);
+        orderCount.setCountUp(0);
         orderCount.setTeaId(tea.getId());
         orderCount.setOrderDate(orderDate);
         return orderCount;
@@ -47,11 +46,11 @@ public class OrderCount {
     }
 
     public void order(Integer quantity){
-        this.count += quantity;
+        this.countUp += quantity;
     }
 
     public void cancel(Integer quantity){
-        this.count -= quantity;
+        this.countUp -= quantity;
     }
 
 }
