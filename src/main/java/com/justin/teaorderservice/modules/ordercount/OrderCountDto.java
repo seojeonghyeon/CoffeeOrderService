@@ -11,11 +11,11 @@ import lombok.Setter;
 @Setter(AccessLevel.PROTECTED)
 public class OrderCountDto {
     private Long teaId;
-    private Integer count;
+    private Integer countUp;
 
     @QueryProjection
-    public OrderCountDto(Long teaId, Integer count) {
+    public OrderCountDto(Long teaId, Integer countUp) {
         this.teaId = teaId;
-        this.count = count;
+        this.countUp = countUp;
     }
 }

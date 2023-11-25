@@ -57,23 +57,4 @@ public class TeaRepositoryImpl extends Querydsl4RepositorySupport implements Tea
         }
     }
 
-    @Override
-    public PopularTea popularTea(Long teaId) {
-        return select(new QPopularTea(
-                tea.id,
-                tea.teaName,
-                tea.price,
-                tea.stockQuantity,
-                tea.teaImage
-                )
-        )
-                .from(tea)
-                .where(teaIdEq(teaId))
-                .fetchOne();
-    }
-
-    private BooleanExpression teaIdEq(Long teaId) {
-        return teaId != null ? tea.id.eq(teaId) : null;
-    }
-
 }

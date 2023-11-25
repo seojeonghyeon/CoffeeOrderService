@@ -1,8 +1,7 @@
 package com.justin.teaorderservice.modules.tea;
 
-import com.justin.teaorderservice.modules.ordercount.OrderCountDto;
 import com.justin.teaorderservice.modules.ordercount.OrderCountRepository;
-import com.justin.teaorderservice.modules.tea.dto.PopularTea;
+import com.justin.teaorderservice.modules.tea.dto.PopularTeaDto;
 import com.justin.teaorderservice.modules.tea.dto.TeaSearchCondition;
 import com.justin.teaorderservice.modules.tea.dto.TeaSearchDto;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -40,15 +37,9 @@ public class TeaService{
         return teaRepository.search(teaSearchCondition, pageable);
     }
 
-    public List<PopularTea> findPopularTeas(){
-        List<OrderCountDto> orderCountDtos = orderCountRepository.countOfOrdersPerPeriod(POPULAR_TEA_NUMBER, LocalDate.now().minusDays(POPULAR_TEA_DURING_DAYS), LocalDate.now());
-        List<PopularTea> popularTeas = new ArrayList<>();
-        orderCountDtos.forEach(orderCountDto -> {
-            PopularTea popularTea = teaRepository.popularTea(orderCountDto.getTeaId());
-            popularTea.setCount(orderCountDto.getCount());
-            popularTeas.add(popularTea);
-        });
-        return popularTeas;
+    public List<PopularTeaDto> searchPopularTeas(){
+        LocalDate nowDate = LocalDate.now();
+        List<PopularTeaDto> popularTeaDtos = teaRepository.searchPopularTea(POPULAR_TEA_NUMBER, nowDate.minusDays(POPULAR_TEA_DURING_DAYS), nowDate);
+        return popularTeaDtos;
     }
-
 }

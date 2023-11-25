@@ -6,5 +6,4 @@ import java.util.List;
 
 public interface OrderCountRepositoryCustom {
     OrderCount findByTeaIdAndOrderDate(Long teaId, LocalDate orderDate);
-    List<OrderCountDto> countOfOrdersPerPeriod(Integer number, LocalDate startDate, LocalDate endDate);
 }
