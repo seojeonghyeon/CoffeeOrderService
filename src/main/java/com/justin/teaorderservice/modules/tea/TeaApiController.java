@@ -1,6 +1,6 @@
 package com.justin.teaorderservice.modules.tea;
 
-import com.justin.teaorderservice.modules.tea.dto.PopularTea;
+import com.justin.teaorderservice.modules.tea.dto.PopularTeaDto;
 import com.justin.teaorderservice.modules.tea.dto.TeaSearchCondition;
 import com.justin.teaorderservice.modules.tea.dto.TeaSearchDto;
 import com.justin.teaorderservice.modules.tea.response.*;
@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -76,8 +75,8 @@ public class TeaApiController {
     })
     @GetMapping(TEA_POPULAR_TOP_THREE_BY_LAST_SEVEN_DAYS)
     ResponseEntity<ResponsePopularTeas> popularTeas(){
-        List<PopularTea> popularTeas = teaService.findPopularTeas();
-        return ResponseEntity.status(HttpStatus.OK).body(ResponsePopularTeas.createResponsePopularTeas(popularTeas));
+        List<PopularTeaDto> popularTeaDtos = teaService.searchPopularTeas();
+        return ResponseEntity.status(HttpStatus.OK).body(ResponsePopularTeas.createResponsePopularTeas(popularTeaDtos));
     }
 
     @Operation(summary = "Tea 상세 정보", description = "Tea 상세 정보 확인")

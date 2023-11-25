@@ -1,7 +1,7 @@
 package com.justin.teaorderservice.modules.tea.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.justin.teaorderservice.modules.tea.dto.PopularTea;
+import com.justin.teaorderservice.modules.tea.dto.PopularTeaDto;
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,11 +14,11 @@ import java.util.List;
 public class ResponsePopularTeas {
     List<ResponsePopularTea> responsePopularTeaList;
 
-    public static ResponsePopularTeas createResponsePopularTeas(List<PopularTea> popularTeas) {
+    public static ResponsePopularTeas createResponsePopularTeas(List<PopularTeaDto> popularTeaDtos) {
         ResponsePopularTeas responsePopularTeas = ResponsePopularTeas.builder()
                 .responsePopularTeaList(new ArrayList<>())
                 .build();
-        popularTeas.forEach(popularTea -> {
+        popularTeaDtos.forEach(popularTea -> {
             ResponsePopularTea responsePopularTea = ResponsePopularTea.builder()
                             .id(popularTea.getId())
                             .teaName(popularTea.getTeaName())
