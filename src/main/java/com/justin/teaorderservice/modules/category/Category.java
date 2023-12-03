@@ -1,7 +1,5 @@
 package com.justin.teaorderservice.modules.category;
 
-import com.justin.teaorderservice.modules.tea.Tea;
-import com.justin.teaorderservice.modules.teacategory.TeaCategory;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,7 +26,7 @@ public class Category {
     private List<Category> child = new ArrayList<>();
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private List<TeaCategory> teaCategories = new ArrayList<>();
+    private List<ProductCategory> drinkCategories = new ArrayList<>();
 
     public void addChildCategory(Category child){
         this.child.add(child);
@@ -45,10 +43,10 @@ public class Category {
         return category;
     }
 
-    public TeaCategory addTeaCategory(){
-        TeaCategory teaCategory = TeaCategory.createTeaCategory(this);
-        teaCategories.add(teaCategory);
-        return teaCategory;
+    public ProductCategory addDrinkCategory(){
+        ProductCategory productCategory = ProductCategory.createTeaCategory(this);
+        drinkCategories.add(productCategory);
+        return productCategory;
     }
 
 

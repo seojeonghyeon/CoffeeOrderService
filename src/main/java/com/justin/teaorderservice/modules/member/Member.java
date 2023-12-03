@@ -2,8 +2,6 @@ package com.justin.teaorderservice.modules.member;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.justin.teaorderservice.modules.authority.Authority;
-import com.justin.teaorderservice.modules.member.word.AdjectiveWord;
-import com.justin.teaorderservice.modules.member.word.AnimalWord;
 import com.justin.teaorderservice.modules.order.Order;
 import com.justin.teaorderservice.modules.point.Point;
 import jakarta.persistence.*;

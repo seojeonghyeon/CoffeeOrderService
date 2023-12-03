@@ -5,7 +5,7 @@ import com.justin.teaorderservice.infra.MockMvcTest;
 import com.justin.teaorderservice.infra.auth.JwtTokenProvider;
 import com.justin.teaorderservice.modules.member.MemberRepository;
 import com.justin.teaorderservice.modules.member.WithAccount;
-import com.justin.teaorderservice.modules.point.request.RequestAddPoint;
+import com.justin.teaorderservice.modules.vo.RequestAddPoint;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,7 +21,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;

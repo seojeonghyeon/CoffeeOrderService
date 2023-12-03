@@ -40,9 +40,9 @@
             </thead>
             <tbody>
             <tr th:each="itemOrderForm : ${itemPurchaseForm.itemOrderFormList}">
-                <td><a href="" th:href="@{|/view/order/v1/teas/${itemOrderForm.id}|}"
+                <td><a href="" th:href="@{|/view/order/v1/products/${itemOrderForm.id}|}"
                        th:text="${itemOrderForm.id}">Tea ID</a></td>
-                <td><a href="" th:href="@{|/view/order/v1/teas/${itemOrderForm.id}|}" th:text="${itemOrderForm.teaName}">Tea 이름</a>
+                <td><a href="" th:href="@{|/view/order/v1/products/${itemOrderForm.id}|}" th:text="${itemOrderForm.teaName}">Tea 이름</a>
                 </td>
                 <td th:text="${itemOrderForm.price}">0</td>
                 <td th:text="${itemOrderForm.quantity}">0</td>
