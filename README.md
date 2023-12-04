@@ -12,6 +12,10 @@ http://localhost:8080/swagger-ui/index.html
 ![스크린샷 2023-11-24 00 01 13](https://github.com/seojeonghyeon/TeaOrderService/assets/24422677/2d4cc326-8083-4860-9b78-00e04705f1b2)
 
 
+## Entity 기반 ERD
+![스크린샷 2023-12-04 23 51 21](https://github.com/seojeonghyeon/TeaOrderService/assets/24422677/b13e0225-d584-4008-a8d0-33c0483a4d86)
+
+
 ## ERD
 ![스크린샷 2023-12-04 23 44 39](https://github.com/seojeonghyeon/TeaOrderService/assets/24422677/4e970229-8a8d-46ab-b516-de32788dd917)
 
