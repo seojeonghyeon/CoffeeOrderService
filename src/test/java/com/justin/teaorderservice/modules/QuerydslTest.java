@@ -88,7 +88,7 @@ public class QuerydslTest {
                 .where(menuCategory.category.eq(findCategory))
                 .fetch();
         assertThat(menus)
-                .extracting("teaName")
+                .extracting("menuName")
                 .containsExactly("Americano(Hot)", "Americano(Ice)", "Caffe Latte(Hot)", "Caffe Latte(Ice)");
     }
 
