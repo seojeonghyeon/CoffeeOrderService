@@ -5,4 +5,4 @@ spring:
     import: |-
       classpath:/application-api.yml
   profiles:
-    active: prd
+    active: local
