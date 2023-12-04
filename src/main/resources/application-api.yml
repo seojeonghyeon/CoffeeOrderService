@@ -1,0 +1,7 @@
+spring:
+  config:
+    import: |-
+      classpath:/application-api-local.yml,
+      classpath:/application-api-dev.yml,
+      classpath:/application-api-stg.yml,
+      classpath:/application-api-prd.yml

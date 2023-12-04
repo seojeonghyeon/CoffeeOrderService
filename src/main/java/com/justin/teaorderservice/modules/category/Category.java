@@ -26,7 +26,7 @@ public class Category {
     private List<Category> child = new ArrayList<>();
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private List<ProductCategory> drinkCategories = new ArrayList<>();
+    private List<MenuCategory> menuCategories = new ArrayList<>();
 
     public void addChildCategory(Category child){
         this.child.add(child);
@@ -43,10 +43,10 @@ public class Category {
         return category;
     }
 
-    public ProductCategory addDrinkCategory(){
-        ProductCategory productCategory = ProductCategory.createTeaCategory(this);
-        drinkCategories.add(productCategory);
-        return productCategory;
+    public MenuCategory addMenuCategory(){
+        MenuCategory menuCategory = MenuCategory.createMenuCategory(this);
+        menuCategories.add(menuCategory);
+        return menuCategory;
     }
 
 

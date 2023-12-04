@@ -1,7 +1,7 @@
 package com.justin.teaorderservice.modules.order;
 
 import com.justin.teaorderservice.modules.common.BaseEntity;
-import com.justin.teaorderservice.modules.product.Product;
+import com.justin.teaorderservice.modules.menu.Menu;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,36 +22,37 @@ public class ProductOrder extends BaseEntity {
     private Order order;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @JoinColumn(name = "menu_id")
+    private Menu menu;
 
     private Integer orderPrice;
 
     private Integer quantity;
 
-    private Boolean disabled;
+    private ProductOrderStatus status;
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "order_count_id")
-    private ProductCount productCount;
+    private ProductOrderCount productOrderCount;
 
-    public static ProductOrder createProductOrder(Product product, ProductCount productCount, Integer orderPrice, Integer quantity){
+    public static ProductOrder createProductOrder(Menu menu, ProductOrderCount productOrderCount, Integer orderPrice, Integer quantity){
         ProductOrder productOrder = ProductOrder.builder()
                 .orderPrice(orderPrice)
                 .quantity(quantity)
-                .disabled(false)
+                .status(ProductOrderStatus.PENDING)
                 .build();
-        product.addTeaOrder(productOrder);
-        productCount.addTeaOrder(productOrder);
-        product.removeStock(quantity);
-        productCount.order(quantity);
+        menu.addProductOrder(productOrder);
+        productOrderCount.addTeaOrder(productOrder);
+        menu.removeStock(quantity);
+        productOrderCount.order(quantity);
+        productOrder.setStatus(ProductOrderStatus.CONFIRMED);
         return productOrder;
     }
 
     public void cancel(){
-        setDisabled(true);
-        getProduct().addStock(quantity);
-        productCount.cancel(quantity);
+        setStatus(ProductOrderStatus.CANCELED);
+        getMenu().addStock(quantity);
+        productOrderCount.cancel(quantity);
     }
 
     public Integer getTotalPrice(){

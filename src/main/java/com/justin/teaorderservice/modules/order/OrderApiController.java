@@ -4,8 +4,8 @@ import com.justin.teaorderservice.infra.exception.ErrorCode;
 import com.justin.teaorderservice.infra.exception.NotEnoughPointException;
 import com.justin.teaorderservice.modules.member.CurrentMember;
 import com.justin.teaorderservice.modules.member.Member;
-import com.justin.teaorderservice.modules.product.Product;
-import com.justin.teaorderservice.modules.product.ProductService;
+import com.justin.teaorderservice.modules.menu.Menu;
+import com.justin.teaorderservice.modules.menu.MenuService;
 import com.justin.teaorderservice.modules.vo.RequestItemPurchase;
 import com.justin.teaorderservice.modules.vo.ResponseOrder;
 import com.justin.teaorderservice.modules.vo.ResponseProductOrder;
@@ -41,7 +41,7 @@ public class OrderApiController {
 
     private final OrderService orderService;
     private final ProductOrderService productOrderService;
-    private final ProductService productService;
+    private final MenuService menuService;
 
     @Operation(summary = "Tea 주문 가능 정보", description = "Tea 주문 가능 정보")
     @ApiResponses({
@@ -52,8 +52,8 @@ public class OrderApiController {
     @GetMapping
     @PreAuthorize("hasAnyAuthority('USER','MANAGER','ADMIN')")
     public ResponseEntity<ResponseOrder> items(@CurrentMember Member member){
-        List<Product> products = productService.findAll();
-        List<ResponseProductOrder> responseProductOrders = products.stream().map(ResponseProductOrder::createResponseProductOrder).toList();
+        List<Menu> menus = menuService.findAll();
+        List<ResponseProductOrder> responseProductOrders = menus.stream().map(ResponseProductOrder::createResponseProductOrder).toList();
         ResponseOrder responseOrder = ResponseOrder.createResponseOrder(member.getMemberName(), responseProductOrders);
         return ResponseEntity.status(HttpStatus.OK).body(responseOrder);
     }

@@ -1,6 +1,6 @@
 package com.justin.teaorderservice.modules.order;
 
-import com.justin.teaorderservice.modules.product.*;
+import com.justin.teaorderservice.modules.menu.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,8 +16,8 @@ import java.util.List;
 public class ProductOrderService {
 
     private final ProductOrderRepository productOrderRepository;
-    private final ProductRepository productRepository;
-    private final ProductCountRepository productCountRepository;
+    private final MenuRepository menuRepository;
+    private final ProductOrderCountRepository productOrderCountRepository;
 
     public List<ProductOrder> findByOrderId(Long orderId) {
         return productOrderRepository.findByOrderId(orderId);
@@ -34,8 +34,8 @@ public class ProductOrderService {
 
     @Transactional
     public ProductOrder drinkOrder(Long drinkId, Integer orderPrice, Integer orderQuantity){
-        Product product = productRepository.findById(drinkId).orElse(null);
-        ProductCount productCount = productCountRepository.findByProductIdAndOrderDate(drinkId, LocalDate.now());
-        return ProductOrder.createProductOrder(product, productCount, orderPrice, orderQuantity);
+        Menu menu = menuRepository.findById(drinkId).orElse(null);
+        ProductOrderCount productOrderCount = productOrderCountRepository.findByProductIdAndOrderDate(drinkId, LocalDate.now());
+        return ProductOrder.createProductOrder(menu, productOrderCount, orderPrice, orderQuantity);
     }
 }

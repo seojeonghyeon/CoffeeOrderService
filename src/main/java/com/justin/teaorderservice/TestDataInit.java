@@ -2,13 +2,13 @@ package com.justin.teaorderservice;
 
 import com.justin.teaorderservice.modules.category.Category;
 import com.justin.teaorderservice.modules.category.CategoryRepository;
-import com.justin.teaorderservice.modules.category.ProductCategory;
+import com.justin.teaorderservice.modules.category.MenuCategory;
 import com.justin.teaorderservice.modules.member.Member;
 import com.justin.teaorderservice.modules.member.MemberRepository;
-import com.justin.teaorderservice.modules.order.ProductCount;
-import com.justin.teaorderservice.modules.order.ProductCountRepository;
-import com.justin.teaorderservice.modules.product.*;
-import com.justin.teaorderservice.modules.category.ProductCategoryRepository;
+import com.justin.teaorderservice.modules.order.ProductOrderCount;
+import com.justin.teaorderservice.modules.order.ProductOrderCountRepository;
+import com.justin.teaorderservice.modules.menu.*;
+import com.justin.teaorderservice.modules.category.MenuCategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -19,70 +19,70 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class TestDataInit {
 
-    private final ProductRepository productRepository;
+    private final MenuRepository menuRepository;
     private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
-    private final ProductCategoryRepository productCategoryRepository;
+    private final MenuCategoryRepository menuCategoryRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final ProductCountRepository productCountRepository;
+    private final ProductOrderCountRepository productOrderCountRepository;
 
     @EventListener(ApplicationReadyEvent.class)
     public void init(){
         Category drink = Category.createCategory(null,"Drink");
-        ProductCategory productCategory1 = drink.addDrinkCategory();
-        ProductCategory productCategory2 = drink.addDrinkCategory();
-        ProductCategory productCategory3 = drink.addDrinkCategory();
-        ProductCategory productCategory4 = drink.addDrinkCategory();
-        ProductCategory productCategory5 = drink.addDrinkCategory();
-        ProductCategory productCategory6 = drink.addDrinkCategory();
+        MenuCategory menuCategory1 = drink.addMenuCategory();
+        MenuCategory menuCategory2 = drink.addMenuCategory();
+        MenuCategory menuCategory3 = drink.addMenuCategory();
+        MenuCategory menuCategory4 = drink.addMenuCategory();
+        MenuCategory menuCategory5 = drink.addMenuCategory();
+        MenuCategory menuCategory6 = drink.addMenuCategory();
 
         Category coffee = Category.createCategory(drink, "Coffee");
-        ProductCategory coffeeCategory1 = coffee.addDrinkCategory();
-        ProductCategory coffeeCategory2 = coffee.addDrinkCategory();
-        ProductCategory coffeeCategory3 = coffee.addDrinkCategory();
-        ProductCategory coffeeCategory4 = coffee.addDrinkCategory();
+        MenuCategory coffeeCategory1 = coffee.addMenuCategory();
+        MenuCategory coffeeCategory2 = coffee.addMenuCategory();
+        MenuCategory coffeeCategory3 = coffee.addMenuCategory();
+        MenuCategory coffeeCategory4 = coffee.addMenuCategory();
 
         Category ade = Category.createCategory(drink, "Ade");
-        ProductCategory adeCategory1 = ade.addDrinkCategory();
+        MenuCategory adeCategory1 = ade.addMenuCategory();
 
 
         Category teaPack = Category.createCategory(drink, "Tea");
-        ProductCategory teaPackCategory1 = teaPack.addDrinkCategory();
+        MenuCategory teaPackCategory1 = teaPack.addMenuCategory();
 
         Coffee coffee1 = createCoffee("Americano(Hot)", 2000, 10000,
                 "https://cdn.paris.spl.li/wp-content/uploads/200406_HOT%E1%84%8B%E1%85%A1%E1%84%86%E1%85%A6%E1%84%85%E1%85%B5%E1%84%8F%E1%85%A1%E1%84%82%E1%85%A9-1280x1280.jpg",
-                "에스프레소에 뜨거운 물을 희석시켜 만든 음료", false, productCategory1, coffeeCategory1);
+                "에스프레소에 뜨거운 물을 희석시켜 만든 음료", false, menuCategory1, coffeeCategory1);
 
 
         Coffee coffee2 = createCoffee("Americano(Ice)", 2000, 10,
                 "https://cdn.paris.spl.li/wp-content/uploads/%E1%84%8B%E1%85%A1%E1%84%86%E1%85%A6%E1%84%85%E1%85%B5%E1%84%8F%E1%85%A1%E1%84%82%E1%85%A9-1280x1280.jpg",
-                "에스프레소에 찬 물을 희석시켜 만든 음료", false, productCategory2, coffeeCategory2);
+                "에스프레소에 찬 물을 희석시켜 만든 음료", false, menuCategory2, coffeeCategory2);
 
 
         Coffee coffee3 = createCoffee("Caffe Latte(Hot)", 2500, 20,
                 "https://cdn.paris.spl.li/wp-content/uploads/200406_HOT%E1%84%85%E1%85%A1%E1%84%84%E1%85%A6-1280x1280.jpg",
-                "리스트레또 더블샷과 스팀우유를 넣어 만든 베이직 커피 음료", false, productCategory3, coffeeCategory3);
+                "리스트레또 더블샷과 스팀우유를 넣어 만든 베이직 커피 음료", false, menuCategory3, coffeeCategory3);
 
 
         Coffee coffee4 = createCoffee("Caffe Latte(Ice)", 2500, 20,
                 "https://cdn.paris.spl.li/wp-content/uploads/%E1%84%8B%E1%85%A1%E1%84%8B%E1%85%B5%E1%84%89%E1%85%B3%E1%84%85%E1%85%A1%E1%84%84%E1%85%A6-1280x1280.jpg",
-                "리스트레또 더블샷과 스팀우유를 넣어 만든 베이직 커피 음료", false, productCategory4, coffeeCategory4);
+                "리스트레또 더블샷과 스팀우유를 넣어 만든 베이직 커피 음료", false, menuCategory4, coffeeCategory4);
 
         Ade ade1 = createAde("자몽 에이드(Ice)", 3000, 50,
                 "https://cdn.paris.spl.li/wp-content/uploads/2023/06/%EC%9E%90%EB%AA%BD-1276x1280.png",
-                "자몽의 과즙에 탄산 따위를 넣어 만든 음료", false, productCategory5, adeCategory1);
+                "자몽의 과즙에 탄산 따위를 넣어 만든 음료", false, menuCategory5, adeCategory1);
 
 
         Tea teaPack1 = createTeaPack("자몽 티(Hot)", 3000, 80,
                 "https://cdn.paris.spl.li/wp-content/uploads/201008-%E1%84%84%E1%85%A1%E1%84%8C%E1%85%A1%E1%84%86%E1%85%A9%E1%86%BC-1280x1280.jpg",
-                "자몽의 과즙에 따끈한 물 따위를 넣어 만든 음료", false, productCategory6, teaPackCategory1);
+                "자몽의 과즙에 따끈한 물 따위를 넣어 만든 음료", false, menuCategory6, teaPackCategory1);
 
-        Product product1 = productRepository.save(coffee1);
-        Product product2 = productRepository.save(coffee2);
-        Product product3 = productRepository.save(coffee3);
-        Product product4 = productRepository.save(coffee4);
-        Product product5 = productRepository.save(ade1);
-        Product product6 = productRepository.save(teaPack1);
+        Menu menu1 = menuRepository.save(coffee1);
+        Menu menu2 = menuRepository.save(coffee2);
+        Menu menu3 = menuRepository.save(coffee3);
+        Menu menu4 = menuRepository.save(coffee4);
+        Menu menu5 = menuRepository.save(ade1);
+        Menu menu6 = menuRepository.save(teaPack1);
 
         categoryRepository.save(drink);
         categoryRepository.save(coffee);
@@ -91,46 +91,46 @@ public class TestDataInit {
 
         LocalDate orderDateToday = LocalDate.now();
         LocalDate orderDateTomorrow = LocalDate.now().minusDays(1);
-        ProductCount coffee1ProductCount = ProductCount.createTeaOrderCount(product1, orderDateToday);
-        ProductCount coffee2ProductCount = ProductCount.createTeaOrderCount(product2, orderDateToday);
-        ProductCount coffee3ProductCount = ProductCount.createTeaOrderCount(product3, orderDateToday);
-        ProductCount coffee4ProductCount = ProductCount.createTeaOrderCount(product4, orderDateToday);
-        ProductCount ade1ProductCount = ProductCount.createTeaOrderCount(product5, orderDateToday);
-        ProductCount teaPack1ProductCount = ProductCount.createTeaOrderCount(product6, orderDateToday);
-        ProductCount coffee1ProductCountTomorrow = ProductCount.createTeaOrderCount(product1, orderDateTomorrow);
-        ProductCount coffee2ProductCountTomorrow = ProductCount.createTeaOrderCount(product2, orderDateTomorrow);
-        ProductCount coffee3ProductCountTomorrow = ProductCount.createTeaOrderCount(product3, orderDateTomorrow);
-        ProductCount coffee4ProductCountTomorrow = ProductCount.createTeaOrderCount(product4, orderDateTomorrow);
-        ProductCount ade1ProductCountTomorrow = ProductCount.createTeaOrderCount(product5, orderDateTomorrow);
-        ProductCount teaPack1ProductCountTomorrow = ProductCount.createTeaOrderCount(product6, orderDateTomorrow);
+        ProductOrderCount coffee1ProductOrderCount = ProductOrderCount.createTeaOrderCount(menu1, orderDateToday);
+        ProductOrderCount coffee2ProductOrderCount = ProductOrderCount.createTeaOrderCount(menu2, orderDateToday);
+        ProductOrderCount coffee3ProductOrderCount = ProductOrderCount.createTeaOrderCount(menu3, orderDateToday);
+        ProductOrderCount coffee4ProductOrderCount = ProductOrderCount.createTeaOrderCount(menu4, orderDateToday);
+        ProductOrderCount ade1ProductOrderCount = ProductOrderCount.createTeaOrderCount(menu5, orderDateToday);
+        ProductOrderCount teaPack1ProductOrderCount = ProductOrderCount.createTeaOrderCount(menu6, orderDateToday);
+        ProductOrderCount coffee1ProductOrderCountTomorrow = ProductOrderCount.createTeaOrderCount(menu1, orderDateTomorrow);
+        ProductOrderCount coffee2ProductOrderCountTomorrow = ProductOrderCount.createTeaOrderCount(menu2, orderDateTomorrow);
+        ProductOrderCount coffee3ProductOrderCountTomorrow = ProductOrderCount.createTeaOrderCount(menu3, orderDateTomorrow);
+        ProductOrderCount coffee4ProductOrderCountTomorrow = ProductOrderCount.createTeaOrderCount(menu4, orderDateTomorrow);
+        ProductOrderCount ade1ProductOrderCountTomorrow = ProductOrderCount.createTeaOrderCount(menu5, orderDateTomorrow);
+        ProductOrderCount teaPack1ProductOrderCountTomorrow = ProductOrderCount.createTeaOrderCount(menu6, orderDateTomorrow);
 
-        productCountRepository.save(coffee1ProductCount);
-        productCountRepository.save(coffee2ProductCount);
-        productCountRepository.save(coffee3ProductCount);
-        productCountRepository.save(coffee4ProductCount);
-        productCountRepository.save(ade1ProductCount);
-        productCountRepository.save(teaPack1ProductCount);
-        productCountRepository.save(coffee1ProductCountTomorrow);
-        productCountRepository.save(coffee2ProductCountTomorrow);
-        productCountRepository.save(coffee3ProductCountTomorrow);
-        productCountRepository.save(coffee4ProductCountTomorrow);
-        productCountRepository.save(ade1ProductCountTomorrow);
-        productCountRepository.save(teaPack1ProductCountTomorrow);
+        productOrderCountRepository.save(coffee1ProductOrderCount);
+        productOrderCountRepository.save(coffee2ProductOrderCount);
+        productOrderCountRepository.save(coffee3ProductOrderCount);
+        productOrderCountRepository.save(coffee4ProductOrderCount);
+        productOrderCountRepository.save(ade1ProductOrderCount);
+        productOrderCountRepository.save(teaPack1ProductOrderCount);
+        productOrderCountRepository.save(coffee1ProductOrderCountTomorrow);
+        productOrderCountRepository.save(coffee2ProductOrderCountTomorrow);
+        productOrderCountRepository.save(coffee3ProductOrderCountTomorrow);
+        productOrderCountRepository.save(coffee4ProductOrderCountTomorrow);
+        productOrderCountRepository.save(ade1ProductOrderCountTomorrow);
+        productOrderCountRepository.save(teaPack1ProductOrderCountTomorrow);
     }
 
     private Member createMember(String email, String encryptedPwd, String simpleEncryptedPwd){
         return Member.createUserMember(email, encryptedPwd, simpleEncryptedPwd);
     }
 
-    private Coffee createCoffee(String teaName, Integer price, Integer stockQuantity, String teaImage, String description, boolean disabled, ProductCategory... teaCategories){
+    private Coffee createCoffee(String teaName, Integer price, Integer stockQuantity, String teaImage, String description, boolean disabled, MenuCategory... teaCategories){
         return Coffee.createCoffee(teaName, price, stockQuantity, teaImage,description,disabled, 1, teaCategories);
     }
 
-    private Tea createTeaPack(String teaName, Integer price, Integer stockQuantity, String teaImage, String description, boolean disabled, ProductCategory... teaCategories){
+    private Tea createTeaPack(String teaName, Integer price, Integer stockQuantity, String teaImage, String description, boolean disabled, MenuCategory... teaCategories){
         return Tea.createTea(teaName, price, stockQuantity, teaImage,description,disabled, teaCategories);
     }
 
-    private Ade createAde(String teaName, Integer price, Integer stockQuantity, String teaImage, String description, boolean disabled, ProductCategory... teaCategories){
+    private Ade createAde(String teaName, Integer price, Integer stockQuantity, String teaImage, String description, boolean disabled, MenuCategory... teaCategories){
         return Ade.createAde(teaName, price, stockQuantity, teaImage,description,disabled, teaCategories);
     }
 }

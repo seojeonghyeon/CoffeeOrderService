@@ -19,20 +19,20 @@ public class ResponseOrder {
     private String userName;
 
     @Schema(description = "사용자 주문 정보", nullable = false)
-    private List<ResponseProductOrder> teaOrderList;
+    private List<ResponseProductOrder> productOrderList;
 
     public static ResponseOrder createResponseOrder(Long orderId, String userName, List<ResponseProductOrder> responseProductOrderList){
         ResponseOrder responseOrder = ResponseOrder.builder()
                 .id(orderId)
                 .userName(userName)
-                .teaOrderList(responseProductOrderList)
+                .productOrderList(responseProductOrderList)
                 .build();
         return responseOrder;
     }
     public static ResponseOrder createResponseOrder(String userName, List<ResponseProductOrder> responseProductOrderList){
         ResponseOrder responseOrder = ResponseOrder.builder()
                 .userName(userName)
-                .teaOrderList(responseProductOrderList)
+                .productOrderList(responseProductOrderList)
                 .build();
         return responseOrder;
     }

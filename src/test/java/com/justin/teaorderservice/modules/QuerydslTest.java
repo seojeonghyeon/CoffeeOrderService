@@ -2,10 +2,10 @@ package com.justin.teaorderservice.modules;
 
 import com.justin.teaorderservice.infra.MockMvcTest;
 import com.justin.teaorderservice.modules.category.Category;
-import com.justin.teaorderservice.modules.category.QProductCategory;
+import com.justin.teaorderservice.modules.category.QMenuCategory;
 import com.justin.teaorderservice.modules.member.Member;
 import com.justin.teaorderservice.modules.member.WithAccount;
-import com.justin.teaorderservice.modules.product.*;
+import com.justin.teaorderservice.modules.menu.*;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -20,9 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.justin.teaorderservice.modules.category.QCategory.*;
-import static com.justin.teaorderservice.modules.category.QProductCategory.*;
-import static com.justin.teaorderservice.modules.product.QProduct.*;
+import static com.justin.teaorderservice.modules.category.QMenuCategory.*;
 import static com.justin.teaorderservice.modules.member.QMember.member;
+import static com.justin.teaorderservice.modules.menu.QMenu.*;
 import static com.querydsl.jpa.JPAExpressions.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.springframework.util.StringUtils.*;
@@ -82,12 +82,12 @@ public class QuerydslTest {
                 .where(category.name.eq("Coffee"))
                 .fetchOne();
 
-        List<Product> products = queryFactory.selectFrom(product)
-                .join(product.productCategories, productCategory)
+        List<Menu> menus = queryFactory.selectFrom(menu)
+                .join(menu.menuCategories, menuCategory)
                 .fetchJoin()
-                .where(productCategory.category.eq(findCategory))
+                .where(menuCategory.category.eq(findCategory))
                 .fetch();
-        assertThat(products)
+        assertThat(menus)
                 .extracting("teaName")
                 .containsExactly("Americano(Hot)", "Americano(Ice)", "Caffe Latte(Hot)", "Caffe Latte(Ice)");
     }
@@ -99,11 +99,11 @@ public class QuerydslTest {
     @DisplayName("Sub Query Test")
     @Test
     public void subQuery(){
-        List<String> teas = queryFactory.select(product.productName)
-                .from(product)
-                .join(product.productCategories, productCategory)
+        List<String> teas = queryFactory.select(menu.menuName)
+                .from(menu)
+                .join(menu.menuCategories, menuCategory)
                 .where(
-                        productCategory.category.id.eq
+                        menuCategory.category.id.eq
                                 (
                                         select(category.id)
                                                 .from(category)
@@ -124,15 +124,15 @@ public class QuerydslTest {
         String categoryName = null;
         Integer price = 3_000;
 
-        List<Product> result = dynamicSearchTeaWithCategoryNameAndPrice1(categoryName, price);
+        List<Menu> result = dynamicSearchTeaWithCategoryNameAndPrice1(categoryName, price);
         assertThat(result.size()).isEqualTo(2);
     }
 
-    private List<Product> dynamicSearchTeaWithCategoryNameAndPrice1(String categoryName, Integer price) {
+    private List<Menu> dynamicSearchTeaWithCategoryNameAndPrice1(String categoryName, Integer price) {
         BooleanBuilder booleanBuilder = new BooleanBuilder();
         if(categoryName != null){
             booleanBuilder.and(
-                    productCategory.category.id.eq(
+                    menuCategory.category.id.eq(
                             select(category.id)
                                     .from(category)
                                     .where(
@@ -143,13 +143,13 @@ public class QuerydslTest {
         }
         if(price != null){
             booleanBuilder.and(
-                    product.price.eq(price)
+                    menu.price.eq(price)
             );
         }
 
         return queryFactory
-                .selectFrom(product)
-                .join(product.productCategories, productCategory)
+                .selectFrom(menu)
+                .join(menu.menuCategories, menuCategory)
                 .fetchJoin()
                 .where(booleanBuilder)
                 .fetch();
@@ -161,14 +161,14 @@ public class QuerydslTest {
         String categoryName = "Coffee";
         Integer price = 3_000;
 
-        List<Product> result = dynamicSearchTeaWithCategoryNameAndPrice2(categoryName, price);
+        List<Menu> result = dynamicSearchTeaWithCategoryNameAndPrice2(categoryName, price);
         assertThat(result.size()).isEqualTo(0);
     }
 
-    private List<Product> dynamicSearchTeaWithCategoryNameAndPrice2(String categoryNameCond, Integer priceCond) {
+    private List<Menu> dynamicSearchTeaWithCategoryNameAndPrice2(String categoryNameCond, Integer priceCond) {
         return queryFactory
-                .selectFrom(product)
-                .join(product.productCategories, productCategory)
+                .selectFrom(menu)
+                .join(menu.menuCategories, menuCategory)
                 .fetchJoin()
                 .where(allEq(categoryNameCond, priceCond))
                 .fetch();
@@ -179,11 +179,11 @@ public class QuerydslTest {
     }
 
     private BooleanExpression categoryNameEq(String categoryNameCond) {
-        return hasText(categoryNameCond) ? productCategory.category.id.eq(select(category.id).from(category).where(category.name.eq(categoryNameCond))) : null;
+        return hasText(categoryNameCond) ? menuCategory.category.id.eq(select(category.id).from(category).where(category.name.eq(categoryNameCond))) : null;
     }
 
     private BooleanExpression priceEq(Integer priceCond) {
-        return priceCond != null ? product.price.eq(priceCond) : null;
+        return priceCond != null ? menu.price.eq(priceCond) : null;
     }
 
     @DisplayName("Bulk Update Query Test1")
@@ -195,12 +195,12 @@ public class QuerydslTest {
         String categoryName = "Coffee";
         double discountPercentage = 10;
         long count = queryFactory
-                .update(product)
-                .set(product.price, product.price.multiply(100 - discountPercentage).divide(100))
-                .where(product.id.in(
-                        select(productCategory.product.id)
-                                .from(productCategory)
-                                .join(productCategory.category, category)
+                .update(menu)
+                .set(menu.price, menu.price.multiply(100 - discountPercentage).divide(100))
+                .where(menu.id.in(
+                        select(menuCategory.menu.id)
+                                .from(menuCategory)
+                                .join(menuCategory.category, category)
                                 .where(categoryNameEq(categoryName))
                 ))
                 .execute();
@@ -211,7 +211,7 @@ public class QuerydslTest {
         entityManager.flush();
         entityManager.clear();
 
-        List<Product> result = dynamicSearchTeaWithCategoryNameAndPrice2(categoryName, 1800);
+        List<Menu> result = dynamicSearchTeaWithCategoryNameAndPrice2(categoryName, 1800);
         assertThat(result.size()).isEqualTo(2);
     }
 
@@ -226,11 +226,11 @@ public class QuerydslTest {
      * 결과를 1개만 가져와 SQL exist와 성능 차이가 없다.
      *
      */
-    private Boolean exist(Long productId){
+    private Boolean exist(Long menuId){
         Integer fetchOne = queryFactory
                 .selectOne()
-                .from(product)
-                .where(product.id.eq(productId))
+                .from(menu)
+                .where(menu.id.eq(menuId))
                 .fetchFirst();
         return fetchOne != null;
     }

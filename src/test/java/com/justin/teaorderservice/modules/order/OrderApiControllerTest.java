@@ -9,7 +9,7 @@ import com.justin.teaorderservice.modules.member.WithAccount;
 import com.justin.teaorderservice.modules.vo.RequestItemPurchase;
 import com.justin.teaorderservice.modules.point.PointRepository;
 import com.justin.teaorderservice.modules.vo.RequestAddPoint;
-import com.justin.teaorderservice.modules.product.ProductRepository;
+import com.justin.teaorderservice.modules.menu.MenuRepository;
 import com.justin.teaorderservice.modules.vo.RequestItemOrder;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
@@ -40,7 +40,7 @@ class OrderApiControllerTest {
     @Autowired private PointRepository pointRepository;
     @Autowired private MemberRepository memberRepository;
     @Autowired private OrderRepository orderRepository;
-    @Autowired private ProductRepository productRepository;
+    @Autowired private MenuRepository menuRepository;
     @Autowired private ProductOrderRepository productOrderRepository;
     @Autowired private JwtTokenProvider jwtTokenProvider;
     @Autowired private ObjectMapper objectMapper;
@@ -82,7 +82,7 @@ class OrderApiControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("userName").exists())
-                .andExpect(jsonPath("teaOrderList").exists());
+                .andExpect(jsonPath("productOrderList").exists());
     }
 
     @WithAccount(
@@ -243,7 +243,7 @@ class OrderApiControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(orderId))
                 .andExpect(jsonPath("userName").exists())
-                .andExpect(jsonPath("teaOrderList").exists());
+                .andExpect(jsonPath("productOrderList").exists());
     }
 
 
