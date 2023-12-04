@@ -8,10 +8,10 @@ spring:
       secret: SnVzdGluU2VvLVRlYW9yZGVyc2VydmljZS1TcHJpbmdCb290LUpXVC1TZWNyZXQtVG9rZW4=
       token_expiration_time: 864000
   datasource:
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-    url: jdbc:h2:mem:teaorderdb;
+    driver-class-name: org.postgresql.Driver
+    username: api_user
+    password: '00000000'
+    url: jdbc:postgresql://localhost:5432/teaorderdb
   h2:
     console:
       enabled: true
@@ -19,13 +19,14 @@ spring:
         web-allow-others: true
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create-drop
     properties:
       hibernate:
         default_batch_fetch_size: 100
         format_sql: true
         show_sql: true
     open-in-view: false
+    database: postgresql
 
 server:
   error:
