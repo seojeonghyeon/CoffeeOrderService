@@ -12,8 +12,9 @@ http://localhost:8080/swagger-ui/index.html
 ![스크린샷 2023-11-24 00 01 13](https://github.com/seojeonghyeon/TeaOrderService/assets/24422677/2d4cc326-8083-4860-9b78-00e04705f1b2)
 
 
-## 객체 다이어그램
-![스크린샷 2023-11-23 23 50 39](https://github.com/seojeonghyeon/TeaOrderService/assets/24422677/9a9451a4-5267-429c-ba48-3038e1f59146)
+## ERD
+![스크린샷 2023-12-04 23 44 39](https://github.com/seojeonghyeon/TeaOrderService/assets/24422677/4e970229-8a8d-46ab-b516-de32788dd917)
+
 
 
 ## PostgreSQL Settings
