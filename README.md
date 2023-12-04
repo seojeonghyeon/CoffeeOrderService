@@ -64,3 +64,22 @@ ALTER ROLE
 postgres=# grant all privileges on database teaorderdb to api_user;
 GRANT
 ```
+
+DB Table 조회
+```
+teaorderdb=# \dt
+                List of relations
+ Schema |         Name         | Type  |  Owner
+--------+----------------------+-------+----------
+ public | authority            | table | api_user
+ public | category             | table | api_user
+ public | member_authorities   | table | api_user
+ public | members              | table | api_user
+ public | menu_category        | table | api_user
+ public | menus                | table | api_user
+ public | orders               | table | api_user
+ public | points               | table | api_user
+ public | product_order        | table | api_user
+ public | product_order_counts | table | api_user
+(10 rows)
+```
