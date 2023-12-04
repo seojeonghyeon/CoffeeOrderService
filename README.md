@@ -27,3 +27,40 @@ http://localhost:8080/swagger-ui/index.html
 647a65814db1334f07844b4313b62e51e8522c53b70044a061693f8f8f75e1a2
 
 ```
+
+Database 생성
+```
+ zayden@Justin-MacBook-Pro  ~  docker exec -it 647a bash
+root@647a65814db1:/# psql -U postgres
+
+postgres=# create database teaorderdb;
+CREATE DATABASE
+
+
+   Name    |  Owner   | Encoding | Locale Provider |  Collate   |   Ctype    | ICU Locale | ICU Rules |   Access privileges
+
+------------+----------+----------+-----------------+------------+------------+------------+-----------+---------------------
+--
+ postgres   | postgres | UTF8     | libc            | en_US.utf8 | en_US.utf8 |            |           |
+ teaorderdb | postgres | UTF8     | libc            | en_US.utf8 | en_US.utf8 |            |           |
+ template0  | postgres | UTF8     | libc            | en_US.utf8 | en_US.utf8 |            |           | =c/postgres
+ +
+            |          |          |                 |            |            |            |           | postgres=CTc/postgre
+s
+ template1  | postgres | UTF8     | libc            | en_US.utf8 | en_US.utf8 |            |           | =c/postgres
+ +
+            |          |          |                 |            |            |            |           | postgres=CTc/postgre
+s
+```
+
+API 계정 생성 및 권한 부여 
+```
+postgres=# create role api_user with login password '00000000';
+CREATE ROLE
+postgres=# alter user api_user with createdb;
+ALTER ROLE
+postgres=# alter user api_user with superuser;
+ALTER ROLE
+postgres=# grant all privileges on database teaorderdb to api_user;
+GRANT
+```
