@@ -88,3 +88,41 @@ teaorderdb=# \dt
  public | product_order_counts | table | api_user
 (10 rows)
 ```
+
+
+
+## How to run
+
+```
+zayden@Justin-MacBook-Pro  ~/Documents/workspace/TeaOrderService   main ±  mvn clean compile package -DskipTests=true
+
+zayden@Justin-MacBook-Pro  ~/Documents/workspace/TeaOrderService   main ±  docker build --tag seojeonghyeon0630/teaorderservice:0.0.1 .
+[+] Building 5.4s (8/8) FINISHED
+ => [internal] load build definition from Dockerfile                                                                                                                                                                       0.1s
+ => => transferring dockerfile: 189B                                                                                                                                                                                       0.0s
+ => [internal] load .dockerignore                                                                                                                                                                                          0.0s
+ => => transferring context: 2B                                                                                                                                                                                            0.0s
+ => [internal] load metadata for docker.io/library/openjdk:17-ea-11-slim                                                                                                                                                   2.9s
+ => [auth] library/openjdk:pull token for registry-1.docker.io                                                                                                                                                             0.0s
+ => CACHED [1/2] FROM docker.io/library/openjdk:17-ea-11-slim@sha256:58a00fe1968ae4d6a412daee3bc013898f33842a550ad5c5f776b89a86906be0                                                                                      0.0s
+ => [internal] load build context                                                                                                                                                                                          1.1s
+ => => transferring context: 94.80MB                                                                                                                                                                                       1.1s
+ => [2/2] COPY target/TeaOrderService-0.0.1.jar TeaOrderService.jar                                                                                                                                                        0.7s
+ => exporting to image                                                                                                                                                                                                     0.5s
+ => => exporting layers                                                                                                                                                                                                    0.4s
+ => => writing image sha256:0347491d682d030938866e9ef52db751159451294c3253409736df4e42be48a5                                                                                                                               0.0s
+ => => naming to docker.io/seojeonghyeon0630/teaorderservice:0.0.1                                                                                                                                                         0.0s
+
+Use 'docker scan' to run Snyk tests against images to find vulnerabilities and learn how to fix them
+
+ zayden@Justin-MacBook-Pro  ~/Documents/workspace/TeaOrderService   main ±  docker push seojeonghyeon0630/teaorderservice:0.0.1
+The push refers to repository [docker.io/seojeonghyeon0630/teaorderservice]
+e38384c4f62e: Pushed
+3d3fdb9815af: Mounted from seojeonghyeon0630/filebeatdemo
+08664b16f94c: Mounted from seojeonghyeon0630/filebeatdemo
+9eb82f04c782: Mounted from seojeonghyeon0630/filebeatdemo
+0.0.1: digest: sha256:2dc12eee0c11b854461c06a1562b6e71415b8dbdc7fa2b2c6d0cde1162af0806 size: 1165
+
+```
+
+
