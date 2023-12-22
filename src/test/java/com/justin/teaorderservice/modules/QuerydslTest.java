@@ -2,7 +2,6 @@ package com.justin.teaorderservice.modules;
 
 import com.justin.teaorderservice.infra.MockMvcTest;
 import com.justin.teaorderservice.modules.category.Category;
-import com.justin.teaorderservice.modules.category.QMenuCategory;
 import com.justin.teaorderservice.modules.member.Member;
 import com.justin.teaorderservice.modules.member.WithAccount;
 import com.justin.teaorderservice.modules.menu.*;
