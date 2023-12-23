@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{label.title}">Tea Order Service</title>
+</head>
+<body>
+<div>
+    <p>안녕하세요. <span th:text="${name}"></span>님</p>
+    <br>
+    <h2 th:text="${message}">메시지</h2>
+
+    <div>
+        <small th:text="${host}"></small>
+    </div>
+</div>
+<br>
+<footer>
+    <small th:text="#{label.footer}"></small>
+</footer>
+</body>
+</html>

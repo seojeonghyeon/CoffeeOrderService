@@ -31,10 +31,9 @@ public class MemberService implements UserDetailsService {
     }
 
     @Transactional
-    public String register(String email, String encryptedPwd, String simpleEncryptedPwd){
+    public Member register(String email, String encryptedPwd, String simpleEncryptedPwd){
         Member member = Member.createUserMember(email, encryptedPwd, simpleEncryptedPwd);
-        memberRepository.save(member);
-        return member.getId();
+        return memberRepository.save(member);
     }
 
     @Transactional
