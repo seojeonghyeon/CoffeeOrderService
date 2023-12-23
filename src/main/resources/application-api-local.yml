@@ -27,6 +27,19 @@ spring:
         show_sql: true
     open-in-view: false
     database: h2
+  mail:
+    host: "smtp.gmail.com"
+    port: 587
+    username: seojeonghyeon0630@gmail.com
+    password: qwcwnodicfohbtnf
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 5000
+          enable: true
+          starttls:
+            enable: true
 
 server:
   error:
@@ -40,3 +53,5 @@ logging:
   level:
     org.hibernate.sql: debug
     org.hibernate.type: trace
+app:
+  host: http://localhost:8080
