@@ -2,6 +2,7 @@ package com.justin.teaorderservice.modules.point;
 
 
 import com.justin.teaorderservice.infra.exception.ErrorCode;
+import com.justin.teaorderservice.modules.event.PointCreatedEvent;
 import com.justin.teaorderservice.modules.member.CurrentMember;
 import com.justin.teaorderservice.modules.member.Member;
 import com.justin.teaorderservice.modules.member.MemberAdapter;
@@ -16,6 +17,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,6 +44,7 @@ public class PointApiController {
     static final String RESULT_DETAIL = "/{pointId}/detail";
 
     private final PointService pointService;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Operation(summary = "Point 충전 양식", description = "Point 충전 양식 전달")
     @ApiResponses({
@@ -68,6 +71,7 @@ public class PointApiController {
         Integer point = pointService.findPointById(member.getId());
         if(validation(requestAddPoint.getPoint(), point)){
             Point savePoint = pointService.addPoint(member.getId(), requestAddPoint.getPoint(), requestAddPoint.getAddPoint());
+            eventPublisher.publishEvent(new PointCreatedEvent(savePoint));
             return ResponseEntity.status(HttpStatus.OK).body(savePoint.getId().toString());
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ErrorCode.NO_MATCH_INPUT_POINT.getDescription());

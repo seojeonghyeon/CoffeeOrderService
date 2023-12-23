@@ -2,13 +2,10 @@ package com.justin.teaorderservice.modules.order;
 
 import com.justin.teaorderservice.infra.exception.ErrorCode;
 import com.justin.teaorderservice.infra.exception.NoSuchOrderException;
-import com.justin.teaorderservice.infra.exception.NotEnoughPointException;
 import com.justin.teaorderservice.modules.member.Member;
 import com.justin.teaorderservice.modules.member.MemberRepository;
 import com.justin.teaorderservice.modules.order.request.RequestItemPurchase;
-import com.justin.teaorderservice.modules.tea.TeaRepository;
 import com.justin.teaorderservice.modules.teaorder.TeaOrder;
-import com.justin.teaorderservice.modules.teaorder.TeaOrderRepository;
 import com.justin.teaorderservice.modules.teaorder.TeaOrderService;
 import com.justin.teaorderservice.modules.teaorder.request.RequestItemOrder;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +23,7 @@ public class OrderService{
     private final OrderRepository orderRepository;
     private final MemberRepository memberRepository;
     private final TeaOrderService teaOrderService;
+
 
     public Order findById(Long orderId) {
         return orderRepository.findById(orderId).orElse(null);

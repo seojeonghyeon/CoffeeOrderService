@@ -2,6 +2,7 @@ package com.justin.teaorderservice.modules.member;
 
 import com.justin.teaorderservice.infra.auth.JwtTokenProvider;
 import com.justin.teaorderservice.infra.exception.*;
+import com.justin.teaorderservice.modules.event.MemberCreatedEvent;
 import com.justin.teaorderservice.modules.member.request.RequestMemberSave;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -37,6 +39,7 @@ public class MemberApiController {
     private final MemberService memberService;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Operation(summary = "회원 가입 양식", description = "Member 추가 양식")
     @ApiResponses({
@@ -61,8 +64,9 @@ public class MemberApiController {
             throw new ExistEmailException(ErrorCode.EXIST_EMAIL);
         }
 
-        String memberId = memberService.register(requestMemberSave.getEmail(), passwordEncoder.encode(requestMemberSave.getPassword()), passwordEncoder.encode(requestMemberSave.getSimplePassword()));
-        return ResponseEntity.status(HttpStatus.OK).body(jwtTokenProvider.createToken(memberId));
+        Member saveMember = memberService.register(requestMemberSave.getEmail(), passwordEncoder.encode(requestMemberSave.getPassword()), passwordEncoder.encode(requestMemberSave.getSimplePassword()));
+        eventPublisher.publishEvent(new MemberCreatedEvent(saveMember));
+        return ResponseEntity.status(HttpStatus.OK).body(jwtTokenProvider.createToken(saveMember.getId()));
     }
 
     @Operation(summary = "회원 가입 여부 확인", description = "사용자의 ID에 대해 등록된 핸드폰 번호가 있는 지 확인 한다.")
