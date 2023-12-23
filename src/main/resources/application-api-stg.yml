@@ -46,3 +46,5 @@ logging:
   level:
     org.hibernate.sql: info
     org.hibernate.type: info
+app:
+  host: http://localhost:8080

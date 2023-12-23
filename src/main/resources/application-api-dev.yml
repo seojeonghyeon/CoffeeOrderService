@@ -40,7 +40,6 @@ spring:
           enable: true
           starttls:
             enable: true
-
 server:
   error:
     whitelabel:
@@ -53,3 +52,5 @@ logging:
   level:
     org.hibernate.sql: debug
     org.hibernate.type: trace
+app:
+  host: http://localhost:8080

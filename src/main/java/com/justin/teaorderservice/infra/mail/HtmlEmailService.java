@@ -11,7 +11,7 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
 @Slf4j
-@Profile("local")
+@Profile({"local", "dev", "stg", "prd"})
 @Component
 @RequiredArgsConstructor
 public class HtmlEmailService implements EmailService {

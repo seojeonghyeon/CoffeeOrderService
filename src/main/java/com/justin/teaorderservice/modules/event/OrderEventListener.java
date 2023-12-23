@@ -9,7 +9,7 @@ import com.justin.teaorderservice.modules.member.MemberRepository;
 import com.justin.teaorderservice.modules.order.Order;
 import com.justin.teaorderservice.modules.order.OrderRepository;
 import com.justin.teaorderservice.modules.order.OrderStatus;
-import com.justin.teaorderservice.modules.teaorder.TeaOrder;
+import com.justin.teaorderservice.modules.order.ProductOrder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -54,7 +54,7 @@ public class OrderEventListener {
     }
 
     private void createEmailContents(String prefixContent, String suffixContent, Order order) {
-        String prefixSubject = "[TeaOrderService] 주문 ";
+        String prefixSubject = "[ProductOrderService] 주문 ";
         prefixContent = prefixContent;
         suffixContent = suffixContent;
 
@@ -74,12 +74,12 @@ public class OrderEventListener {
 
     private void sendOrderCreatedEmail(Order order, Member member, String contextMessage, String emailSubject) {
         Context context = new Context();
-        List<TeaOrder> teaOrders = order.getTeaOrders();
+        List<ProductOrder> productOrders = order.getProductOrders();
 
         context.setVariable("name", member.getMemberName());
         context.setVariable("totalPrice", order.getTotalPrice());
         context.setVariable("restPoint", member.getPoint());
-        context.setVariable("contents", createdDetailContents(teaOrders));
+        context.setVariable("contents", createdDetailContents(productOrders));
         context.setVariable("message", contextMessage);
         context.setVariable("host", appProperties.getHost() + ROOT + "/" + order.getId() + "/detail");
         String message = templateEngine.process("mail/order-result", context);
@@ -93,7 +93,7 @@ public class OrderEventListener {
         emailService.sendEmail(emailMessage);
     }
 
-    private String createdDetailContents(List<TeaOrder> teaOrders){
+    private String createdDetailContents(List<ProductOrder> productOrders){
         StringBuffer contents = new StringBuffer();
 
         contents.append("<table class='table'>");
@@ -106,11 +106,11 @@ public class OrderEventListener {
         contents.append("</thead>");
 
         contents.append("<tbody>");
-        teaOrders.forEach(teaOrder -> {
+        productOrders.forEach(teaOrder -> {
             contents.append("<tr>");
 
             contents.append("<td>");
-            contents.append(teaOrder.getTea().getTeaName());
+            contents.append(teaOrder.getMenu().getMenuName());
             contents.append("</td>");
             contents.append("<td>");
             contents.append(teaOrder.getOrderPrice());
