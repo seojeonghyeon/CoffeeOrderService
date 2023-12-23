@@ -21,7 +21,31 @@ http://localhost:8080/swagger-ui/index.html
 
 
 ## Spring Boot 요청, 응답 간 프로세스
-<img width="1644" alt="image" src="https://github.com/seojeonghyeon/TeaOrderService/assets/24422677/7272f5f8-0ff5-4e50-b8f2-136f18f5050a">
+<img width="1644" alt="image" src="https://github.com/seojeonghyeon/TeaOrderService/assets/24422677/78d305ac-0a11-49be-b695-afe215238f75">
+
+Connector : 클라이언트로부터의 요청을 받아들이고 서블릿 컨테이너로 전달, 웹 서버와 Tomcat 간의 통신을 담당
+Servlet Container : Connector로부터 전달받은 요청을 처리하는 부분, 서블릿의 생명주기를 관리하고, 요청에 따라 적절한 서블릿을 호출하여 응답을 생성
+
+Dispatcher Servlet
+ - 요청 분배 역할, Dispatching
+    HTTP 요청에 대해 적절한 Handler에게 전달, URL 매핑, 핸들러 매핑 등을 사용하여 어떤 컨트롤러가 해당 요청을 처리할 지 결정한다.
+    1. Spring MVC에서 제공하는 Controller Annocation(@Controller -> Retention Policy : Runtime)이 Component Scan의 대상이 되어 Spring IoC Container 내 Bean으로 등록됨.
+    2. Dispatcher Servlet은 Spring IoC Container에 등록된 Bean 중에 @Controller이 부여된 Class를 찾아서 컨트롤러로 인식한다.
+    3. Controller Method에 지정된 @RequestMapping, @GetMapping, @PostMapping, @PutMapping, @DeleteMapping 정보를 읽어온다.
+    4. URL 매핑 정보(클래스수준과 메소드 수준의 Annotation을 조합하여 최종 URL 정보가 결정)를 읽어와 URL 매핑에 따른 Controller의 Method를 호출하여 처리한다.
+- View 결정 및 Rendering
+    controller가 처리한 결과를 기반으로 어떤 View를 사용할 지 결정한다. View는 JSP, Thymeleaf와 같은 템플릿 엔진이나 JSON, XML와 같은 형식으로 구성될 수 있다. 결정된 View는 Client에 보내질 최종 응답을 생성한다.
+    1. model.addAttribute 메소드를 통해 전달된 값을 Dispatcher Servlet은 뷰 템블릿에 전달
+    2. 뷰 템플릿이 html 파일에 값이 추가되어 최종적인 HTML 응답이 생성한다.(View Rendering)
+    3. 다시 Dispatcher Servlet에 전달된 Rendering된 결과 값을  Client에게 반환된다.
+    OSIV를 키게 되면 Dispatcher Servlet이 요청을 처리하는 동안에만 Database Session이 유지되는 것으로 뷰 템플릿이 뷰 렌더링 완료 후 Dispatcher Servlet에서 Rendering된 결과를 Client에게 전달하면 그 이후에 Database Session을 닫는다.
+
+- Intercepter 지원
+   Handler Intercepter를 사용하여 요청 처리 전후에 추가적인 로직을 수행할 수 있다.
+
+preHandle : Handler Adapter 호출 전 호출, 응답값이 true이면 Handler Adapter 호출하고 false이면 나머지 Intercepter와 Handler Adapter를 호출하지 않는다.
+postHandle : Handler Adapter 호출 후 호출(Controller에서 Exception 발생 시, 호출되지 않는다.)
+afterCompletion : View Rendering 된 이후 호출, Exception이 발생해도 호출되며, 예외의 Parameter(ex)로 받아 어떤 예외가 발생했는지 로그로 출력이 가능하다.
 
 
 
