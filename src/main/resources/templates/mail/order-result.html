@@ -2,7 +2,7 @@
 <html lang="kr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Tea Order Service</title>
+    <title th:text="#{label.title}">Tea Order Service</title>
 </head>
 <body>
 <div>
@@ -11,9 +11,9 @@
     <h2 th:text="${message}">메시지</h2>
 
     <div>
-        <label>전체 가격(Total Price)</label><input type="text" id="totalPrice" th:value="${totalPrice}" class="form-control" readonly>
+        <label th:text="#{label.order.total.price}">전체 가격(Total Price)</label><input type="text" id="totalPrice" th:value="${totalPrice}" class="form-control" readonly>
         <span th:utext="${contents}"></span>
-        <label>잔여 포인트(Rest Point)</label><input type="text" id="restPoint" th:value="${restPoint}" class="form-control" readonly>
+        <label th:text="#{label.order.rest.point}">잔여 포인트(Rest Point)</label><input type="text" id="restPoint" th:value="${restPoint}" class="form-control" readonly>
     </div>
 
     <div>
@@ -22,7 +22,7 @@
 </div>
 <br>
 <footer>
-    <small>Tea Order Service with 2023</small>
+    <small th:text="#{label.footer}"></small>
 </footer>
 </body>
 </html>

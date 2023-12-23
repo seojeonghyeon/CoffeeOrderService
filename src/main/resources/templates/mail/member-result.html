@@ -2,7 +2,7 @@
 <html lang="kr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Tea Order Service</title>
+    <title th:text="#{label.title}">Tea Order Service</title>
 </head>
 <body>
 <div>
@@ -16,7 +16,7 @@
 </div>
 <br>
 <footer>
-    <small>Tea Order Service with 2023</small>
+    <small th:text="#{label.footer}"></small>
 </footer>
 </body>
 </html>

@@ -2,7 +2,7 @@
 <html lang="kr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Tea Order Service</title>
+    <title th:text="#{label.title}">Tea Order Service</title>
 </head>
 <body>
 <div>
@@ -14,10 +14,10 @@
         <table class="table">
             <thead>
             <tr>
-                <th>충전 상태</th>
-                <th>총 현재 Point</th>
-                <th>이전의 Point</th>
-                <th>충전한 Point</th>
+                <th th:text="#{label.points.status}">충전 상태</th>
+                <th th:text="#{label.members.point}">총 현재 Point</th>
+                <th th:text="#{label.points.point}">이전의 Point</th>
+                <th th:text="#{label.points.addPoint}">충전한 Point</th>
             </tr>
             </thead>
                 <tbody>
@@ -45,7 +45,7 @@
 </div>
 <br>
 <footer>
-    <small>Tea Order Service with 2023</small>
+    <small th:text="#{label.footer}"></small>
 </footer>
 </body>
 </html>
