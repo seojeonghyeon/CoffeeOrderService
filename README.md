@@ -89,6 +89,21 @@ teaorderdb=# \dt
 (10 rows)
 ```
 
+## Email 연동
+1. Google 계정에서 보안 탭 선택(https://myaccount.google.com/)
+<img width="843" alt="스크린샷 2023-12-23 19 04 36" src="https://github.com/seojeonghyeon/TeaOrderService/assets/24422677/56437392-6855-465a-9045-47bda01f2387">
+
+2. 보안 탭에서 2단계 인증 선택
+<img width="848" alt="스크린샷 2023-12-23 19 05 30" src="https://github.com/seojeonghyeon/TeaOrderService/assets/24422677/f1a6d2cd-bdf0-4497-80d9-4b7902037d80">
+
+3. 2단계 인증에서 최하단에 앱 비밀번호 선택
+<img width="848" alt="스크린샷 2023-12-23 19 06 08" src="https://github.com/seojeonghyeon/TeaOrderService/assets/24422677/7a656458-2e8f-4d86-b68d-b019c1e398ee">
+
+4. App Password 생성 후 Copy
+<img width="850" alt="스크린샷 2023-12-23 19 07 03" src="https://github.com/seojeonghyeon/TeaOrderService/assets/24422677/9188dd48-6d37-4609-b142-dce6615db0f3">
+
+5. application-api-local.yml 내 spring.mail.username과 password 부분에 업데이트(GitHub에 업데이트 한 password는 유효하지 않음)
+<img width="821" alt="스크린샷 2023-12-23 19 08 34" src="https://github.com/seojeonghyeon/TeaOrderService/assets/24422677/4ef95a1d-0113-46f8-a7a4-e0e1f53cfcfa">
 
 
 ## How to run
