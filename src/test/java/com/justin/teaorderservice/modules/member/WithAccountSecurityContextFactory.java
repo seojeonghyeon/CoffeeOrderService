@@ -1,6 +1,6 @@
 package com.justin.teaorderservice.modules.member;
 
-import com.justin.teaorderservice.modules.member.request.RequestMemberSave;
+import com.justin.teaorderservice.modules.vo.RequestMemberSave;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

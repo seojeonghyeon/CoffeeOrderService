@@ -3,7 +3,7 @@ package com.justin.teaorderservice.modules.member;
 import com.justin.teaorderservice.infra.auth.JwtTokenProvider;
 import com.justin.teaorderservice.infra.exception.*;
 import com.justin.teaorderservice.modules.event.MemberCreatedEvent;
-import com.justin.teaorderservice.modules.member.request.RequestMemberSave;
+import com.justin.teaorderservice.modules.vo.RequestMemberSave;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

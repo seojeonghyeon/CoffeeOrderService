@@ -2,9 +2,9 @@ package com.justin.teaorderservice;
 
 import com.justin.teaorderservice.modules.category.CategoryRepository;
 import com.justin.teaorderservice.modules.member.MemberRepository;
-import com.justin.teaorderservice.modules.ordercount.OrderCountRepository;
-import com.justin.teaorderservice.modules.tea.TeaRepository;
-import com.justin.teaorderservice.modules.teacategory.TeaCategoryRepository;
+import com.justin.teaorderservice.modules.order.ProductOrderCountRepository;
+import com.justin.teaorderservice.modules.menu.MenuRepository;
+import com.justin.teaorderservice.modules.category.MenuCategoryRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -28,7 +28,7 @@ public class App {
 
     @Bean
     @Profile({"local", "test"})
-    public TestDataInit testDataInit(TeaRepository teaRepository, MemberRepository memberRepository, CategoryRepository categoryRepository, TeaCategoryRepository teaCategoryRepository, BCryptPasswordEncoder passwordEncoder, OrderCountRepository orderCountRepository){
-        return new TestDataInit(teaRepository, memberRepository, categoryRepository, teaCategoryRepository, passwordEncoder, orderCountRepository);
+    public TestDataInit testDataInit(MenuRepository menuRepository, MemberRepository memberRepository, CategoryRepository categoryRepository, MenuCategoryRepository menuCategoryRepository, BCryptPasswordEncoder passwordEncoder, ProductOrderCountRepository productOrderCountRepository){
+        return new TestDataInit(menuRepository, memberRepository, categoryRepository, menuCategoryRepository, passwordEncoder, productOrderCountRepository);
     }
 }

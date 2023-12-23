@@ -6,12 +6,11 @@ import com.justin.teaorderservice.infra.auth.JwtTokenProvider;
 import com.justin.teaorderservice.modules.member.Member;
 import com.justin.teaorderservice.modules.member.MemberRepository;
 import com.justin.teaorderservice.modules.member.WithAccount;
-import com.justin.teaorderservice.modules.order.request.RequestItemPurchase;
+import com.justin.teaorderservice.modules.vo.RequestItemPurchase;
 import com.justin.teaorderservice.modules.point.PointRepository;
-import com.justin.teaorderservice.modules.point.request.RequestAddPoint;
-import com.justin.teaorderservice.modules.tea.TeaRepository;
-import com.justin.teaorderservice.modules.teaorder.TeaOrderRepository;
-import com.justin.teaorderservice.modules.teaorder.request.RequestItemOrder;
+import com.justin.teaorderservice.modules.vo.RequestAddPoint;
+import com.justin.teaorderservice.modules.menu.MenuRepository;
+import com.justin.teaorderservice.modules.vo.RequestItemOrder;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,10 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -44,8 +40,8 @@ class OrderApiControllerTest {
     @Autowired private PointRepository pointRepository;
     @Autowired private MemberRepository memberRepository;
     @Autowired private OrderRepository orderRepository;
-    @Autowired private TeaRepository teaRepository;
-    @Autowired private TeaOrderRepository teaOrderRepository;
+    @Autowired private MenuRepository menuRepository;
+    @Autowired private ProductOrderRepository productOrderRepository;
     @Autowired private JwtTokenProvider jwtTokenProvider;
     @Autowired private ObjectMapper objectMapper;
 
@@ -86,7 +82,7 @@ class OrderApiControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("userName").exists())
-                .andExpect(jsonPath("teaOrderList").exists());
+                .andExpect(jsonPath("productOrderList").exists());
     }
 
     @WithAccount(
@@ -247,7 +243,7 @@ class OrderApiControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("id").value(orderId))
                 .andExpect(jsonPath("userName").exists())
-                .andExpect(jsonPath("teaOrderList").exists());
+                .andExpect(jsonPath("productOrderList").exists());
     }
 
 

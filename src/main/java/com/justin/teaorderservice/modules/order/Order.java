@@ -4,10 +4,8 @@ package com.justin.teaorderservice.modules.order;
 import com.justin.teaorderservice.infra.exception.AlreadyCompletedOrderException;
 import com.justin.teaorderservice.infra.exception.AlreadyNotPendingOrderException;
 import com.justin.teaorderservice.infra.exception.ErrorCode;
-import com.justin.teaorderservice.infra.exception.NotEnoughPointException;
 import com.justin.teaorderservice.modules.common.BaseEntity;
 import com.justin.teaorderservice.modules.member.Member;
-import com.justin.teaorderservice.modules.teaorder.TeaOrder;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,15 +31,15 @@ public class Order extends BaseEntity {
     private OrderStatus status;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    private List<TeaOrder> teaOrders = new ArrayList<>();
+    private List<ProductOrder> productOrders = new ArrayList<>();
 
 
-    public static Order createOrder(Member member, TeaOrder... teaOrders){
+    public static Order createOrder(Member member, ProductOrder... productOrders){
         Order order = new Order();
         order.setMember(member);
         order.setStatus(OrderStatus.PENDING);
-        for (TeaOrder teaOrder : teaOrders) {
-            order.addTeaOrder(teaOrder);
+        for (ProductOrder productOrder : productOrders) {
+            order.addTeaOrder(productOrder);
         }
         order.deductPoint();
         return order;
@@ -57,9 +55,9 @@ public class Order extends BaseEntity {
         }
     }
 
-    public void addTeaOrder(TeaOrder teaOrder){
-        teaOrders.add(teaOrder);
-        teaOrder.setOrder(this);
+    public void addTeaOrder(ProductOrder productOrder){
+        productOrders.add(productOrder);
+        productOrder.setOrder(this);
     }
 
     public void setMember(Member member){
@@ -68,7 +66,7 @@ public class Order extends BaseEntity {
     }
 
     public Integer getTotalPrice(){
-        return teaOrders.stream().mapToInt(TeaOrder::getTotalPrice).sum();
+        return productOrders.stream().mapToInt(ProductOrder::getTotalPrice).sum();
     }
 
     public void cancel(){
@@ -78,7 +76,7 @@ public class Order extends BaseEntity {
             status = OrderStatus.CANCELED;
             member.inducePoint(getTotalPrice());
         }
-        teaOrders.forEach(TeaOrder::cancel);
+        productOrders.forEach(ProductOrder::cancel);
     }
 
 }

@@ -2,9 +2,8 @@ package com.justin.teaorderservice.modules.member;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.justin.teaorderservice.infra.MockMvcTest;
-import com.justin.teaorderservice.infra.auth.JwtTokenProvider;
 import com.justin.teaorderservice.modules.login.LoginService;
-import com.justin.teaorderservice.modules.member.request.RequestMemberSave;
+import com.justin.teaorderservice.modules.vo.RequestMemberSave;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;

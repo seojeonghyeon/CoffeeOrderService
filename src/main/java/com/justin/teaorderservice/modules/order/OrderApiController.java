@@ -3,17 +3,13 @@ package com.justin.teaorderservice.modules.order;
 import com.justin.teaorderservice.infra.exception.ErrorCode;
 import com.justin.teaorderservice.infra.exception.NotEnoughPointException;
 import com.justin.teaorderservice.modules.event.OrderCreatedEvent;
-import com.justin.teaorderservice.modules.event.OrderUpdateEvent;
 import com.justin.teaorderservice.modules.member.CurrentMember;
 import com.justin.teaorderservice.modules.member.Member;
-import com.justin.teaorderservice.modules.tea.Tea;
-import com.justin.teaorderservice.modules.tea.TeaService;
-import com.justin.teaorderservice.modules.teaorder.TeaOrderService;
-import com.justin.teaorderservice.modules.teaorder.request.RequestItemOrder;
-import com.justin.teaorderservice.modules.order.request.RequestItemPurchase;
-import com.justin.teaorderservice.modules.order.response.ResponseOrder;
-import com.justin.teaorderservice.modules.teaorder.response.ResponseTeaOrder;
-import com.justin.teaorderservice.modules.teaorder.TeaOrder;
+import com.justin.teaorderservice.modules.menu.Menu;
+import com.justin.teaorderservice.modules.menu.MenuService;
+import com.justin.teaorderservice.modules.vo.RequestItemPurchase;
+import com.justin.teaorderservice.modules.vo.ResponseOrder;
+import com.justin.teaorderservice.modules.vo.ResponseProductOrder;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -46,9 +42,9 @@ public class OrderApiController {
     static final String ORDER_DETAIL = "/{orderId}/detail";
 
     private final OrderService orderService;
-    private final TeaOrderService teaOrderService;
-    private final TeaService teaService;
     private final ApplicationEventPublisher eventPublisher;
+    private final ProductOrderService productOrderService;
+    private final MenuService menuService;
 
     @Operation(summary = "Tea 주문 가능 정보", description = "Tea 주문 가능 정보")
     @ApiResponses({
@@ -59,9 +55,9 @@ public class OrderApiController {
     @GetMapping
     @PreAuthorize("hasAnyAuthority('USER','MANAGER','ADMIN')")
     public ResponseEntity<ResponseOrder> items(@CurrentMember Member member){
-        List<Tea> teas = teaService.findAll();
-        List<ResponseTeaOrder> responseTeaOrders = teas.stream().map(ResponseTeaOrder::createResponseTeaOrder).toList();
-        ResponseOrder responseOrder = ResponseOrder.createResponseOrder(member.getMemberName(), responseTeaOrders);
+        List<Menu> menus = menuService.findAll();
+        List<ResponseProductOrder> responseProductOrders = menus.stream().map(ResponseProductOrder::createResponseProductOrder).toList();
+        ResponseOrder responseOrder = ResponseOrder.createResponseOrder(member.getMemberName(), responseProductOrders);
         return ResponseEntity.status(HttpStatus.OK).body(responseOrder);
     }
 
@@ -78,11 +74,11 @@ public class OrderApiController {
         ResponseOrder responseOrder = null;
 
         if(order != null){
-            List<TeaOrder> teaOrders = teaOrderService.findByOrderId(orderId);
-            List<ResponseTeaOrder> responseTeaOrders = teaOrders.stream()
-                    .map(ResponseTeaOrder::createResponseTeaOrder)
+            List<ProductOrder> productOrders = productOrderService.findByOrderId(orderId);
+            List<ResponseProductOrder> responseProductOrders = productOrders.stream()
+                    .map(ResponseProductOrder::createResponseProductOrder)
                     .toList();
-            responseOrder = ResponseOrder.createResponseOrder(orderId, member.getMemberName(), responseTeaOrders);
+            responseOrder = ResponseOrder.createResponseOrder(orderId, member.getMemberName(), responseProductOrders);
         }
         return ResponseEntity.status(HttpStatus.OK).body(responseOrder);
     }
