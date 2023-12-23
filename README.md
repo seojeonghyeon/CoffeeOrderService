@@ -20,6 +20,10 @@ http://localhost:8080/swagger-ui/index.html
 ![스크린샷 2023-12-04 23 44 39](https://github.com/seojeonghyeon/TeaOrderService/assets/24422677/4e970229-8a8d-46ab-b516-de32788dd917)
 
 
+## Spring Boot 요청, 응답 간 프로세스
+<img width="1644" alt="image" src="https://github.com/seojeonghyeon/TeaOrderService/assets/24422677/7272f5f8-0ff5-4e50-b8f2-136f18f5050a">
+
+
 
 ## PostgreSQL Settings
 ```
