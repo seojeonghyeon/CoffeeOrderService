@@ -46,5 +46,12 @@ logging:
   level:
     org.hibernate.sql: info
     org.hibernate.type: info
+  file:
+    path: /output/${HOSTNAME}
 app:
   host: http://localhost:8080
+management:
+  endpoint:
+    health:
+      enabled: true
+      show-details: always
