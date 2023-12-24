@@ -1,0 +1,9 @@
+apiVersion: v2
+name: teaorderservice
+version: 0.0.1
+appVersion: 0.0.1
+kubeVersion: ">= 1.27.0"
+description: "Tea Order Service Springboot Application"
+maintainers:
+  - name: jeonghyeon
+    email: seojeonghyeon0630@gmail.com

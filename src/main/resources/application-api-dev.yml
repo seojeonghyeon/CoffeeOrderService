@@ -1,0 +1,56 @@
+spring:
+  config:
+    activate:
+      on-profile: dev
+  security:
+    jwt:
+      header: Authorization
+      secret: SnVzdGluU2VvLVRlYW9yZGVyc2VydmljZS1TcHJpbmdCb290LUpXVC1TZWNyZXQtVG9rZW4=
+      token_expiration_time: 864000
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    username: api_user
+    password: '00000000'
+    url: jdbc:postgresql://localhost:5432/teaorderdb
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        default_batch_fetch_size: 100
+        format_sql: true
+        show_sql: true
+    open-in-view: false
+    database: postgresql
+  mail:
+    host: "smtp.gmail.com"
+    port: 587
+    username: seojeonghyeon0630@gmail.com
+    password: qwcwnodicfohbtnf
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 5000
+          enable: true
+          starttls:
+            enable: true
+server:
+  error:
+    whitelabel:
+      enabled: false
+    include-binding-errors: on_param
+    include-stacktrace: on_param
+    include-message: on_param
+    include-exception: true
+logging:
+  level:
+    org.hibernate.sql: debug
+    org.hibernate.type: trace
+app:
+  host: http://localhost:8080

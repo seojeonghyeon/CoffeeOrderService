@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: teaorder-service
+  config:
+    import: |-
+      classpath:/application-api.yml
+  profiles:
+    active: local
