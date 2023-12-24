@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="kr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{label.title}">Tea Order Service</title>
+</head>
+<body>
+<div>
+    <p>안녕하세요. <span th:text="${name}"></span>님</p>
+    <br>
+    <h2 th:text="${message}">메시지</h2>
+
+    <div>
+        <table class="table">
+            <thead>
+            <tr>
+                <th th:text="#{label.points.status}">충전 상태</th>
+                <th th:text="#{label.members.point}">총 현재 Point</th>
+                <th th:text="#{label.points.point}">이전의 Point</th>
+                <th th:text="#{label.points.addPoint}">충전한 Point</th>
+            </tr>
+            </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <p th:text="${status}"/>
+                        </td>
+                        <td>
+                            <p th:text="${totalPoint}"/>
+                        </td>
+                        <td>
+                            <p th:text="${currentPoint}"/>
+                        </td>
+                        <td>
+                            <p th:text="${addPoint}"/>
+                        </td>
+                    </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div>
+        <small th:text="${host}"></small>
+    </div>
+</div>
+<br>
+<footer>
+    <small th:text="#{label.footer}"></small>
+</footer>
+</body>
+</html>
