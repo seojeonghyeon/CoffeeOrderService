@@ -1,5 +1,5 @@
-# TeaOrderService
-Tea 주문 서비스
+# CoffeeOrderService
+Coffee 주문 서비스
 
 ## 구현 기능
 1. 커피 메뉴 목록 조회 API(조건 검색 기능)
