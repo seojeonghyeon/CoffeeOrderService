@@ -12,10 +12,10 @@ import com.justin.teaorderservice.modules.order.OrderStatus;
 import com.justin.teaorderservice.modules.order.ProductOrder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionalEventListener;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
@@ -41,20 +41,20 @@ public class OrderEventListener {
     private final TemplateEngine templateEngine;
     private final EmailService emailService;
 
-    @EventListener
+    @TransactionalEventListener
     public void handleOrderCreatedEvent(OrderCreatedEvent orderCreatedEvent){
         Order order = orderRepository.findById(orderCreatedEvent.getOrder().getId()).orElse(null);
         createEmailContents("[", "] 새로운 주문 정보가 생성 되었습니다.", order);
     }
 
-    @EventListener
+    @TransactionalEventListener
     public void handleOrderUpdateEvent(OrderUpdateEvent orderUpdateEvent){
         Order order = orderRepository.findById(orderUpdateEvent.getOrder().getId()).orElse(null);
         createEmailContents("[", "] 주문 정보가 업데이트 되었습니다.", order);
     }
 
     private void createEmailContents(String prefixContent, String suffixContent, Order order) {
-        String prefixSubject = "[ProductOrderService] 주문 ";
+        String prefixSubject = "[TeaOrderService] 주문 ";
         prefixContent = prefixContent;
         suffixContent = suffixContent;
 

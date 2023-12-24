@@ -7,10 +7,10 @@ import com.justin.teaorderservice.modules.member.Member;
 import com.justin.teaorderservice.modules.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.event.TransactionalEventListener;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
@@ -28,7 +28,7 @@ public class MemberEventListener {
     private final TemplateEngine templateEngine;
     private final EmailService emailService;
 
-    @EventListener
+    @TransactionalEventListener
     public void handleOrderCreatedEvent(MemberCreatedEvent memberCreatedEvent){
         Member member = memberRepository.findById(memberCreatedEvent.getMember().getId()).orElse(null);
         String emailSubject = "[TeaOrderService] 계정 생성";

@@ -2,12 +2,15 @@ package com.justin.teaorderservice.modules.order;
 
 import com.justin.teaorderservice.infra.exception.ErrorCode;
 import com.justin.teaorderservice.infra.exception.NoSuchOrderException;
+import com.justin.teaorderservice.modules.event.OrderCreatedEvent;
+import com.justin.teaorderservice.modules.event.OrderUpdateEvent;
 import com.justin.teaorderservice.modules.member.Member;
 import com.justin.teaorderservice.modules.member.MemberRepository;
 import com.justin.teaorderservice.modules.vo.RequestItemPurchase;
 import com.justin.teaorderservice.modules.vo.RequestItemOrder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -21,6 +24,7 @@ public class OrderService{
     private final OrderRepository orderRepository;
     private final MemberRepository memberRepository;
     private final ProductOrderService productOrderService;
+    private final ApplicationEventPublisher eventPublisher;
 
 
     public Order findById(Long orderId) {
@@ -54,13 +58,16 @@ public class OrderService{
         if(order.getStatus() == OrderStatus.REJECTED){
             order.cancel();
         }
-        return orderRepository.save(order);
+        Order saveOrder = orderRepository.save(order);
+        eventPublisher.publishEvent(new OrderCreatedEvent(saveOrder));
+        return saveOrder;
     }
 
     @Transactional
     public void cancel(Long orderId){
         Order order = orderRepository.findById(orderId).orElseThrow(()-> new NoSuchOrderException(ErrorCode.NO_SUCH_ORDER));
         order.cancel();
+        eventPublisher.publishEvent(new OrderUpdateEvent(order));
     }
 
 }
