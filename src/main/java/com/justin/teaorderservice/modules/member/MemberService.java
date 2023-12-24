@@ -1,7 +1,9 @@
 package com.justin.teaorderservice.modules.member;
 
+import com.justin.teaorderservice.modules.event.MemberCreatedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,6 +19,7 @@ import static java.lang.String.format;
 public class MemberService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
+    private final ApplicationEventPublisher eventPublisher;
 
     public Member findByMemberId(String memberId) {
         return memberRepository.findById(memberId).filter(member -> !member.getDisabled()).orElse(null);
@@ -31,9 +34,11 @@ public class MemberService implements UserDetailsService {
     }
 
     @Transactional
-    public Member register(String email, String encryptedPwd, String simpleEncryptedPwd){
+    public String register(String email, String encryptedPwd, String simpleEncryptedPwd){
         Member member = Member.createUserMember(email, encryptedPwd, simpleEncryptedPwd);
-        return memberRepository.save(member);
+        Member saveMember = memberRepository.save(member);
+        eventPublisher.publishEvent(new MemberCreatedEvent(saveMember));
+        return saveMember.getId();
     }
 
     @Transactional

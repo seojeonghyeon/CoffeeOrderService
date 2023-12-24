@@ -50,7 +50,6 @@ public class WebSecurityConfig {
 
                 .and()
                 .authorizeHttpRequests()
-                .requestMatchers("/**").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
                 .requestMatchers("/favicon.ico").permitAll()
                 .requestMatchers("/error").permitAll()
@@ -77,31 +76,35 @@ public class WebSecurityConfig {
                 .requestMatchers("/docs/*").permitAll()
                 .requestMatchers("/v2/api-docs").permitAll()
                 .requestMatchers("/v3/api-docs/**").permitAll()
-
-                /**
-                 * VIEW
-                 */
-                .and()
-                .authorizeHttpRequests()
-                .requestMatchers("/").permitAll()
-                .requestMatchers("/index.html").permitAll()
-                .requestMatchers("/home.html").permitAll()
-                .requestMatchers("/view/**").permitAll()
+//
+//                /**
+//                 * VIEW
+//                 */
+//                .and()
+//                .authorizeHttpRequests()
+//                .requestMatchers("/").permitAll()
+//                .requestMatchers("/index.html").permitAll()
+//                .requestMatchers("/home.html").permitAll()
+//                .requestMatchers("/view/**").permitAll()
 
 
                 /**
                  * API
                  *
-                 * URI : /api/order/v1/login
+                 * URI : /api/order/login
                  * DESCRIPTION : Order Login
                  *
-                 * URI : /api/order/v1/members/add
+                 * URI : /api/order/members/add
                  * DESCRIPTION : Add USER Member
+                 *
+                 * * URI : /api/order/menus/**
+                 * * DESCRIPTION : Search menus
                  */
                 .and()
                 .authorizeHttpRequests()
                 .requestMatchers("/api/order/login").permitAll()
                 .requestMatchers("/api/order/members/add").permitAll()
+                .requestMatchers("/api/order/menus/**").permitAll()
                 .anyRequest().authenticated()
 
                 .and()
