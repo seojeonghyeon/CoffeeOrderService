@@ -2,7 +2,6 @@ package com.justin.teaorderservice.modules.order;
 
 import com.justin.teaorderservice.infra.exception.ErrorCode;
 import com.justin.teaorderservice.infra.exception.NotEnoughPointException;
-import com.justin.teaorderservice.modules.event.OrderCreatedEvent;
 import com.justin.teaorderservice.modules.member.CurrentMember;
 import com.justin.teaorderservice.modules.member.Member;
 import com.justin.teaorderservice.modules.menu.Menu;
@@ -18,7 +17,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,7 +40,6 @@ public class OrderApiController {
     static final String ORDER_DETAIL = "/{orderId}/detail";
 
     private final OrderService orderService;
-    private final ApplicationEventPublisher eventPublisher;
     private final ProductOrderService productOrderService;
     private final MenuService menuService;
 
@@ -93,7 +90,6 @@ public class OrderApiController {
     @PreAuthorize("hasAnyAuthority('USER','MANAGER','ADMIN')")
     public ResponseEntity<String> addOrder(@CurrentMember Member member, final @RequestBody @Validated RequestItemPurchase requestItemPurchase){
         Order saveOrder = orderService.addOrder(member, requestItemPurchase);
-        eventPublisher.publishEvent(new OrderCreatedEvent(saveOrder));
         if(saveOrder.getStatus() == OrderStatus.REJECTED){
             throw new NotEnoughPointException(ErrorCode.NOT_ENOUGH_POINT);
         }
