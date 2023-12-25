@@ -57,7 +57,7 @@ service:
   port: 8080
 
 rbac:
-  enabled: true
+  enabled: false
   roleBinding:
     autoCreate: true
     additionalRoles: []
