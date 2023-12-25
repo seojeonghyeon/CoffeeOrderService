@@ -12,6 +12,8 @@ spring:
     username: sa
     password:
     url: jdbc:h2:mem:teaorderdb;
+    hikari:
+      data-source-class-name:
   h2:
     console:
       enabled: true
@@ -54,4 +56,4 @@ logging:
     org.hibernate.sql: debug
     org.hibernate.type: trace
 app:
-  host: http://localhost:8080
+  host: http://${HOST:localhost}:${server.port}

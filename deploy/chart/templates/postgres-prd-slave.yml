@@ -1,0 +1,110 @@
+{{- if eq .Values.app.profiles "prd" }}
+{{- if .Values.postgres.masterSlaveMode.enabled }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.postgres.slave.name }}
+spec:
+  serviceName: {{ .Values.postgres.slave.name }}
+  replicas: {{ .Values.postgres.master.replicas }}
+  selector:
+    matchLabels:
+      {{- with .Values.postgres.slave.labels }}
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+  template:
+    metadata:
+      labels:
+        {{- with .Values.postgres.slave.labels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      containers:
+        - name: {{ .Values.postgres.slave.appName }}
+          image: {{ .Values.postgres.slave.image }}
+          env:
+            {{- with .Values.postgres.slave.env }}
+            {{- toYaml . | nindent 8 }}
+            {{- end }}
+          ports:
+            - containerPort: {{ .Values.postgres.slave.ports.containerPort}}
+          volumeMounts:
+            - mountPath: /etc/postgresql
+              name: config-volume
+            - mountPath: {{ .Values.postgres.slave.data.volumes.mountPath }}
+              name: {{ .Values.postgres.slave.data.volumes.name }}
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ .Values.postgres.slave.configMap.name }}
+        - name: {{ .Values.postgres.slave.data.volumes.name }}
+        - persistentVolumeClaim:
+            claimName: {{ .Values.postgres.slave.persistentVolumeClaim.name }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteMany
+        resources:
+          requests:
+            storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.postgres.slave.name }}
+spec:
+  selector:
+    app: {{ .Values.postgres.slave.name }}
+    {{- with .Values.postgres.slave.labels }}
+    {{- toYaml . | nindent 8 }}
+    {{- end }}
+  ports:
+    - protocol: {{ .Values.postgres.slave.ports.protocol}}
+      port: {{ .Values.postgres.slave.ports.containerPort}}
+      targetPort: {{ .Values.postgres.slave.ports.containerPort}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.postgres.slave.configMap.name }}
+data:
+  postgresql.conf: |
+    standby_mode = 'on'
+    primary_conninfo = 'host={{ .Values.postgres.master.name }}.{{ .Release.Namespace }} port=5432 user={{ .Values.postgres.master.username }} password={{ .Values.postgres.master.password }}'
+    trigger_file = '/tmp/failover'
+---
+{{- if .Values.postgres.slave.persistentVolumeClaim.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.postgres.slave.persistentVolumeClaim.name }}
+spec:
+  resources:
+    requests:
+      storage: {{ .Values.postgres.slave.persistentVolumeClaim.storage }}
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ""
+{{- end }}
+---
+{{- if .Values.postgres.slave.persistentVolume.enabled }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Values.postgres.slave.persistentVolume.name }}
+spec:
+  capacity:
+    storage: {{ .Values.postgres.slave.persistentVolume.storage }}
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  gcePersistentDisk:
+    pdName: {{ .Values.postgres.slave.persistentVolume.pdName }}
+    fsType: ext4
+{{- end }}
+
+{{- end }}
+{{- end}}

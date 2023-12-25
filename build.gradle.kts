@@ -50,6 +50,7 @@ dependencies {
     annotationProcessor("jakarta.annotation:jakarta.annotation-api")
     annotationProcessor("jakarta.persistence:jakarta.persistence-api")
     implementation("com.querydsl:querydsl-core:5.0.0")
+    implementation("com.zaxxer:HikariCP:4.0.3")
     implementation("jakarta.annotation:jakarta.annotation-api")
     implementation("jakarta.persistence:jakarta.persistence-api")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-hibernate5")
@@ -63,6 +64,7 @@ dependencies {
     testImplementation("org.springframework.kafka:spring-kafka-test")
     testImplementation("com.tngtech.archunit:archunit-junit5:0.13.1")
     testImplementation("org.testcontainers:junit-jupiter:1.13.0")
+    testAnnotationProcessor("org.projectlombok:lombok")
 }
 
 val generated = "src.main/generated"

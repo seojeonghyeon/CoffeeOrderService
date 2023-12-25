@@ -8,15 +8,30 @@ spring:
       secret: SnVzdGluU2VvLVRlYW9yZGVyc2VydmljZS1TcHJpbmdCb290LUpXVC1TZWNyZXQtVG9rZW4=
       token_expiration_time: 864000
   datasource:
-    driver-class-name: org.postgresql.Driver
-    username: api_user
-    password: '00000000'
-    url: jdbc:postgresql://localhost:5432/teaorderdb
-  h2:
-    console:
-      enabled: false
-      settings:
-        web-allow-others: false
+    master:
+      hikari:
+        driver-class-name: org.postgresql.Driver
+        username: api_user
+        password: '00000000'
+        jdbc-url: jdbc:postgresql://postgres-master.${NAMESPACE}:5432/teaorderdb
+    slave:
+      hikari:
+        driver-class-name: org.postgresql.Driver
+        username: api_user
+        password: '00000000'
+        jdbc-url: jdbc:postgresql://postgres-slave.${NAMESPACE}:5432/teaorderdb
+    hikari:
+      connection-timeout: 60000
+      maximum-pool-size: 5
+      minimum-idle: 1
+      idle-timeout: 30000
+      pool-name: hikariPool
+      auto-commit: true
+      data-source-properties:
+        cachePrepStmts: true
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048
+        useServerPrepStmts: true
   jpa:
     hibernate:
       ddl-auto: none
@@ -49,7 +64,7 @@ logging:
   file:
     path: /output/${HOSTNAME}
 app:
-  host: http://localhost:8080
+  host: http://${HOST:localhost}:${server.port}
 management:
   endpoint:
     health:

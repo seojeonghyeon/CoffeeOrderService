@@ -1,0 +1,111 @@
+{{- if eq .Values.app.profiles "prd" }}
+{{- if .Values.postgres.masterSlaveMode.enabled }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.postgres.master.name }}
+spec:
+  serviceName: {{ .Values.postgres.master.name }}
+  replicas: {{ .Values.postgres.master.replicas }}
+  selector:
+    matchLabels:
+      {{- with .Values.postgres.master.labels }}
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+  template:
+    metadata:
+      labels:
+        {{- with .Values.postgres.master.labels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      containers:
+        - name: {{ .Values.postgres.master.appName }}
+          image: {{ .Values.postgres.master.image }}
+          env:
+            {{- with .Values.postgres.master.env }}
+            {{- toYaml . | nindent 8 }}
+            {{- end }}
+          ports:
+            - containerPort: {{ .Values.postgres.master.ports.containerPort}}
+          volumeMounts:
+            - mountPath: /etc/postgresql
+              name: config-volume
+            - mountPath: {{ .Values.postgres.master.data.volumes.mountPath }}
+              name: {{ .Values.postgres.master.data.volumes.name }}
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ .Values.postgres.master.configMap.name }}
+        - name: {{ .Values.postgres.master.data.volumes.name }}
+        - persistentVolumeClaim:
+            claimName: {{ .Values.postgres.master.persistentVolumeClaim.name }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteMany
+        resources:
+          requests:
+            storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.postgres.master.name }}
+spec:
+  selector:
+    app: {{ .Values.postgres.master.name }}
+    {{- with .Values.postgres.master.labels }}
+    {{- toYaml . | nindent 8 }}
+    {{- end }}
+  ports:
+    - protocol: {{ .Values.postgres.master.ports.protocol}}
+      port: {{ .Values.postgres.master.ports.containerPort}}
+      targetPort: {{ .Values.postgres.master.ports.containerPort}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.postgres.master.configMap.name }}
+data:
+  postgresql.conf: |
+    wal_level = replica
+    max_wal_senders = 3
+  pg_hba.conf: |
+    host replication {{ .Values.postgres.slave.username }} {{ .Values.postgres.slave.name }}.{{ .Release.Namespace }}/32 md5
+---
+{{- if .Values.postgres.master.persistentVolumeClaim.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.postgres.master.persistentVolumeClaim.name }}
+spec:
+  resources:
+    requests:
+      storage: {{ .Values.postgres.master.persistentVolumeClaim.storage }}
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ""
+{{- end }}
+---
+{{- if .Values.postgres.master.persistentVolume.enabled }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Values.postgres.master.persistentVolume.name }}
+spec:
+  capacity:
+    storage: {{ .Values.postgres.master.persistentVolume.storage }}
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  gcePersistentDisk:
+    pdName: {{ .Values.postgres.master.persistentVolume.pdName }}
+    fsType: ext4
+{{- end }}
+
+{{- end }}
+{{- end}}

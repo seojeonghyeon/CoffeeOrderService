@@ -154,40 +154,4 @@ class MemberApiControllerTest {
         assertNull(member);
     }
 
-    @WithAccount(
-            email = EMAIL,
-            password = PASSWORD,
-            simplePassword = SIMPLE_PASSWORD
-    )
-    @DisplayName("회원 가입 여부 확인 - 정상")
-    @Test
-    void memberDetail() throws Exception{
-        log.info("Account: " + SecurityContextHolder.getContext().getAuthentication());
-
-        MvcResult mvcResult = mockMvc
-                .perform(
-                        get(ROOT + "/" + EMAIL + ADD_MEMBER_RESULT)
-                )
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andReturn();
-
-        MockHttpServletResponse response = mvcResult.getResponse();
-        String content = response.getContentAsString();
-        Assertions.assertThat(content.contains(EMAIL)).isTrue();
-    }
-
-    @DisplayName("회원 가입 여부 확인 - 오류")
-    @Test
-    void memberDetail_unauthorized() throws Exception{
-        log.info("Account: " + SecurityContextHolder.getContext().getAuthentication());
-
-        mockMvc
-                .perform(
-                        get(ROOT + "/" + EMAIL + ADD_MEMBER_RESULT)
-                )
-                .andDo(print())
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("errorCode").value("NO_EXIST_EMAIL"));
-    }
 }

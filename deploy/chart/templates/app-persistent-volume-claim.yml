@@ -1,3 +1,4 @@
+{{- if .Values.podVolumes.enabled}}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -7,5 +8,6 @@ spec:
     requests:
       storage: {{ .Values.podVolumes.storage }}
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   storageClassName: ""
+{{- end }}

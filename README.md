@@ -50,6 +50,8 @@ afterCompletion : View Rendering 된 이후 호출, Exception이 발생해도 �
 
 
 ## PostgreSQL Settings
+PostgreSQL 기준 Default Connection pool은 100
+각 Pod의 maximum-pool-size 합이 100을 넘지 않도록 해야 함.(또는 Connection pool을 늘려주거나..)
 ```
  zayden@Justin-MacBook-Pro  ~  docker pull postgres:latest
  zayden@Justin-MacBook-Pro  ~  docker run -p 5432:5432 --name local-postgres \

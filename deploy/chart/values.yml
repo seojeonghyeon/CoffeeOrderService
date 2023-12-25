@@ -1,6 +1,7 @@
 app:
   name: coffeeorderservice
   image: seojeonghyeon0630/coffeeorderservice:0.0.1
+  profiles: dev
   port: 8080
   replicas: 3
   customCommand: []
@@ -53,7 +54,7 @@ probes:
 
 service:
   enabled: true
-  port: 80
+  port: 8080
 
 rbac:
   enabled: true
@@ -73,8 +74,127 @@ applicationYamlSecret: {}
 # value: |
 
 ingress:
-  enabled: false
+  enabled: true
   className: nginx
   host: ""
-  path: ""
+  path: "/"
   pathType: Prefix
+  annotations:
+    kubernetes.io/ingress.class: "gce"
+
+postgres:
+  masterSlaveMode:
+    enabled: false
+  standAloneMode:
+    enabled: true
+
+  master:
+    name: postgres-master
+    appName: postgres
+    image: postgres:15.2-alpine
+    replicas: 1
+    username: api_user
+    password: '00000000'
+    labels:
+      app: postgres
+      layer: persistence
+      role: master
+    env:
+      - name: POSTGRES_DB
+        value: teaorderdb
+      - name: POSTGRES_USER
+        value: api_user
+      - name: POSTGRES_PASSWORD
+        value: '00000000'
+    ports:
+      protocol: TCP
+      containerPort: 5432
+    configMap:
+      name: postgres-master-config
+    data:
+      volumes:
+        name: postgres-master-storage
+        storage: 1Gi
+        mountPath: /var/lib/postgresql/data
+    persistentVolume:
+      enabled: true
+      name: postgres-master-storage-pv
+      storage: 1Gi
+      pdName: postgres-master-storage
+    persistentVolumeClaim:
+      enabled: true
+      name: postgres-master-storage-pvc
+      storage: 1Gi
+
+  slave:
+    name: postgres-slave
+    appName: postgres
+    image: postgres:15.2-alpine
+    replicas: 2
+    username: api_user
+    labels:
+      app: postgres
+      layer: persistence
+      role: slave
+    env:
+      - name: POSTGRES_DB
+        value: teaorderdb
+      - name: POSTGRES_USER
+        value: api_user
+      - name: POSTGRES_PASSWORD
+        value: '00000000'
+    ports:
+      protocol: TCP
+      containerPort: 5432
+    configMap:
+      name: postgres-slave-config
+    data:
+      volumes:
+        name: postgres-slave-storage
+        storage: 1Gi
+        mountPath: /var/lib/postgresql/data
+    persistentVolume:
+      enabled: true
+      name: postgres-slave-storage-pv
+      storage: 1Gi
+      pdName: postgres-slave-storage
+    persistentVolumeClaim:
+      enabled: true
+      name: postgres-slave-storage-pvc
+      storage: 1Gi
+
+  standAlone:
+    name: postgres-standalone
+    appName: postgres
+    image: postgres:15.2-alpine
+    replicas: 1
+    username: api_user
+    labels:
+      app: postgres
+      layer: persistence
+      role: standalone
+    env:
+      - name: POSTGRES_DB
+        value: teaorderdb
+      - name: POSTGRES_USER
+        value: api_user
+      - name: POSTGRES_PASSWORD
+        value: '00000000'
+    ports:
+      protocol: TCP
+      containerPort: 5432
+    data:
+      volumes:
+        name: postgres-storage
+        storage: 1Gi
+        mountPath: /var/lib/postgresql/data
+    persistentVolume:
+      enabled: true
+      name: postgres-storage-pv
+      storage: 1Gi
+      pdName: postgres-storage
+    persistentVolumeClaim:
+      enabled: true
+      name: postgres-storage-pvc
+      storage: 1Gi
+

@@ -4,6 +4,9 @@ kind: Service
 metadata:
   labels:
     app: {{ .Values.app.name }}
+    {{- with .Values.app.labels}}
+    {{- toYaml . | nindent 8}}
+    {{- end}}
   name: {{ .Values.app.name }}
   namespace: {{ .Release.Namespace | quote }}
 spec:
@@ -14,4 +17,7 @@ spec:
       targetPort: {{ .Values.app.port }}
   selector:
     app: {{ .Values.app.name }}
+    {{- with .Values.app.labels}}
+    {{- toYaml . | nindent 8}}
+    {{- end}}
 {{- end }}
