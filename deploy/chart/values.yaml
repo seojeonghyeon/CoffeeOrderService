@@ -15,13 +15,13 @@ app:
     release: blue
 
 podAnnotations:
-  app.version: "0.0.1"
-  app.build: "Gradle Kotlin"
+  version: "0.0.1"
+  build: "Gradle Kotlin"
   environment: "dev"
-  monitoring.enabled: "false"
-  monitoring.tool: ""
-  log-config: "info"
-  deployment.pipeline: "develop"
+  monitoring_enabled: "false"
+  monitoring_tool: ""
+  log_config: "info"
+  deployment_pipeline: "develop"
 
 podLabels: {}
 podImagePullPolicy: Always

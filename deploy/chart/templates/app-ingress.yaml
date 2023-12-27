@@ -7,7 +7,13 @@ metadata:
   namespace: {{ .Release.Namespace | quote }}
   {{- with .Values.podAnnotations }}
   annotations:
-    {{- toYaml .Values.podAnnotations | nindent 8 }}
+    {{- toYaml .version | nindent 8 }}
+    {{- toYaml .build | nindent 8 }}
+    {{- toYaml .environment | nindent 8 }}
+    {{- toYaml .monitoring_enabled | nindent 8 }}
+    {{- toYaml .monitoring_tool | nindent 8 }}
+    {{- toYaml .log_config | nindent 8 }}
+    {{- toYaml .deployment_pipeline | nindent 8 }}
   {{- end }}
 spec:
   rules:

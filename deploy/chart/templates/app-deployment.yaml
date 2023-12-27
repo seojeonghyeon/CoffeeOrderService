@@ -3,8 +3,12 @@ kind: Deployment
 metadata:
   labels:
     app: {{ .Values.app.name }}
+
     {{- with .Values.app.labels}}
-    {{- toYaml . | nindent 8}}
+      {{- toYaml .layer | nindent 4}}
+      {{- toYaml .environment | nindent 4}}
+      {{- toYaml .version | nindent 4}}
+      {{- toYaml .release | nindent 4}}
     {{- end}}
   name: {{ .Values.app.name }}
   namespace: {{ .Release.Namespace | quote }}
@@ -14,21 +18,24 @@ spec:
     matchLabels:
       app: {{ .Values.app.name }}
       {{- with .Values.app.labels}}
-      {{- toYaml . | nindent 8}}
+        {{- toYaml .layer | nindent 6}}
+        {{- toYaml .environment | nindent 6}}
+        {{- toYaml .version | nindent 6}}
+        {{- toYaml .environment | nindent 6}}
       {{- end}}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
       annotations:
-        {{- toYaml .Values.podAnnotations | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
         app: {{ .Values.app.name }}
         {{- with .Values.app.labels}}
-        {{- toYaml . | nindent 8}}
+          {{- toYaml . | nindent 8}}
         {{- end}}
         {{- with .Values.podLabels }}
-        {{- toYaml . | nindent 8 }}
+          {{- toYaml . | nindent 8 }}
         {{- end }}
 
     spec:

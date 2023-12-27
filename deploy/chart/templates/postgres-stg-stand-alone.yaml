@@ -1,4 +1,4 @@
-{{-if eq .Values.app.profiles "dev" }}
+{{- if eq .Values.app.profiles "stg" }}
 {{- if .Values.postgres.standAloneMode.enabled }}
 apiVersion: apps/v1
 kind: StatefulSet
@@ -84,4 +84,4 @@ spec:
 {{- end }}
 
 {{- end }}
-{{- end }}
+{{- end}}
