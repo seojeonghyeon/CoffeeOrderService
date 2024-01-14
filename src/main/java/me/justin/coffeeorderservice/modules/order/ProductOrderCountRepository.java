@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface ProductOrderCountRepository extends JpaRepository<ProductOrderCount, Long>, ProductOrderCountRepositoryCustom {
+public interface ProductOrderCountRepository extends JpaRepository<ProductOrderCount, Long>, ProductOrderCountRepositoryExtension {
     Optional<ProductOrderCount> findByMenuId(Long menuId);
 }

@@ -68,7 +68,7 @@ Database 생성
  zayden@Justin-MacBook-Pro  ~  docker exec -it 647a bash
 root@647a65814db1:/# psql -U postgres
 
-postgres=# create database teaorderdb;
+postgres=# create database coffeeorderdb;
 CREATE DATABASE
 
 
@@ -139,9 +139,9 @@ teaorderdb=# \dt
 ## How to run
 
 ```
-zayden@Justin-MacBook-Pro  ~/Documents/workspace/TeaOrderService   main ±  mvn clean compile package -DskipTests=true
+zayden@Justin-MacBook-Pro  ~/Documents/workspace/CoffeeOrderService   main ±  mvn clean compile package -DskipTests=true
 
-zayden@Justin-MacBook-Pro  ~/Documents/workspace/TeaOrderService   main ±  docker build --tag seojeonghyeon0630/teaorderservice:0.0.1 .
+zayden@Justin-MacBook-Pro  ~/Documents/workspace/CoffeeOrderService   main ±  docker build --tag seojeonghyeon0630/coffeeorderservice:0.0.1 .
 [+] Building 5.4s (8/8) FINISHED
  => [internal] load build definition from Dockerfile                                                                                                                                                                       0.1s
  => => transferring dockerfile: 189B                                                                                                                                                                                       0.0s
@@ -160,7 +160,7 @@ zayden@Justin-MacBook-Pro  ~/Documents/workspace/TeaOrderService   main
 
 Use 'docker scan' to run Snyk tests against images to find vulnerabilities and learn how to fix them
 
- zayden@Justin-MacBook-Pro  ~/Documents/workspace/TeaOrderService   main ±  docker push seojeonghyeon0630/teaorderservice:0.0.1
+ zayden@Justin-MacBook-Pro  ~/Documents/workspace/CoffeeOrderService   main ±  docker push seojeonghyeon0630/coffeeorderservice:0.0.1
 The push refers to repository [docker.io/seojeonghyeon0630/teaorderservice]
 e38384c4f62e: Pushed
 3d3fdb9815af: Mounted from seojeonghyeon0630/filebeatdemo
@@ -171,3 +171,92 @@ e38384c4f62e: Pushed
 ```
 
 
+### PV 생성(최소 10Gi)
+
+```
+zayden@Justin-MacBook-Pro  ~/Documents/workspace/CoffeeOrderService/deploy/chart/storages   9-compose-helm-chart ±✚  gcloud compute disks create logstorage --size=10Gi --zone=asia-east1-a
+WARNING:  Python 3.5-3.7 will be deprecated on August 8th, 2023. Please use Python version 3.8 and up.
+
+If you have a compatible Python interpreter installed, you can use it by setting
+the CLOUDSDK_PYTHON environment variable to point to it.
+
+WARNING: You have selected a disk size of under [200GB]. This may result in poor I/O performance. For more information, see: https://developers.google.com/compute/docs/disks#performance.
+Created [https://www.googleapis.com/compute/v1/projects/kubernetes-project-409807/zones/asia-east1-a/disks/logstorage].
+NAME        ZONE          SIZE_GB  TYPE         STATUS
+logstorage  asia-east1-a  10       pd-standard  READY
+
+New disks are unformatted. You must format and mount a disk before it
+can be used. You can find instructions on how to do this at:
+
+https://cloud.google.com/compute/docs/disks/add-persistent-disk#formatting
+
+```
+
+```
+zayden@Justin-MacBook-Pro  ~/Documents/workspace/CoffeeOrderService/deploy/chart/storages   9-compose-helm-chart ±✚  gcloud compute disks list
+WARNING:  Python 3.5-3.7 will be deprecated on August 8th, 2023. Please use Python version 3.8 and up.
+
+If you have a compatible Python interpreter installed, you can use it by setting
+the CLOUDSDK_PYTHON environment variable to point to it.
+
+NAME                                               LOCATION      LOCATION_SCOPE  SIZE_GB  TYPE         STATUS
+gke-kubernetes-cluster-default-pool-b12c6571-1jkp  asia-east1-a  zone            30       pd-balanced  READY
+gke-kubernetes-cluster-default-pool-b12c6571-3lnm  asia-east1-a  zone            30       pd-balanced  READY
+gke-kubernetes-cluster-default-pool-b12c6571-vp9s  asia-east1-a  zone            30       pd-balanced  READY
+logstorage                                         asia-east1-a  zone            10       pd-standard  READY
+postgres-master-storage                            asia-east1-a  zone            10       pd-standard  READY
+postgres-slave-storage                             asia-east1-a  zone            10       pd-standard  READY
+postgres-storage                                   asia-east1-a  zone            10       pd-standard  READY
+```
+
+```
+ zayden@Justin-MacBook-Pro  ~/Documents/workspace/CoffeeOrderService/deploy/chart/storages   9-compose-helm-chart ±✚  ll
+total 32
+-rw-r--r--  1 zayden  staff   289B 12 31 18:31 app-storage.yaml
+-rw-r--r--  1 zayden  staff   278B 12 31 18:31 postgres-storage-dev-and-stg-stand-alone-pv.yaml
+-rw-r--r--  1 zayden  staff   292B 12 31 18:31 postgres-storage-prd-master.yaml
+-rw-r--r--  1 zayden  staff   290B 12 31 18:31 postgres-storage-prd-slave.yaml
+ zayden@Justin-MacBook-Pro  ~/Documents/workspace/CoffeeOrderService/deploy/chart/storages   9-compose-helm-chart ±✚  kubectl apply -f app-storage.yaml
+persistentvolume/logstorage-pv created
+ zayden@Justin-MacBook-Pro  ~/Documents/workspace/CoffeeOrderService/deploy/chart/storages   9-compose-helm-chart ±✚  kubectl apply -f postgres-storage-prd-master.yaml
+persistentvolume/postgres-master-storage-pv created
+ zayden@Justin-MacBook-Pro  ~/Documents/workspace/CoffeeOrderService/deploy/chart/storages   9-compose-helm-chart ±✚  kubectl apply -f postgres-storage-prd-slave.yaml
+persistentvolume/postgres-slave-storage-pv created
+ zayden@Justin-MacBook-Pro  ~/Documents/workspace/CoffeeOrderService/deploy/chart/storages   9-compose-helm-chart ±✚  kubectl apply -f postgres-storage-dev-and-stg-stand-alone-pv.yaml
+persistentvolume/postgres-storage-pv created
+```
+
+
+```
+zayden@Justin-MacBook-Pro  ~/Documents/workspace/CoffeeOrderService/deploy/chart/storages   9-compose-helm-chart ±✚  kubectl get persistentvolume -n orderservice
+NAME                         CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM   STORAGECLASS   REASON   AGE
+logstorage-pv                10Gi       RWO,RWX        Retain           Available           standard                41s
+postgres-master-storage-pv   10Gi       RWO,RWX        Retain           Available           standard                14s
+postgres-slave-storage-pv    10Gi       RWO,RWX        Retain           Available           standard                8s
+postgres-storage-pv          10Gi       RWO,RWX        Retain           Available           standard                25s
+```
+
+```
+ zayden@Justin-MacBook-Pro  ~/Documents/workspace/CoffeeOrderService/deploy/chart   9-compose-helm-chart ±✚  helm lint .
+==> Linting .
+[INFO] Chart.yaml: icon is recommended
+
+1 chart(s) linted, 0 chart(s) failed
+ zayden@Justin-MacBook-Pro  ~/Documents/workspace/CoffeeOrderService/deploy/chart   9-compose-helm-chart ±✚  helm package .
+Successfully packaged chart and saved it to: /Users/zayden/Documents/workspace/CoffeeOrderService/deploy/chart/coffeeorderservice-0.0.1.tgz
+```
+
+
+```
+ayden@Justin-MacBook-Pro  ~/Documents/workspace/CoffeeOrderService/deploy/chart   9-compose-helm-chart ±✚  kubectl create namespace coffeeo
+rderservice
+namespace/coffeeorderservice created
+ zayden@Justin-MacBook-Pro  ~/Documents/workspace/CoffeeOrderService/deploy/chart   9-compose-helm-chart ±✚  helm install coffeeorderservice coffeeorderservice-0.0.1.tgz -n coffeeorderservice
+W1231 19:10:23.633845   76620 warnings.go:70] unknown field "spec.template.spec.containers[0].httpGet"
+NAME: coffeeorderservice
+LAST DEPLOYED: Sun Dec 31 19:10:19 2023
+NAMESPACE: coffeeorderservice
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+```

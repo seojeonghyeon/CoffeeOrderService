@@ -10,8 +10,8 @@ import static me.justin.coffeeorderservice.modules.order.QProductOrderCount.*;
 
 
 @Repository
-public class ProductOrderCountRepositoryImpl extends Querydsl4RepositorySupport implements ProductOrderCountRepositoryCustom {
-    public ProductOrderCountRepositoryImpl() {
+public class ProductOrderCountRepositoryExtensionImpl extends Querydsl4RepositorySupport implements ProductOrderCountRepositoryExtension {
+    public ProductOrderCountRepositoryExtensionImpl() {
         super(ProductOrderCount.class);
     }
 

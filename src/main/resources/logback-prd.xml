@@ -1,4 +1,5 @@
-<configuration>
+<?xml version="1.0" encoding="UTF-8"?>
+<included>
     <springProperty name="logPath" source="logging.file.path"/>
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <file>${logPath}/service.log</file>
@@ -17,4 +18,4 @@
     <root level="info">
         <appender-ref ref="FILE"/>
     </root>
-</configuration>
+</included>

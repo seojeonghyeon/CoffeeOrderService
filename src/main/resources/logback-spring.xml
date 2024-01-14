@@ -1,31 +1,28 @@
-<included>
-    <springProperty scope="context" name="spring.profiles.active" source="spring.profiles.active" defaultValue="default"/>
-
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <springProperty scope="context" name="spring.profiles.active" source="spring.profiles.active" defaultValue="local"/>
     <!-- 로컬 환경 설정 -->
-    <if condition='property("spring.profiles.active").contains("local")'>
+    <if condition='property("spring.profiles.active").equals("local")'>
         <then>
             <include resource="logback-local.xml"/>
         </then>
     </if>
-
     <!-- 개발 환경 설정 -->
-    <if condition='property("spring.profiles.active").contains("dev")'>
+    <if condition='property("spring.profiles.active").equals("dev")'>
         <then>
             <include resource="logback-dev.xml"/>
         </then>
     </if>
-
     <!-- 검증 환경 설정 -->
-    <if condition='property("spring.profiles.active").contains("stg")'>
+    <if condition='property("spring.profiles.active").equals("stg")'>
         <then>
             <include resource="logback-stg.xml"/>
         </then>
     </if>
-
     <!-- 운영 환경 설정 -->
-    <if condition='property("spring.profiles.active").contains("prd")'>
+    <if condition='property("spring.profiles.active").equals("prd")'>
         <then>
             <include resource="logback-prd.xml"/>
         </then>
     </if>
-</included>
+</configuration>

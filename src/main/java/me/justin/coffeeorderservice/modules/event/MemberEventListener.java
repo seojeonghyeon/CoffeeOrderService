@@ -31,7 +31,7 @@ public class MemberEventListener {
     @TransactionalEventListener
     public void handleOrderCreatedEvent(MemberCreatedEvent memberCreatedEvent){
         Member member = memberRepository.findById(memberCreatedEvent.getMember().getId()).orElse(null);
-        String emailSubject = "[TeaOrderService] 계정 생성";
+        String emailSubject = "[CoffeeOrderService] 계정 생성";
         String contextMessage = "가입을 축하합니다.";
         sendOrderCreatedEmail(member, contextMessage, emailSubject);
     }

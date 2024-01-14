@@ -1,4 +1,5 @@
 {{- if eq .Values.app.profiles "dev" }}
+
 {{- if .Values.postgres.standAloneMode.enabled }}
 apiVersion: apps/v1
 kind: StatefulSet
@@ -10,13 +11,17 @@ spec:
   selector:
     matchLabels:
       {{- with .Values.postgres.standAlone.labels }}
-      {{- toYaml . | nindent 8 }}
+      app: {{- toYaml .app | nindent 8 }}
+      layer: {{- toYaml .layer | nindent 8 }}
+      role: {{- toYaml .role | nindent 8 }}
       {{- end }}
   template:
     metadata:
       labels:
         {{- with .Values.postgres.standAlone.labels }}
-        {{- toYaml . | nindent 8 }}
+        app: {{- toYaml .app | nindent 10 }}
+        layer: {{- toYaml .layer | nindent 10 }}
+        role: {{- toYaml .role | nindent 10 }}
         {{- end }}
     spec:
       containers:
@@ -24,17 +29,10 @@ spec:
           image: {{ .Values.postgres.standAlone.image }}
           env:
             {{- with .Values.postgres.standAlone.env }}
-            {{- toYaml . | nindent 8 }}
+            {{- toYaml . | nindent 12 }}
             {{- end }}
           ports:
             - containerPort: {{ .Values.postgres.standAlone.ports.containerPort}}
-          volumeMounts:
-            - mountPath: {{ .Values.postgres.standAlone.data.volumes.mountPath }}
-              name: {{ .Values.postgres.standAlone.data.volumes.name }}
-      volumes:
-        - name: {{ .Values.postgres.standAlone.data.volumes.name }}
-        - persistentVolumeClaim:
-            claimName: {{ .Values.postgres.standAlone.persistentVolumeClaim.name }}
 
 ---
 apiVersion: v1
@@ -45,43 +43,14 @@ spec:
   selector:
     app: {{ .Values.postgres.standAlone.name }}
     {{- with .Values.postgres.standAlone.labels }}
-    {{- toYaml . | nindent 8 }}
+    layer: {{- toYaml .layer | nindent 8 }}
+    role: {{- toYaml .role | nindent 8 }}
     {{- end }}
   ports:
     - protocol: {{ .Values.postgres.standAlone.ports.protocol}}
       port: {{ .Values.postgres.standAlone.ports.containerPort}}
       targetPort: {{ .Values.postgres.standAlone.ports.containerPort}}
----
-{{- if .Values.postgres.standAlone.persistentVolumeClaim.enabled }}
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: {{ .Values.postgres.standAlone.persistentVolumeClaim.name }}
-spec:
-  resources:
-    requests:
-      storage: {{ .Values.postgres.standAlone.persistentVolumeClaim.storage }}
-  accessModes:
-    - ReadWriteMany
-  storageClassName: ""
-{{- end }}
----
-{{- if .Values.postgres.standAlone.persistentVolume.enabled}}
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: {{ .Values.postgres.standAlone.persistentVolume.name }}
-spec:
-  capacity:
-    storage: {{ .Values.postgres.standAlone.persistentVolume.storage }}
-  volumeMode: Filesystem
-  accessModes:
-    - ReadWriteMany
-  persistentVolumeReclaimPolicy: Retain
-  gcePersistentDisk:
-    pdName: {{ .Values.postgres.standAlone.persistentVolume.pdName }}
-    fsType: ext4
-{{- end }}
+
 
 {{- end }}
 {{- end }}

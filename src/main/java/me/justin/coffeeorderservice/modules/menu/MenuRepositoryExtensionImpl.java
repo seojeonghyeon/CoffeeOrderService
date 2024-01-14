@@ -10,8 +10,8 @@ import static me.justin.coffeeorderservice.modules.menu.QMenu.*;
 import static org.springframework.util.StringUtils.hasText;
 
 @Repository
-public class MenuRepositoryImpl extends Querydsl4RepositorySupport implements MenuRepositoryCustom {
-    public MenuRepositoryImpl() {
+public class MenuRepositoryExtensionImpl extends Querydsl4RepositorySupport implements MenuRepositoryExtension {
+    public MenuRepositoryExtensionImpl() {
         super(Menu.class);
     }
 

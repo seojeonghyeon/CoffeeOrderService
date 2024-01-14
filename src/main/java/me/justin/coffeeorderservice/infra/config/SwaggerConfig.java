@@ -17,9 +17,9 @@ import java.util.Arrays;
  */
 @OpenAPIDefinition(
         info = @Info(
-                title = "Tea Order Service API",
-                description = "Tea Order Service API 명세서",
-                version = "0.0.1"
+                title = "Coffee Order Service API",
+                description = "Coffee Order Service API 명세서",
+                version = "0.0.2"
         )
 )
 @RequiredArgsConstructor

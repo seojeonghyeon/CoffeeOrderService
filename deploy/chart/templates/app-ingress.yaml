@@ -7,13 +7,13 @@ metadata:
   namespace: {{ .Release.Namespace | quote }}
   {{- with .Values.podAnnotations }}
   annotations:
-    {{- toYaml .version | nindent 8 }}
-    {{- toYaml .build | nindent 8 }}
-    {{- toYaml .environment | nindent 8 }}
-    {{- toYaml .monitoring_enabled | nindent 8 }}
-    {{- toYaml .monitoring_tool | nindent 8 }}
-    {{- toYaml .log_config | nindent 8 }}
-    {{- toYaml .deployment_pipeline | nindent 8 }}
+    version: {{- toYaml .version | nindent 8 }}
+    build: {{- toYaml .build | nindent 8 }}
+    environment: {{- toYaml .environment | nindent 8 }}
+    monitoring_enabled: {{- toYaml .monitoring_enabled | nindent 8 }}
+    monitoring_tool: {{- toYaml .monitoring_tool | nindent 8 }}
+    log_config: {{- toYaml .log_config | nindent 8 }}
+    deployment_pipeline: {{- toYaml .deployment_pipeline | nindent 8 }}
   {{- end }}
 spec:
   rules:

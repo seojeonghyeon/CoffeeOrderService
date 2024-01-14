@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Repository
-public interface MenuRepository extends JpaRepository<Menu, Long>, MenuRepositoryCustom {
+public interface MenuRepository extends JpaRepository<Menu, Long>, MenuRepositoryExtension {
     @Query(
             value = "SELECT T.MENU_ID as id, T.MENU_NAME as menuName, T.PRICE as price, T.STOCK_QUANTITY, T.MENU_IMAGE, O.ORDER_COUNT as orderCount " +
                     "FROM MENUS as T " +

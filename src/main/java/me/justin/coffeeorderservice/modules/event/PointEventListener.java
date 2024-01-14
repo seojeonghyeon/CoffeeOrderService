@@ -40,7 +40,7 @@ public class PointEventListener {
     public void handleOrderCreatedEvent(PointCreatedEvent pointCreatedEvent){
         Point point = pointRepository.findById(pointCreatedEvent.getPoint().getId()).orElse(null);
         Member member = point.getMember();
-        String emailSubject = "[TeaOrderService] Point 충전";
+        String emailSubject = "[CoffeeOrderService] Point 충전";
         String prefixContent = "충전이 ";
         String suffixContent = " 되었습니다.";
 

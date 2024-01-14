@@ -1,8 +1,8 @@
 apiVersion: v2
 name: coffeeorderservice
-version: 0.0.1
-appVersion: 0.0.1
-kubeVersion: ">= 1.27.0"
+version: 0.0.4
+appVersion: 0.0.4
+kubeVersion: ">= v1.27.3-gke.100"
 description: "Coffee Order Service Springboot Application"
 maintainers:
   - name: jeonghyeon

@@ -1,6 +1,6 @@
 app:
   name: coffeeorderservice
-  image: seojeonghyeon0630/coffeeorderservice:0.0.1
+  image: seojeonghyeon0630/coffeeorderservice:0.0.4
   profiles: dev
   port: 8080
   replicas: 3
@@ -11,7 +11,7 @@ app:
   labels:
     layer: backend
     environment: dev
-    version: 0.0.1
+    version: 0.0.4
     release: blue
 
 podAnnotations:
@@ -19,7 +19,7 @@ podAnnotations:
   build: "Gradle Kotlin"
   environment: "dev"
   monitoring_enabled: "false"
-  monitoring_tool: ""
+  monitoring_tool: "none"
   log_config: "info"
   deployment_pipeline: "develop"
 
@@ -37,6 +37,7 @@ podVolumes:
 podPersistentVolume:
   name: logstorage-pv
   pdName: logstorage
+  storageClassName: standard
 
 probes:
   readiness:
@@ -101,7 +102,7 @@ postgres:
       role: master
     env:
       - name: POSTGRES_DB
-        value: teaorderdb
+        value: coffeeorderdb
       - name: POSTGRES_USER
         value: api_user
       - name: POSTGRES_PASSWORD
@@ -116,15 +117,7 @@ postgres:
         name: postgres-master-storage
         storage: 1Gi
         mountPath: /var/lib/postgresql/data
-    persistentVolume:
-      enabled: true
-      name: postgres-master-storage-pv
-      storage: 1Gi
-      pdName: postgres-master-storage
-    persistentVolumeClaim:
-      enabled: true
-      name: postgres-master-storage-pvc
-      storage: 1Gi
+      hostPath: /postgres/data
 
   slave:
     name: postgres-slave
@@ -138,7 +131,7 @@ postgres:
       role: slave
     env:
       - name: POSTGRES_DB
-        value: teaorderdb
+        value: coffeeorderdb
       - name: POSTGRES_USER
         value: api_user
       - name: POSTGRES_PASSWORD
@@ -151,17 +144,9 @@ postgres:
     data:
       volumes:
         name: postgres-slave-storage
-        storage: 1Gi
+        storage: 10Gi
         mountPath: /var/lib/postgresql/data
-    persistentVolume:
-      enabled: true
-      name: postgres-slave-storage-pv
-      storage: 1Gi
-      pdName: postgres-slave-storage
-    persistentVolumeClaim:
-      enabled: true
-      name: postgres-slave-storage-pvc
-      storage: 1Gi
+      hostPath: /postgres/data
 
   standAlone:
     name: postgres-standalone
@@ -175,7 +160,7 @@ postgres:
       role: standalone
     env:
       - name: POSTGRES_DB
-        value: teaorderdb
+        value: coffeeorderdb
       - name: POSTGRES_USER
         value: api_user
       - name: POSTGRES_PASSWORD
@@ -186,15 +171,6 @@ postgres:
     data:
       volumes:
         name: postgres-storage
-        storage: 1Gi
+        storage: 10Gi
         mountPath: /var/lib/postgresql/data
-    persistentVolume:
-      enabled: true
-      name: postgres-storage-pv
-      storage: 1Gi
-      pdName: postgres-storage
-    persistentVolumeClaim:
-      enabled: true
-      name: postgres-storage-pvc
-      storage: 1Gi
-
+      hostPath: /postgres/data

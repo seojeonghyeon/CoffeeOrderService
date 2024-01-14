@@ -61,6 +61,7 @@ public class MemberApiController {
         }
 
         String memberId = memberService.register(requestMemberSave.getEmail(), passwordEncoder.encode(requestMemberSave.getPassword()), passwordEncoder.encode(requestMemberSave.getSimplePassword()));
+        log.info("Success to add member : {}", memberId);
         return ResponseEntity.status(HttpStatus.OK).body(jwtTokenProvider.createToken(memberId));
     }
 

@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "me.justin"
-version = "0.0.1"
+version = "0.0.4"
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -33,11 +33,9 @@ dependencies {
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("com.h2database:h2")
     runtimeOnly("org.postgresql:postgresql")
-    implementation("org.springframework.boot:spring-boot-starter-data-elasticsearch")
     implementation("jakarta.xml.bind:jakarta.xml.bind-api:4.0.0")
     implementation("jakarta.mail:jakarta.mail-api:2.1.2")
     implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("org.springframework.kafka:spring-kafka")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0")
     implementation("io.jsonwebtoken:jjwt:0.9.1")
     implementation("javax.xml.bind:jaxb-api:2.3.1")
@@ -55,6 +53,7 @@ dependencies {
     implementation("jakarta.persistence:jakarta.persistence-api")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-hibernate5")
     implementation("org.springframework.boot:spring-boot-configuration-processor")
+    implementation("org.codehaus.janino:janino:3.1.2")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")

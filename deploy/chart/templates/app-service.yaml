@@ -5,7 +5,10 @@ metadata:
   labels:
     app: {{ .Values.app.name }}
     {{- with .Values.app.labels}}
-    {{- toYaml . | nindent 8}}
+    layer: {{- toYaml .layer | nindent 6}}
+    environment: {{- toYaml .environment | nindent 6}}
+    version: {{- toYaml .version | nindent 6}}
+    release: {{- toYaml .release | nindent 6}}
     {{- end}}
   name: {{ .Values.app.name }}
   namespace: {{ .Release.Namespace | quote }}
@@ -18,6 +21,9 @@ spec:
   selector:
     app: {{ .Values.app.name }}
     {{- with .Values.app.labels}}
-    {{- toYaml . | nindent 8}}
+    layer: {{- toYaml .layer | nindent 6}}
+    environment: {{- toYaml .environment | nindent 6}}
+    version: {{- toYaml .version | nindent 6}}
+    release: {{- toYaml .release | nindent 6}}
     {{- end}}
 {{- end }}

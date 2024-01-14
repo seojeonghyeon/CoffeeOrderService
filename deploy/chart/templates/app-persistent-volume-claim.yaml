@@ -3,11 +3,14 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: {{ .Values.podVolumes.persistentVolumeClaimName}}
+  namespace: {{ .Release.Namespace | quote }}
 spec:
+  volumeName: {{ .Values.podPersistentVolume.name }}
   resources:
     requests:
       storage: {{ .Values.podVolumes.storage }}
   accessModes:
+    - ReadWriteOnce
     - ReadWriteMany
-  storageClassName: ""
+  storageClassName: {{ .Values.podPersistentVolume.storageClassName }}
 {{- end }}

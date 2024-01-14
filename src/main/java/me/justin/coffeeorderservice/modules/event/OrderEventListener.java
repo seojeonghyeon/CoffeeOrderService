@@ -54,7 +54,7 @@ public class OrderEventListener {
     }
 
     private void createEmailContents(String prefixContent, String suffixContent, Order order) {
-        String prefixSubject = "[TeaOrderService] 주문 ";
+        String prefixSubject = "[CoffeeOrderService] 주문 ";
         prefixContent = prefixContent;
         suffixContent = suffixContent;
 

@@ -26,7 +26,6 @@ spring:
       hibernate:
         default_batch_fetch_size: 100
         format_sql: true
-        show_sql: true
     open-in-view: false
     database: h2
   mail:

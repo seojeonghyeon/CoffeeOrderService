@@ -1,6 +1,6 @@
 spring:
   application:
-    name: teaorder-service
+    name: coffee-order-service
   config:
     import: |-
       classpath:/application-api.yml
