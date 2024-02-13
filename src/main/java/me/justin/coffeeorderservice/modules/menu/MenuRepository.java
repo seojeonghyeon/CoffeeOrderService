@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface MenuRepository extends JpaRepository<Menu, Long>, MenuRepositoryExtension {
     @Query(
-            value = "SELECT T.MENU_ID as id, T.MENU_NAME as menuName, T.PRICE as price, T.STOCK_QUANTITY, T.MENU_IMAGE, O.ORDER_COUNT as orderCount " +
+            value = "SELECT T.MENU_ID as id, T.MENU_NAME as menuName, T.PRICE as price, T.STOCK_QUANTITY as stockQuantity, T.MENU_IMAGE as menuImage, O.ORDER_COUNT as orderCount " +
                     "FROM MENUS as T " +
                     "LEFT JOIN (" +
                         "SELECT OC.MENU_ID, SUM(OC.COUNT_UP) as ORDER_COUNT " +

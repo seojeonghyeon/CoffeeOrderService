@@ -50,6 +50,7 @@ server:
     include-stacktrace: on_param
     include-message: on_param
     include-exception: true
+  port: 8080
 logging:
   level:
     org.hibernate.sql: debug

@@ -19,8 +19,8 @@ public class CorsFilterConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedHeader("*");
-        config.addAllowedOrigin("*");
         config.addAllowedMethod("*");
+        config.addAllowedOriginPattern("*");
 
         source.registerCorsConfiguration("/api/**", config);
         return new CorsFilter(source);

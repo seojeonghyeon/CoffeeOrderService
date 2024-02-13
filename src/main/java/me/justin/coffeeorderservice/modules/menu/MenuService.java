@@ -1,6 +1,5 @@
 package me.justin.coffeeorderservice.modules.menu;
 
-import me.justin.coffeeorderservice.modules.order.ProductOrderCountRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -20,7 +19,6 @@ public class MenuService {
     private static final Integer POPULAR_MENU_DURING_DAYS = 7;
 
     private final MenuRepository menuRepository;
-    private final ProductOrderCountRepository productOrderCountRepository;
 
     public List<Menu> findAll() {
         return menuRepository.findAll();
