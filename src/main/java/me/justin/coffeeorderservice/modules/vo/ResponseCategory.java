@@ -13,7 +13,7 @@ public class ResponseCategory {
     @Schema(description = "Category 고유 식별 번호", nullable = false, example = "1")
     private Long id;
 
-    @Schema(description = "Category 부모 식별 번호", nullable = false, example = "1")
+    @Schema(description = "Category 부모 식별 번호", nullable = true, example = "1")
     private Long parentId;
 
     @Schema(description = "Category 이름", nullable = false, example = "Coffee")
@@ -22,7 +22,7 @@ public class ResponseCategory {
     public static ResponseCategory createResponseCategory(Category category) {
         return ResponseCategory.builder()
                 .id(category.getId())
-                .parentId(category.getParent().getId())
+                .parentId(category.getParent() != null ? category.getParent().getId() : null)
                 .categoryName(category.getName())
                 .build();
     }

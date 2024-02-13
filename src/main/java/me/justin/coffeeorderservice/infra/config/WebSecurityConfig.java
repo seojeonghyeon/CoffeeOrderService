@@ -77,15 +77,7 @@ public class WebSecurityConfig {
                 .requestMatchers("/v2/api-docs").permitAll()
                 .requestMatchers("/v3/api-docs/**").permitAll()
 //
-//                /**
-//                 * VIEW
-//                 */
-//                .and()
-//                .authorizeHttpRequests()
-//                .requestMatchers("/").permitAll()
-//                .requestMatchers("/index.html").permitAll()
-//                .requestMatchers("/home.html").permitAll()
-//                .requestMatchers("/view/**").permitAll()
+//
 
 
                 /**
@@ -105,6 +97,7 @@ public class WebSecurityConfig {
                 .requestMatchers("/api/order/login").permitAll()
                 .requestMatchers("/api/order/members/add").permitAll()
                 .requestMatchers("/api/order/menus/**").permitAll()
+                .requestMatchers("/api/order/categories/**").permitAll()
                 .anyRequest().authenticated()
 
                 .and()
