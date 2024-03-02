@@ -2,6 +2,10 @@ plugins {
     java
     id("org.springframework.boot") version "3.2.1"
     id("io.spring.dependency-management") version "1.1.4"
+    id("org.jetbrains.kotlin.jvm") version "1.8.22"
+    id("org.jetbrains.kotlin.plugin.jpa") version "1.8.22"
+    id("org.jetbrains.kotlin.plugin.spring") version "1.8.22"
+    id("org.jetbrains.kotlin.kapt") version "1.8.22"
 }
 
 group = "me.justin"
@@ -55,6 +59,11 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-configuration-processor")
     implementation("org.codehaus.janino:janino:3.1.2")
     annotationProcessor("org.projectlombok:lombok")
+
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.6.21")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.3")
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
@@ -87,3 +96,4 @@ tasks{
         }
     }
 }
+
